@@ -1,7 +1,5 @@
 #include "stackSim.h"
 
-string FILENAME;
-
 /*
 *	This is just the main entry point that begins the
 *	initialization routine and then hands off execution
@@ -26,78 +24,6 @@ int main(int argc, char* argv[])
 	
 	printDebug(0,5);
 	
-	return 0;
-}
-
-/*
-*	This is the "all-powerful initialization routine".
-*	Reads in and initializes the data segment and the
-*	text segment from the file given as an argument on
-*	the command line
-*/
-int init()
-{
-	printf("Initializing...\n");
-	
-	string line;
-	ifstream file (FILENAME, ios::in);
-	
-	if (file.is_open())
-	{
-		string segment;
-		
-		while (getline(file, line))
-		{
-			if (line == ".text")
-			{
-				segment = "text";
-			}
-				
-			else if (line == ".data")
-			{
-				segment = "data";
-			}
-				
-			else if (line.length() == 0)
-			{
-				segment = "";
-			}
-			
-			/*
-			*	If this is a line within the data block,
-			*	we need to store the data at the given
-			*	address in DATA_SEG
-			*/
-			else if (segment == "data")
-			{
-				mem_addr address = stoi(line.substr(0, line.find(":")), nullptr, 0);
-				mem_word data = stoi(line.substr(line.find(":") + 1));
-				
-				write(address, data);
-			}
-			
-			/*
-			*	If this is a line within the text block,
-			*	we need to store the instruction at the next
-			*	position in TEXT_SEG
-			*/
-			else if (segment == "text")
-			{
-				instruction instr = encode(line);
-				
-				write(TEXT_TOP, instr);
-			}		
-		
-		}
-				
-		file.close();
-	}
-	else
-	{
-		throw runtime_error("Failed to open input file");
-	}
-
-	printf("Initialization complete!\n");
 	return 0;
 }
 

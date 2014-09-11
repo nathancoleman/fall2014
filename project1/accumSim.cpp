@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
 		printf("ERROR: Expected filename\n");
 		exit(1);
 	}
+<<<<<<< HEAD
 	
 	init();
 	execute();
@@ -44,6 +45,14 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
+=======
+	myfile.close();	
+
+	return 0;
+}
+
+
+>>>>>>> master
 
 /*
 *	This function handles execution of the instructions
