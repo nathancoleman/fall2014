@@ -7,6 +7,7 @@
 
 ## Instructions
 ### Compile
+This project includes a Makefile
 #### All
 - From this directory, run ```make```
 - To force rebuild of all targets, run ```make -B```
