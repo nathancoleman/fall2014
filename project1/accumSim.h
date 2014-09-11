@@ -26,5 +26,4 @@ extern mem_word STACK_SEG[];
 extern string FILENAME;
 
 //Functions
-int init();
 int execute();
