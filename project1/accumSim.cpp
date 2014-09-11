@@ -23,6 +23,7 @@ ____________________THINGS TO DO___________________________
 string segment;
 string line;
 fstream myfile;
+string FILENAME;
 
 
 int main(int argc, char* argv[]) {
