@@ -101,6 +101,13 @@ int init()
 	return 0;
 }
 
+/*
+*	This function handles execution of the instructions
+*	in TEXT_SEG after it has been initialized. Execution
+*	begins at the address PC is pointing to, TEXT_SEG_BASE
+*	and continues until it reaches TEXT_TOP, the address
+*	the final instruction.
+*/
 int execute()
 {	
 	printf("Executing...\n");
