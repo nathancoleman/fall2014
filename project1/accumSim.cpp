@@ -67,27 +67,18 @@ int execute()
 		
 		if (op == LOAD) //was PUSH- now LOAD
 		{
-			TOS = 0x00300005;
 			printf("LOAD [%x]\n", address);
-			//Need to load value at address and write it into accumulator address
-			write(TOS, read(address));
+			
+			write(ACCUMULATOR, read(address));
 		}
 		
 		else if (op == STORE) //was POP-Store
 		{
 			printf("STORE [%x]\n", address);
 			
-			mem_word val1 = read(address);
+			mem_word val1 = read(ACCUMULATOR);
 
-			/*
-			*	Reset the data at this position since
-			*	we are taking one from the top of the
-			*	stack and putting nothing in its place
-			*/
-			//STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			
-
-			write(ACCUMULATOR, val1);	
+			write(address, val1);	
 		}
 		
 		else if (op == ADD)
