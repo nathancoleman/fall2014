@@ -7,7 +7,7 @@ COMP4300 - Computer Architecture
 Project 1 - Due 12 September 2014
 */
 
-#include "accumCode.h"
+#include "accumSim.h"
 
 /*
 *	These are shared between stackSim and accumSim.
