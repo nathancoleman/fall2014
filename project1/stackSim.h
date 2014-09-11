@@ -12,8 +12,6 @@
 
 using namespace std;
 
-//#define FILENAME "stackCode.s"
-
 extern mem_addr PC;
 extern reg_word R[];
 extern mem_addr TEXT_TOP;

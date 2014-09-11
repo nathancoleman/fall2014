@@ -26,20 +26,12 @@ typedef unsigned int int32;
 /* Memory */
 typedef int32 mem_addr; // Memory address
 typedef int32 mem_word; // Memory word
-// mem_addr PC = TEXT_SEG_BASE;
 
 /* Registers */
 typedef int32 reg_word; // Register word
-// reg_word R[R_LENGTH];
 
 /* Segments */
 typedef int32 instruction;
-// mem_addr TEXT_TOP = TEXT_SEG_BASE;
-// mem_addr DATA_TOP = DATA_SEG_BASE;
-// mem_addr TOS = STACK_SEG_BASE;
-// mem_word TEXT_SEG[TEXT_SEG_LENGTH];
-// mem_word DATA_SEG[DATA_SEG_LENGTH];
-// mem_word STACK_SEG[STACK_SEG_LENGTH];
 
 
 // Functions
