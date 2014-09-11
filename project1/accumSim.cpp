@@ -9,22 +9,9 @@ Project 1 - Due 12 September 2014
 
 #include "accumSim.h"
 
-
-/*
-____________________THINGS TO DO___________________________
-1. Edit ADD to add value with accumulator address value
-2. Edit MULT to mult value with accumulator
-3. Add STORE - store accumulator value into listed address
-5. Add LOAD - load an address value into accumulator
-
-*/
-
 mem_addr TEMP = 0x00300004;
 mem_addr ACCUMULATOR = 0x00300005;
-string segment;
-string line;
-fstream myfile;
-//string FILENAME;
+
 
 
 int main(int argc, char* argv[]) {
@@ -50,13 +37,11 @@ int main(int argc, char* argv[]) {
 
 
 
-
 /*
 *	This function handles execution of the instructions
-*	in TEXT_SEG after it has been initialized. Execution
-*	begins at the address PC is pointing to, TEXT_SEG_BASE
-*	and continues until it reaches TEXT_TOP, the address
-*	the final instruction.
+*	for the accumulator simulation. Values at given addresses 
+*	are either multiplied, added, loaded or stored with the 
+*	ACCUMULATOR.
 */
 int execute()
 {	
@@ -68,14 +53,14 @@ int execute()
 		int32 op = instr >> 24;
 		mem_addr address = instr & ((1 << 24) - 1);
 		
-		if (op == LOAD) //was PUSH- now LOAD
+		if (op == LOAD) 
 		{
 			printf("LOAD [%x]\n", address);
 			
 			write(ACCUMULATOR, read(address));
 		}
 		
-		else if (op == STORE) //was POP-Store
+		else if (op == STORE) 
 		{
 			printf("STORE [%x]\n", address);
 			
