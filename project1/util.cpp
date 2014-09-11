@@ -2,7 +2,12 @@
 
 using namespace std;
 
-
+/*
+*	These are shared between stackSim and accumSim.
+*	They are defined here (as opposed to within the
+*	corresponding header file) to avoid a duplicate
+*	symbol clang error on compilation.
+*/
 mem_addr PC = TEXT_SEG_BASE;
 reg_word R[R_LENGTH];
 mem_addr TEXT_TOP = TEXT_SEG_BASE;
@@ -12,7 +17,16 @@ mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 mem_word DATA_SEG[DATA_SEG_LENGTH];
 mem_word STACK_SEG[STACK_SEG_LENGTH];
 
-
+/*
+*	This function is used when reading the text segment
+*	of the file given as an argument on the command line.
+*	It reads in each line and converts it into a 32-bit
+*	instruction with the first 8 bits being the binary
+*	op-code assigned to the instruction and the remaining
+*	24 bits being the address associated with the operation.
+*	Address may be a zero value if the instruction does not
+*	require an operand.
+*/
 instruction encode(string line)
 {
 	instruction instr;
@@ -75,6 +89,15 @@ instruction encode(string line)
 	return instr;
 }
 
+/*
+*	This is used to visualize the contents of the various
+*	segments at any given time. It takes two arguments, min
+*	and max. These refer to the local address of each segment
+*	and will frame the output as such.
+*
+*	printDebug(0,5) will show the first 6 addresses and their
+*	contents within each segment
+*/
 void printDebug(int min, int max)
 {
 	printf("\n\n```````````````````````````````````````````\nDEBUG INFO:\n");
@@ -106,6 +129,12 @@ void printDebug(int min, int max)
 	printf("\n```````````````````````````````````````````\n\n");
 }
 
+/*
+*	This function is used to simulate a read from memory.
+*	It deciphers the address given to determine which segment
+*	the requested mem_word lies in (based on the BASE for each
+*	segment) and returns the data at the given address.
+*/
 mem_word read(mem_addr address)
 {	
 	mem_word data;
@@ -139,6 +168,12 @@ mem_word read(mem_addr address)
 	return data;
 }
 
+/*
+*	This function is used to simulate a write to memory.
+*	It deciphers the address given to determine which segment
+*	the caller wishes to store the data in (based on the BASE
+*	for each segment) and stores the given data at the address.
+*/
 int write(mem_addr address, mem_word data)
 {
 	printf("Writing %x(hex), %i(int) to address %x - ", data, data, address);

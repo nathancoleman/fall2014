@@ -1,9 +1,10 @@
-// Stack Simulator
-// 
-// Methods: PUSH X, POP X, ADD, SUB, MULT, DIV
-//
-// By: Nathan Coleman
-// For: Comp 4300 Intro to Computer Architecture
+/*
+*	Stack Simulator
+*	by: Nathan Coleman
+*	for: COMP4300 Fall 2014
+*
+*	This simulates an instruction set for MIPS using a stack
+*/
 
 #include "util.h"
 #include <stdio.h>
@@ -12,6 +13,10 @@
 
 using namespace std;
 
+/*
+*	These are shared and are defined in util.cpp
+*	to prevent a duplicate symbol clang error
+*/
 extern mem_addr PC;
 extern reg_word R[];
 extern mem_addr TEXT_TOP;
