@@ -8,18 +8,18 @@
 ## Instructions
 ### Compile
 #### All
-- From the project directory, run ```make```
+- From this directory, run ```make```
 - To force rebuild of all targets, run ```make -B```
 - To clean make-related files, run ```make clean```
 
 #### stackSim
-- From the project directory, run ```make stackSim```
+- From this directory, run ```make stackSim```
 
 #### accumSim
-- From the project directory, run ```make accumSim```
+- From this directory, run ```make accumSim```
 
 ### Run
 - stackSim:
-    - From the project directory, ```./stackSim```
+    - From this directory, ```./stackSim```
 - accumSim:
-    - From the project directory, ```./accumSim```
+    - From this directory, ```./accumSim```
