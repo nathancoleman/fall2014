@@ -1,6 +1,6 @@
 /*
 Accumulator Simulator
-
+         
 By Lucas Saltz
 Group 15 with Nathan Coleman
 COMP4300 - Computer Architecture
