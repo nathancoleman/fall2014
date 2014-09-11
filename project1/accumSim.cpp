@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
 	
 	init();
 	execute();
+	//printf("%i\n", read(ACCUMULATOR)); 
 
 	return 0;
 }
@@ -86,8 +87,9 @@ int execute()
 			printf("ADD\n");
 			
 			mem_word val1 = read(address);
+			mem_word val2 = read(ACCUMULATOR);
 						
-			write(ACCUMULATOR, ACCUMULATOR + val1);	
+			write(ACCUMULATOR, val2 + val1);	
 		}
 		
 		
@@ -96,8 +98,9 @@ int execute()
 			printf("MULT\n");
 	
 			mem_word val1 = read(address);
+			mem_word val2 = read(ACCUMULATOR);
 			
-			write(ACCUMULATOR, ACCUMULATOR * val1);
+			write(ACCUMULATOR, val2 * val1);
 		}
 		
 		
