@@ -10,6 +10,15 @@ Project 1 - Due 12 September 2014
 #include "accumSim.h"
 
 
+/*
+_________________THINGS TO DO___________________________
+1. Edit ADD to add value with accumulator address value
+2. Edit MULT to mult value with accumulator
+3. Add STORE - store accumulator value into listed address
+5. Add LOAD - load an address value into accumulator
+
+*/
+
 
 string segment;
 string line;
@@ -71,7 +80,6 @@ int init()
 	
 		return 0;
 }
-
 
 
 /*
