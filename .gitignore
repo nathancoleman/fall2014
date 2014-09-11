@@ -1,3 +1,7 @@
 *.o
+*.tar.gz
+
+#---- Project 1 ----
 accumSim
 stackSim
+stackSimgroup15_project1/*
