@@ -11,7 +11,7 @@ Project 1 - Due 12 September 2014
 
 
 /*
-_________________THINGS TO DO___________________________
+____________________THINGS TO DO___________________________
 1. Edit ADD to add value with accumulator address value
 2. Edit MULT to mult value with accumulator
 3. Add STORE - store accumulator value into listed address
@@ -38,48 +38,7 @@ int main() {
 	return 0;
 }
 
-int init() 
-{
-	//printf ("starting init");
-	//myfile.open("test.txt");
 
-	
-		//printf ("myfile is open. continuing init");
-	//Reading in code line by line
-		while (getline (myfile, line)) 
-		{
-
-			//If this is the text segment
-			if (line == ".text") {
-				segment = "text";
-			}
-
-			//If this is the data segment
-			else if (line == ".data")
-				segment = "data";
-
-			//If this is the blank line
-			else if (line.length() == 0)
-				segment = "";
-
-			//If this is a line within a segment
-			else if (segment == "data")
-			{
-				mem_addr address = stoi(line.substr(0, line.find(":")), nullptr, 0);
-				mem_word data = stoi(line.substr(line.find(":") + 1));
-				
-				write(address, data);
-			}	
-			else if (segment == "text")
-			{
-				instruction instr = encode(line);
-				
-				write(TEXT_TOP, instr);
-			}
-		}
-	
-		return 0;
-}
 
 
 /*

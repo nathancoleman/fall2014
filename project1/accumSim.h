@@ -25,5 +25,4 @@ extern mem_word DATA_SEG[];
 extern mem_word STACK_SEG[];
 
 //Functions
-int init();
 int execute();
