@@ -91,16 +91,16 @@ int execute()
 		int32 op = instr >> 24;
 		mem_addr address = instr & ((1 << 24) - 1);
 		
-		if (op == PUSH) 
+		if (op == LOAD) //was PUSH
 		{
-			printf("PUSH [%x]\n", address);
+			printf("LOAD [%x]\n", address);
 			
 			write(TOS, read(address));
 		}
 		
-		else if (op == POP) 
+		else if (op == STORE) //was POP
 		{
-			printf("POP [%x]\n", address);
+			printf("STORE [%x]\n", address);
 			
 			mem_word val1 = read(--TOS);
 

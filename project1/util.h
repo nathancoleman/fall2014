@@ -9,6 +9,8 @@ using namespace std;
 #define DIV		0b11110000
 #define PUSH	0b11111111
 #define POP		0b00000000
+#define LOAD	0b11100001
+#define STORE	0b01110111
 #define END		0b10100101
 
 #define R_LENGTH 8
