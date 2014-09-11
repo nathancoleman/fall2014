@@ -31,56 +31,104 @@ instruction encode(string line)
 	
 	string op = line.substr(0, line.find(" "));
 	
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits to make room for the address.
+	*	Binary OR will give us a 32-bit integer with 8
+	*	bits for the op-code and 24 bits for the address
+	*	at which the value to be pushed resides.
+	*/
 	if (op == "PUSH")
 	{
 		instr = PUSH;
 		
 		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
 		
-		instr = (instr << 24) | address; // Op code is first 8 bits, address last 24 bits
+		instr = (instr << 24) | address;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits to make room for the address.
+	*	Binary OR will give us a 32-bit integer with 8
+	*	bits for the op-code and 24 bits for the address
+	*	to which the popped value is to be assigned.
+	*/
 	else if (op == "POP")
 	{
 		instr = POP;
-		
+
 		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
-		
-		instr = (instr << 24) | address; // Op code is first 8 bits, address last 24 bits
+
+		instr = (instr << 24) | address;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits, but only to make this consistent
+	*	with our other 32-bit instructions (where the first
+	*	8 bits are the op-code). The address portion will
+	*	have a zero value since no operand is required for ADD
+	*	to operate on stack values.
+	*/
 	else if (op == "ADD")
 	{
 		instr = ADD;
-		
 		instr = instr << 24;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits, but only to make this consistent
+	*	with our other 32-bit instructions (where the first
+	*	8 bits are the op-code). The address portion will
+	*	have a zero value since no operand is required for SUB
+	*	to operate on stack values.
+	*/
 	else if (op == "SUB")
 	{
 		instr = SUB;
-		
 		instr = instr << 24;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits, but only to make this consistent
+	*	with our other 32-bit instructions (where the first
+	*	8 bits are the op-code). The address portion will
+	*	have a zero value since no operand is required for MULT
+	*	to operate on stack values.
+	*/
 	else if (op == "MULT")
 	{
 		instr = MULT;
-		
 		instr = instr << 24;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits, but only to make this consistent
+	*	with our other 32-bit instructions (where the first
+	*	8 bits are the op-code). The address portion will
+	*	have a zero value since no operand is required for DIV
+	*	to operate on stack values.
+	*/
 	else if (op == "DIV")
 	{
 		instr = DIV;
-		
 		instr = instr << 24;
 	}
 
+	/*
+	*	Here we need to shift the instruction code
+	*	left by 24 bits, but only to make this consistent
+	*	with our other 32-bit instructions (where the first
+	*	8 bits are the op-code). The address portion will
+	*	have a zero value since no operand is required for END.
+	*/
 	else if (op == "END")
 	{
 		instr = END;
-		
 		instr = instr << 24;
 	}
 		
