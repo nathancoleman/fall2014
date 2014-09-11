@@ -19,7 +19,8 @@ ____________________THINGS TO DO___________________________
 
 */
 
-
+mem_addr TEMP = 0x00300004;
+mem_addr ACCUMULATOR = 0x00300005;
 string segment;
 string line;
 fstream myfile;
@@ -84,25 +85,18 @@ int execute()
 			*	stack and putting nothing in its place
 			*/
 			//STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			TOS = 0x00300005;
-			write(TOS, val1);	
+			
+
+			write(ACCUMULATOR, val1);	
 		}
 		
 		else if (op == ADD)
 		{
 			printf("ADD\n");
 			
-			mem_word val1 = read(--TOS);
-
-			
-			//*	Reset the data at this position since
-			//*	we are taking two from the stack and
-			//*	only returning the result
-			
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			mem_word val2 = read(--TOS);
+			mem_word val1 = read(address);
 						
-			write(TOS, val2 + val1);	
+			write(ACCUMULATOR, ACCUMULATOR + val1);	
 		}
 		
 		
@@ -110,17 +104,9 @@ int execute()
 		{
 			printf("MULT\n");
 	
-			mem_word val1 = read(--TOS);
-
-			/*
-			*	Reset the data at this position since
-			*	we are taking two from the stack and
-			*	only returning the result
-			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			mem_word val2 = read(--TOS);
+			mem_word val1 = read(address);
 			
-			write(TOS, val2 * val1);
+			write(ACCUMULATOR, ACCUMULATOR * val1);
 		}
 		
 		
