@@ -1,7 +1,5 @@
 #include "util.h"
 
-using namespace std;
-
 /*
 *	These are shared between stackSim and accumSim.
 *	They are defined here (as opposed to within the
