@@ -37,12 +37,9 @@ int main(int argc, char* argv[]) {
 		printf("ERROR: Expected filename\n");
 		exit(1);
 	}
-
 	
 	init();
 	execute();
-
-	//myfile.close();	
 
 	return 0;
 }
@@ -67,27 +64,28 @@ int execute()
 		int32 op = instr >> 24;
 		mem_addr address = instr & ((1 << 24) - 1);
 		
-		if (op == LOAD) //was PUSH
+		if (op == LOAD) //was PUSH- now LOAD
 		{
+			TOS = 0x00300005;
 			printf("LOAD [%x]\n", address);
-			
+			//Need to load value at address and write it into accumulator address
 			write(TOS, read(address));
 		}
 		
-		else if (op == STORE) //was POP
+		else if (op == STORE) //was POP-Store
 		{
 			printf("STORE [%x]\n", address);
 			
-			mem_word val1 = read(--TOS);
+			mem_word val1 = read(address);
 
 			/*
 			*	Reset the data at this position since
 			*	we are taking one from the top of the
 			*	stack and putting nothing in its place
 			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			
-			write(address, val1);	
+			//STACK_SEG[TOS - STACK_SEG_BASE] = 0;
+			TOS = 0x00300005;
+			write(TOS, val1);	
 		}
 		
 		else if (op == ADD)
