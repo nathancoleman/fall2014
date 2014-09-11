@@ -25,21 +25,24 @@ string line;
 fstream myfile;
 
 
-int main() {
+int main(int argc, char* argv[]) {
 	
-	myfile.open("accumSim.txt");
-	if (myfile.is_open()) 
+	if (argc > 1)
 	{
-	init();
-	//execute();
+		FILENAME = argv[1];
 	}
-	myfile.close();	
+	else
+	{
+		printf("ERROR: Expected filename\n");
+		exit(1);
+	}
+	
+	init();
+	execute();
+		
 
 	return 0;
 }
-
-
-
 
 /*
 *	This function handles execution of the instructions
