@@ -260,7 +260,7 @@ int write(mem_addr address, mem_word data, bool increment_top)
 			
 		DATA_SEG[localAdd] = data;
 		
-		if(increment_top)
+		if (increment_top)
 		{
 			DATA_TOP++;
 		}
