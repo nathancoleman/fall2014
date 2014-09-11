@@ -23,7 +23,7 @@ ____________________THINGS TO DO___________________________
 string segment;
 string line;
 fstream myfile;
-string FILENAME;
+//string FILENAME;
 
 
 int main(int argc, char* argv[]) {
@@ -37,22 +37,18 @@ int main(int argc, char* argv[]) {
 		printf("ERROR: Expected filename\n");
 		exit(1);
 	}
-<<<<<<< HEAD
+
 	
 	init();
 	execute();
-		
 
-	return 0;
-}
-=======
-	myfile.close();	
+	//myfile.close();	
 
 	return 0;
 }
 
 
->>>>>>> master
+
 
 /*
 *	This function handles execution of the instructions
