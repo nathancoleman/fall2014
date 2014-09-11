@@ -10,25 +10,41 @@ Project 1 - Due 12 September 2014
 #include "accumSim.h"
 
 
+/*
+____________________THINGS TO DO___________________________
+1. Edit ADD to add value with accumulator address value
+2. Edit MULT to mult value with accumulator
+3. Add STORE - store accumulator value into listed address
+5. Add LOAD - load an address value into accumulator
 
+*/
+
+mem_addr TEMP = 0x00300004;
+mem_addr ACCUMULATOR = 0x00300005;
 string segment;
 string line;
 fstream myfile;
+//string FILENAME;
 
 
-int main() {
+int main(int argc, char* argv[]) {
 	
-	myfile.open("accumSim.txt");
-	if (myfile.is_open()) 
+	if (argc > 1)
 	{
-	init();
-	//execute();
+		FILENAME = argv[1];
 	}
-	myfile.close();	
+	else
+	{
+		printf("ERROR: Expected filename\n");
+		exit(1);
+	}
+	
+	init();
+	execute();
+	//printf("%i\n", read(ACCUMULATOR)); 
 
 	return 0;
 }
-
 
 
 
@@ -50,26 +66,19 @@ int execute()
 		int32 op = instr >> 24;
 		mem_addr address = instr & ((1 << 24) - 1);
 		
-		if (op == LOAD) //was PUSH
+		if (op == LOAD) //was PUSH- now LOAD
 		{
 			printf("LOAD [%x]\n", address);
 			
-			write(TOS, read(address));
+			write(ACCUMULATOR, read(address));
 		}
 		
-		else if (op == STORE) //was POP
+		else if (op == STORE) //was POP-Store
 		{
 			printf("STORE [%x]\n", address);
 			
-			mem_word val1 = read(--TOS);
+			mem_word val1 = read(ACCUMULATOR);
 
-			/*
-			*	Reset the data at this position since
-			*	we are taking one from the top of the
-			*	stack and putting nothing in its place
-			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			
 			write(address, val1);	
 		}
 		
@@ -77,17 +86,10 @@ int execute()
 		{
 			printf("ADD\n");
 			
-			mem_word val1 = read(--TOS);
-
-			
-			//*	Reset the data at this position since
-			//*	we are taking two from the stack and
-			//*	only returning the result
-			
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			mem_word val2 = read(--TOS);
+			mem_word val1 = read(address);
+			mem_word val2 = read(ACCUMULATOR);
 						
-			write(TOS, val2 + val1);	
+			write(ACCUMULATOR, val2 + val1);	
 		}
 		
 		
@@ -95,17 +97,10 @@ int execute()
 		{
 			printf("MULT\n");
 	
-			mem_word val1 = read(--TOS);
-
-			/*
-			*	Reset the data at this position since
-			*	we are taking two from the stack and
-			*	only returning the result
-			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
-			mem_word val2 = read(--TOS);
+			mem_word val1 = read(address);
+			mem_word val2 = read(ACCUMULATOR);
 			
-			write(TOS, val2 * val1);
+			write(ACCUMULATOR, val2 * val1);
 		}
 		
 		

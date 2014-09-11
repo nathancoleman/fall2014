@@ -64,7 +64,21 @@ instruction encode(string line)
 
 		instr = (instr << 24) | address;
 	}
+	else if (op == "LOAD")
+	{
+		instr = LOAD;
+		//instr = instr << 24;
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		instr = (instr << 24) | address;
 
+	}
+	else if (op == "STORE")
+	{
+		instr = STORE;
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		instr = (instr << 24) | address;
+
+	}
 	/*
 	*	Here we need to shift the instruction code
 	*	left by 24 bits to make room for the address.
