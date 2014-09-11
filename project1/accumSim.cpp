@@ -40,8 +40,10 @@ int main(int argc, char* argv[]) {
 	}
 	
 	init();
+	
 	execute();
-	//printf("%i\n", read(ACCUMULATOR)); 
+	
+	printDebug(0,5);
 
 	return 0;
 }
