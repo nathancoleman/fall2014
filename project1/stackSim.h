@@ -9,7 +9,6 @@
 #include "util.h"
 #include <stdio.h>
 #include <cstdlib>
-#include <fstream>
 
 using namespace std;
 
@@ -25,6 +24,6 @@ extern mem_addr TOS;
 extern mem_word TEXT_SEG[];
 extern mem_word DATA_SEG[];
 extern mem_word STACK_SEG[];
+extern string FILENAME;
 
-int init();
 int execute();
