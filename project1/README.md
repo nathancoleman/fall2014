@@ -1,13 +1,15 @@
-## Group Members
-- Nathan Coleman (ndc0002)
-- Lucas Saltz (las0029)
+## Group Info
+- Group #: 15
+- Members:
+    - Nathan Coleman (ndc0002)
+    - Lucas Saltz (las0029)
 
 ## Notes
 - Runs only on UNIX systems
 
 ## Instructions
 ### Compile
-This project includes a Makefile
+This project includes a Makefile and requires g++ for compilation
 #### All
 - From this directory, run ```make```
 - To force rebuild of all targets, run ```make -B``` or ```make --always-make```
@@ -22,7 +24,10 @@ This project includes a Makefile
 - To force rebuild of target, run ```make -B accumSim``` or ```make --always-make accumSim```
 
 ### Run
+After running ```make```, ```make stackSim```, or ```make accumSim```:
 - stackSim:
     - From this directory, ```./stackSim filename```
+    - The stackCode file is included as example input. To run, ```./stackSim stackCode```
 - accumSim:
     - From this directory, ```./accumSim filename```
+    - The accumCode file is included as example input. To run, ```./accumSim accumCode```
