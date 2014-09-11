@@ -67,16 +67,28 @@ instruction encode(string line)
 
 	/*
 	*	Here we need to shift the instruction code
-	*	left by 24 bits, but only to make this consistent
-	*	with our other 32-bit instructions (where the first
-	*	8 bits are the op-code). The address portion will
-	*	have a zero value since no operand is required for ADD
-	*	to operate on stack values.
+	*	left by 24 bits to make room for the address.
+	*	Binary OR will give us a 32-bit integer with 8
+	*	bits for the op-code and 24 bits for the address.
+	*	If using the stack instructions set, the address
+	*	will be a zero value since no operand is used.
 	*/
 	else if (op == "ADD")
 	{
 		instr = ADD;
 		instr = instr << 24;
+
+		/*
+		*	If there is a space in this line, we must be
+		*	dealing with the accumulator instruction set
+		*	as the stack instruction set does not require
+		*	an operand for its add instruction.
+		*/
+		if (line.find(" ") != std::string::npos)
+		{
+			mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+			instr = instr | address;
+		}
 	}
 
 	/*
@@ -95,16 +107,28 @@ instruction encode(string line)
 
 	/*
 	*	Here we need to shift the instruction code
-	*	left by 24 bits, but only to make this consistent
-	*	with our other 32-bit instructions (where the first
-	*	8 bits are the op-code). The address portion will
-	*	have a zero value since no operand is required for MULT
-	*	to operate on stack values.
+	*	left by 24 bits to make room for the address.
+	*	Binary OR will give us a 32-bit integer with 8
+	*	bits for the op-code and 24 bits for the address.
+	*	If using the stack instructions set, the address
+	*	will be a zero value since no operand is used.
 	*/
 	else if (op == "MULT")
 	{
 		instr = MULT;
 		instr = instr << 24;
+
+		/*
+		*	If there is a space in this line, we must be
+		*	dealing with the accumulator instruction set
+		*	as the stack instruction set does not require
+		*	an operand for its multiply instruction.
+		*/
+		if (line.find(" ") != std::string::npos)
+		{
+			mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+			instr = instr | address;
+		}
 	}
 
 	/*
