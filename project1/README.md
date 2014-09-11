@@ -21,6 +21,6 @@ This project includes a Makefile
 
 ### Run
 - stackSim:
-    - From this directory, ```./stackSim```
+    - From this directory, ```./stackSim filename```
 - accumSim:
-    - From this directory, ```./accumSim```
+    - From this directory, ```./accumSim filename```
