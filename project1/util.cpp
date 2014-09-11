@@ -27,6 +27,7 @@ instruction encode(string line)
 		
 		instr = (instr << 24) | address; // Op code is first 8 bits, address last 24 bits
 	}
+
 	else if (op == "POP")
 	{
 		instr = POP;
@@ -35,30 +36,35 @@ instruction encode(string line)
 		
 		instr = (instr << 24) | address; // Op code is first 8 bits, address last 24 bits
 	}
+
 	else if (op == "ADD")
 	{
 		instr = ADD;
 		
 		instr = instr << 24;
 	}
+
 	else if (op == "SUB")
 	{
 		instr = SUB;
 		
 		instr = instr << 24;
 	}
+
 	else if (op == "MULT")
 	{
 		instr = MULT;
 		
 		instr = instr << 24;
 	}
+
 	else if (op == "DIV")
 	{
 		instr = DIV;
 		
 		instr = instr << 24;
 	}
+
 	else if (op == "END")
 	{
 		instr = END;
@@ -148,7 +154,9 @@ int write(mem_addr address, mem_word data)
 		int32 localAdd = address - TEXT_SEG_BASE;
 		
 		if (localAdd > TEXT_SEG_LENGTH)
+		{
 			throw runtime_error("*** MEMORY ERROR *** : Address outside available space");
+		}
 		
 		TEXT_SEG[localAdd] = data;
 		
@@ -162,7 +170,9 @@ int write(mem_addr address, mem_word data)
 		int32 localAdd = address - DATA_SEG_BASE;
 		
 		if (localAdd > DATA_SEG_LENGTH)
+		{
 			throw runtime_error("*** MEMORY ERROR *** : Address outside available space");
+		}
 			
 		DATA_SEG[localAdd] = data;
 		
@@ -176,7 +186,9 @@ int write(mem_addr address, mem_word data)
 		int32 localAdd = TOS - STACK_SEG_BASE;
 		
 		if (localAdd > STACK_SEG_LENGTH)
+		{
 			throw runtime_error("*** MEMORY ERROR *** : Address outside available space");
+		}
 		
 		STACK_SEG[localAdd] = data;
 		

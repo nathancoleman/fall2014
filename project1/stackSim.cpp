@@ -39,15 +39,21 @@ int init()
 		{
 			// If this is the text segment
 			if (line == ".text")
+			{
 				segment = "text";
+			}
 				
 			// If this is the data segment
 			else if (line == ".data")
+			{
 				segment = "data";
+			}
 				
 			// If this is the blank seperator line
 			else if (line.length() == 0)
+			{
 				segment = "";
+			}
 			
 			// If this is a line within a segment
 			else if (segment == "data")
