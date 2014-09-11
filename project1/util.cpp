@@ -220,7 +220,7 @@ mem_word read(mem_addr address)
 *	the caller wishes to store the data in (based on the BASE
 *	for each segment) and stores the given data at the address.
 */
-int write(mem_addr address, mem_word data)
+int write(mem_addr address, mem_word data, bool increment_top)
 {
 	printf("Writing %x(hex), %i(int) to address %x - ", data, data, address);
 	
@@ -241,7 +241,10 @@ int write(mem_addr address, mem_word data)
 		
 		TEXT_SEG[localAdd] = data;
 		
-		TEXT_TOP++;
+		if (increment_top)
+		{
+			TEXT_TOP++;
+		}
 	}
 	
 	else if (inDataSeg)
@@ -257,7 +260,10 @@ int write(mem_addr address, mem_word data)
 			
 		DATA_SEG[localAdd] = data;
 		
-		DATA_TOP++;
+		if(increment_top)
+		{
+			DATA_TOP++;
+		}
 	}
 	
 	else if (inStackSeg)
@@ -273,7 +279,10 @@ int write(mem_addr address, mem_word data)
 		
 		STACK_SEG[localAdd] = data;
 		
-		TOS++;
+		if (increment_top)
+		{
+			TOS++;
+		}
 	}
 	
 	else

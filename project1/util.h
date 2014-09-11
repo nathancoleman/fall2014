@@ -38,4 +38,4 @@ typedef int32 instruction;
 instruction encode(string line);
 void printDebug(int min, int max);
 mem_word read(mem_addr address);
-int write(mem_addr address, mem_word data);
+int write(mem_addr address, mem_word data, bool increment_top = true);

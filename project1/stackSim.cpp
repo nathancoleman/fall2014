@@ -152,7 +152,7 @@ int execute()
 			*	we are taking two from the stack and
 			*	only returning the result
 			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
+			write(TOS, 0, false);
 			mem_word val2 = read(--TOS);
 						
 			write(TOS, val2 + val1);	
@@ -169,7 +169,7 @@ int execute()
 			*	we are taking two from the stack and
 			*	only returning the result
 			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
+			write(TOS, 0, false);
 			mem_word val2 = read(--TOS);
 			
 			write(TOS, val2 - val1);	
@@ -186,7 +186,7 @@ int execute()
 			*	we are taking two from the stack and
 			*	only returning the result
 			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
+			write(TOS, 0, false);
 			mem_word val2 = read(--TOS);
 			
 			write(TOS, val2 * val1);
@@ -203,7 +203,7 @@ int execute()
 			*	we are taking two from the stack and
 			*	only returning the result
 			*/
-			STACK_SEG[TOS - STACK_SEG_BASE] = 0;
+			write(TOS, 0, false);
 			mem_word val2 = read(--TOS);
 			
 			write(TOS, val2 / val1);	
