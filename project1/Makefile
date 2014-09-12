@@ -1,22 +1,25 @@
 CC = g++
 
-all: accumSim stackSim
+all: pre-build accumSim stackSim
 
-accumSim: util.o accumSim.o
-	@$(CC) -g -o accumSim util.o accumSim.o
-accumSim.o: accumSim.cpp
-	@$(CC) -g -c accumSim.cpp
+accumSim: pre-build util.o accumSim.o
+	@$(CC) -o bin/accumSim obj/util.o obj/accumSim.o
+accumSim.o: src/accumSim.cpp src/accumSim.h
+	@$(CC) -c src/accumSim.cpp -o obj/accumSim.o
 
-stackSim: util.o stackSim.o
-	@$(CC) -g -o stackSim util.o stackSim.o
-stackSim.o: stackSim.cpp stackSim.h
-	@$(CC) -g -c stackSim.cpp
+stackSim: pre-build util.o stackSim.o
+	@$(CC) -o bin/stackSim obj/util.o obj/stackSim.o
+stackSim.o: src/stackSim.cpp src/stackSim.h
+	@$(CC) -c src/stackSim.cpp -o obj/stackSim.o
 
-util.o: util.cpp util.h
-	@$(CC) -g -c util.cpp
+util.o: src/util.cpp src/util.h
+	@$(CC) -c src/util.cpp -o obj/util.o
+
+pre-build:
+	@mkdir -p bin obj
 
 clean:
-	@rm -f stackSim accumSim *.o *.tar.gz
+	@rm -rf bin obj *.tar.gz
 
 tar: clean
 	@tar -zcf ./group15_project1.tar.gz *
