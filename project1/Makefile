@@ -20,4 +20,3 @@ clean:
 
 tar: clean
 	tar -zcf ./group15_project1.tar.gz *
-	
