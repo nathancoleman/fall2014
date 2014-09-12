@@ -18,6 +18,6 @@ util.o: util.cpp util.h
 clean:
 	rm -f stackSim accumSim *.o *.tar.gz
 
-tar:
+tar: clean
 	tar -zcf ./group15_project1.tar.gz *
 	

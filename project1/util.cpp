@@ -44,7 +44,7 @@ instruction encode(string line)
 	{
 		instr = PUSH;
 		
-		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 		
 		instr = (instr << 24) | address;
 	}
@@ -60,7 +60,7 @@ instruction encode(string line)
 	{
 		instr = POP;
 
-		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 
 		instr = (instr << 24) | address;
 	}
@@ -68,14 +68,14 @@ instruction encode(string line)
 	{
 		instr = LOAD;
 		//instr = instr << 24;
-		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 		instr = (instr << 24) | address;
 
 	}
 	else if (op == "STORE")
 	{
 		instr = STORE;
-		mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+		mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 		instr = (instr << 24) | address;
 
 	}
@@ -100,7 +100,7 @@ instruction encode(string line)
 		*/
 		if (line.find(" ") != std::string::npos)
 		{
-			mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+			mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 			instr = instr | address;
 		}
 	}
@@ -140,7 +140,7 @@ instruction encode(string line)
 		*/
 		if (line.find(" ") != std::string::npos)
 		{
-			mem_addr address = stoi(line.substr(line.find(" ") + 1), nullptr, 0);
+			mem_addr address = stoi(line.substr(line.find(" ") + 1), 0, 0);
 			instr = instr | address;
 		}
 	}
@@ -374,7 +374,7 @@ int init()
 			*/
 			else if (segment == "data")
 			{
-				mem_addr address = stoi(line.substr(0, line.find(":")), nullptr, 0);
+				mem_addr address = stoi(line.substr(0, line.find(":")), 0, 0);
 				mem_word data = stoi(line.substr(line.find(":") + 1));
 				
 				write(address, data);
