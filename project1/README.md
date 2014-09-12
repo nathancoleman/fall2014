@@ -26,8 +26,8 @@ This project includes a Makefile and requires g++ for compilation
 ### Run
 After running ```make```, ```make stackSim```, or ```make accumSim```:
 - stackSim:
-    - From this directory, ```./stackSim filename```
-    - The stackCode file is included as example input. To run, ```./stackSim stackCode```
+    - From this directory, ```bin/stackSim filename```
+    - The stackCode file is included as example input. To run, ```bin/stackSim stackCode```
 - accumSim:
-    - From this directory, ```./accumSim filename```
-    - The accumCode file is included as example input. To run, ```./accumSim accumCode```
+    - From this directory, ```bin/accumSim filename```
+    - The accumCode file is included as example input. To run, ```bin/accumSim accumCode```
