@@ -13,7 +13,7 @@ stackSim.o: src/stackSim.cpp src/stackSim.h
 	@$(CC) -c src/stackSim.cpp -o obj/stackSim.o
 
 util.o: src/util.cpp src/util.h
-	@$(CC) -c src/util.cpp -o obj/util.o
+	@$(CC) -c src/util.cpp -std=gnu++0x -o obj/util.o
 
 pre-build:
 	@mkdir -p bin obj
