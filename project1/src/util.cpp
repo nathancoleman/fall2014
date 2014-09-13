@@ -261,17 +261,13 @@ mem_word read(mem_addr address)
 *	for each segment) and stores the given data at the address.
 */
 int write(mem_addr address, mem_word data, bool increment_top)
-{
-	printf("Writing %x(hex), %i(int) to address %x - ", data, data, address);
-	
+{	
 	bool inTextSeg = (address >= TEXT_SEG_BASE) && (address < DATA_SEG_BASE);
 	bool inDataSeg = (address >= DATA_SEG_BASE) && (address < STACK_SEG_BASE);
 	bool inStackSeg = (address >= STACK_SEG_BASE);
 	
 	if (inTextSeg)
-	{		
-		printf("TEXT SEGMENT\n");
-		
+	{				
 		int32 localAdd = address - TEXT_SEG_BASE;
 		
 		if (localAdd > TEXT_SEG_LENGTH)
@@ -288,9 +284,7 @@ int write(mem_addr address, mem_word data, bool increment_top)
 	}
 	
 	else if (inDataSeg)
-	{		
-		printf("DATA SEGMENT\n");
-		
+	{				
 		int32 localAdd = address - DATA_SEG_BASE;
 		
 		if (localAdd > DATA_SEG_LENGTH)
@@ -307,9 +301,7 @@ int write(mem_addr address, mem_word data, bool increment_top)
 	}
 	
 	else if (inStackSeg)
-	{		
-		printf("STACK SEGMENT\n");
-		
+	{				
 		int32 localAdd = TOS - STACK_SEG_BASE;
 		
 		if (localAdd > STACK_SEG_LENGTH)
