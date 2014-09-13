@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 	
 	execute();
 	
-	printDebug(0,5);
+	//printDebug(0,5);
 
 	return 0;
 }
@@ -94,6 +94,7 @@ int execute()
 		else if (op == END)
 		{
 			printf("END\n");
+			printf("ANSWER: %i\n", read(ACCUMULATOR));
 			break;	
 		}
 		
