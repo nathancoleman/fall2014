@@ -24,9 +24,10 @@ class TCPHandler(SocketServer.BaseRequestHandler):
 		
 		pack_format = 'B B'
 		unpacked_data = struct.unpack(pack_format, self.data)
+		f_unpacked_data = [chr(x) for x in unpacked_data]
 
 		print 'Packed data:', self.data
-		print 'Unpacked data:', unpacked_data
+		print 'Unpacked data:', f_unpacked_data
 
 
 
