@@ -1,5 +1,4 @@
-import SocketServer
-import struct
+import SocketServer, struct
 
 HOST = 'localhost'
 PORT = 8001

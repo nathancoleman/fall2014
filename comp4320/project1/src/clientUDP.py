@@ -1,1 +1,1 @@
-print "Running ClientUDP"
+import socket, struct
