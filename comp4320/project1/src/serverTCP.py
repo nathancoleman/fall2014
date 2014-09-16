@@ -26,6 +26,7 @@ class TCPHandler(SocketServer.BaseRequestHandler):
 
 
 if __name__ == "__main__":
+    
     server = MultiThreadTCPServer((HOST, PORT), TCPHandler)
     
     try:
