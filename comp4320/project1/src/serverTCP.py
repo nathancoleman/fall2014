@@ -1,4 +1,5 @@
 import SocketServer
+import struct
 
 HOST = 'localhost'
 PORT = 8001
@@ -20,8 +21,13 @@ class MultiThreadTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 class TCPHandler(SocketServer.BaseRequestHandler):
 
 	def handle(self):
-		self.data = self.request.recv(1024)
-		print "Received: " + str(self.data)
+		self.data = self.request.recv(1024).strip()
+		
+		pack_format = 'B B'
+		unpacked_data = struct.unpack(pack_format, self.data)
+
+		print 'Packed data:', self.data
+		print 'Unpacked data:', unpacked_data
 
 
 
