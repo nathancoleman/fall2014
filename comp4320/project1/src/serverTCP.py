@@ -1,4 +1,4 @@
-import socket, SocketServer
+import SocketServer
 
 HOST = 'localhost'
 PORT = 8001
@@ -35,4 +35,5 @@ if __name__ == "__main__":
         server.serve_forever()
 
     except KeyboardInterrupt:
-        sys.exit(0)
+        print "\nExiting...\n"
+        exit(0)
