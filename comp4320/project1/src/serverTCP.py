@@ -1,3 +1,9 @@
+"""
+	This is the TCP server for COMP4320 project1
+
+	Author: Nathan Coleman
+"""
+
 import socket, struct
 
 class ServerTCP:

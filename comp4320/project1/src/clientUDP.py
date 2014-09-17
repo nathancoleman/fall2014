@@ -1,3 +1,9 @@
+"""
+	This is the UDP client for COMP4320 project1
+
+	Author: Nathan Coleman
+"""
+
 import socket, struct
 
 class ClientUDP:
