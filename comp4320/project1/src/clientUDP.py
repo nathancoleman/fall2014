@@ -25,4 +25,8 @@ class ClientUDP:
 
 if __name__ == "__main__":
     
-    client = ClientUDP('localhost', 8001)
+    try:
+    	client = ClientUDP('localhost', 8001)
+
+    except KeyboardInterrupt:
+		print "\nExiting..."
