@@ -15,13 +15,9 @@ class ClientUDP:
 		self.socket.connect((host, port))
 		self.requestID = 0
 
-
-
 	def getVLength(input):
 		# TODO
 		print "TODO: getVLength"
-
-
 
 	def disemvowel(input):
 		# TODO
