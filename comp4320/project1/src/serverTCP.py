@@ -31,6 +31,14 @@ class ServerTCP:
 		print "Header:", header_hex
 		print "Message:", message
 
+	def get_vowel_count(self, message):
+		# TODO
+		print "TODO: get_vowel_count"
+
+	def disemvowel(self, message):
+		# TODO
+		print "TODO: disemvowel"
+
 
 
 if __name__ == "__main__":
