@@ -11,19 +11,18 @@ class ServerTCP:
 		conn, addr = self.socket.accept()
 		print "Client connected from:", addr
 		while 1:
-			self.process_connection(conn)
+			# How much data should we take in here?
+			data = conn.recv(1024).strip()
+			self.process_data(data)
 		conn.close()
 
-	def process_connection(self, conn):
-		# How much data should we take in here?
-		data = conn.recv(1023).strip()
-	
+	def process_data(self, data):
 		pack_format = '!HHB'
 		header = struct.unpack(pack_format, data[:5])
+		header_hex = [hex(x) for x in header]
 		message = data[5:]
-		form_header = [hex(x) for x in header]
 
-		print "Header:", form_header
+		print "Header:", header_hex
 		print "Message:", message
 
 
