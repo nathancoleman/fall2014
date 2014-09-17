@@ -16,8 +16,15 @@ class ServerTCP:
 
 	def process_connection(self, conn):
 		# How much data should we take in here?
-		data = conn.recv(1023)
-		conn.sendall(data)
+		data = conn.recv(1023).strip()
+	
+		pack_format = '!HHB'
+		header = struct.unpack(pack_format, data[:5])
+		message = data[5:]
+		form_header = [hex(x) for x in header]
+
+		print "Header:", form_header
+		print "Message:", message
 
 
 
