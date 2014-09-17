@@ -15,11 +15,11 @@ class ClientUDP:
 		self.socket.connect((host, port))
 		self.requestID = 0
 
-	def getVLength(input):
+	def get_vowel_count(self, message):
 		# TODO
-		print "TODO: getVLength"
+		print "TODO: get_vowel_count"
 
-	def disemvowel(input):
+	def disemvowel(self, message):
 		# TODO
 		print "TODO: disemvowel"
 
