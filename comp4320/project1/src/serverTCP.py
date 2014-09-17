@@ -39,6 +39,10 @@ class ServerTCP:
 		# TODO
 		print "TODO: disemvowel"
 
+	def respond(self, val):
+		# TODO
+		print "TODO: respond"
+
 
 
 if __name__ == "__main__":

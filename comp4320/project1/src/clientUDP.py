@@ -23,6 +23,10 @@ class ClientUDP:
 		# TODO
 		print "TODO: disemvowel"
 
+	def request(self, op, message):
+		# TODO
+		print "TODO: request"
+
 
 
 if __name__ == "__main__":
