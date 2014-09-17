@@ -17,13 +17,13 @@ class ServerTCP:
 		conn, addr = self.socket.accept()
 		print "Client connected from:", addr
 		while 1:
-			# How much data should we take in here?
-			data = conn.recv(1024).strip()
+			#1024 max payload + 5 for header
+			data = conn.recv(1029).strip()
 			self.process_data(data)
 		conn.close()
 
 	def process_data(self, data):
-		pack_format = '!HHB'
+		pack_format = 'HHB'
 		header = struct.unpack(pack_format, data[:5])
 		header_hex = [hex(x) for x in header]
 		message = data[5:]
