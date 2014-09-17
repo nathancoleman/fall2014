@@ -1,45 +1,30 @@
-import SocketServer, struct
+import socket, struct
 
-HOST = 'localhost'
-PORT = 8001
+class ServerTCP:
 
-#	ThreadingMixIn allows a new thread to be created
-#	for every request instead of servicing one request
-#	at a time
+	def __init__(self, host, port):
+		self.host = host
+		self.port = port
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.bind((host, port))
+		self.socket.listen(1)
+		conn, addr = self.socket.accept()
+		print "Client connected from:", addr
+		while 1:
+			self.process_connection(conn)
+		conn.close()
 
-class MultiThreadTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-	
-	daemon_threads = True
-	allow_reuse_address = True
-
-	def __init__(self, server_address, RequestHandlerClass):
-		SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)
-
-
-
-class TCPHandler(SocketServer.BaseRequestHandler):
-
-	def handle(self):
-		self.data = self.request.recv(1024).strip()
-		
-		pack_format = 'B B'
-		unpacked_data = struct.unpack(pack_format, self.data)
-		f_unpacked_data = [chr(x) for x in unpacked_data]
-
-		print 'Packed data:', self.data
-		print 'Unpacked data:', f_unpacked_data
+	def process_connection(self, conn):
+		# How much data should we take in here?
+		data = conn.recv(1023)
+		conn.sendall(data)
 
 
 
 if __name__ == "__main__":
     
-    server = MultiThreadTCPServer((HOST, PORT), TCPHandler)
-    
-    try:
-    	print "Running server at " + HOST + ":" + str(PORT)
-    	print "(Ctrl+C to terminate)"
-        server.serve_forever()
+	try:
+		server = ServerTCP('localhost', 8001)
 
-    except KeyboardInterrupt:
-        print "\nExiting...\n"
-        exit(0)
+	except KeyboardInterrupt:
+		print "\nExiting..."
