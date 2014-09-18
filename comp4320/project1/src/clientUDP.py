@@ -4,7 +4,7 @@
 	Author: Nathan Coleman
 """
 
-import socket, struct
+import socket, struct, sys
 
 class ClientUDP:
 
@@ -13,21 +13,14 @@ class ClientUDP:
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.socket.connect((host, port))
-		self.requestID = 0
-
-	def get_vowel_count(self, message):
-		# TODO
-		print "TODO: get_vowel_count"
-
-	def disemvowel(self, message):
-		# TODO
-		print "TODO: disemvowel"
+		self.requestID = 1
 
 	def send_request(self, op, message):
 		message_length = 5 + len(message) # 5 for required tml, id, and op
 		pack_format = "HHB"
 		packed_data = struct.pack(pack_format, message_length, self.requestID, op)
 		packed_data = packed_data + message
+		print "Packed data:", packed_data
 		self.socket.sendall(packed_data)
 		self.requestID += 1
 
@@ -39,16 +32,18 @@ class ClientUDP:
 
 if __name__ == "__main__":
     
-	host, port = sysargv[1:]
-	host = str(host)
-	port = int(port)
+	host, port, op, message = sys.argv[1:]
+	host	= str(host)
+	port 	= int(port)
+	op 		= int(op)
+	message = str(message)
 
 	print 'Starting client at ' + host + ':' + str(port)
 
-    try:
-    	client = ClientUDP(host, port)
-    	client.send_request(1, "Hello world")
-
-    except KeyboardInterrupt:
+	try:
+		client = ClientUDP(host, port)
+		client.send_request(op, message)
+	
+	except KeyboardInterrupt:
 		print "\nExiting..."
 		exit(0)
