@@ -4,7 +4,7 @@
 	Author: Nathan Coleman
 """
 
-import socket, struct
+import socket, struct, sys
 
 class ServerTCP:
 
@@ -32,12 +32,22 @@ class ServerTCP:
 		print "Message:", message
 
 	def get_vowel_count(self, message):
-		# TODO
-		print "TODO: get_vowel_count"
+		vowels = "aeiouAEIOU"
+		count = 0
+
+		for character in message:
+			if character in vowels:
+				count = count + 1
+
+		return count
 
 	def disemvowel(self, message):
-		# TODO
-		print "TODO: disemvowel"
+		vowels = "aeiouAEIOU"
+
+		for vowel in vowels:
+			message = message.replace(vowel, '')
+
+		return message
 
 	def send_response(self, val):
 		# TODO
