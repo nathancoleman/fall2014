@@ -25,24 +25,29 @@ class ClientUDP:
 		packed_data = packed_data + message
 		self.socket.sendall(packed_data)
 		self.requestID += 1
+		self.get_response(op)
 
-		if op == GETVLENGTH:
-			self.parse_getvlength()
-
-		elif op == DISEMVOWEL:
-			self.parse_disemvowel()
-
-	def get_response(self):
+	def get_response(self, op):
 		# 1024 max payload + 5 for header
 		data = self.socket.recv(1029)
+		data = data.strip()
 
-	def parse_getvlength(self):
-		# TODO
-		print "TODO: parse_getvlength"
+		if op == GETVLENGTH:
+			self.parse_getvlength(data)
 
-	def parse_disemvowel(self):
-		# TODO
-		print "TODO: parse_disemvowel"
+		elif op == DISEMVOWEL:
+			self.parse_disemvowel(data)
+
+	def parse_getvlength(self, data):
+		pack_format = 'HHH'
+		header = data[:6]
+		tml, rid, message_length = struct.unpack(pack_format, header)
+
+	def parse_disemvowel(self, data):
+		pack_format = 'HH'
+		header = data[:4]
+		tml, rid = struct.unpack(pack_format, header)
+		message = data[4:]
 
 
 
