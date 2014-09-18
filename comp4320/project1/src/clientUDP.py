@@ -6,6 +6,9 @@
 
 import socket, struct, sys
 
+GETVLENGTH = 0x55
+DISEMVOWEL = 0xAA
+
 class ClientUDP:
 
 	def __init__(self, host, port):
@@ -20,13 +23,26 @@ class ClientUDP:
 		pack_format = "HHB"
 		packed_data = struct.pack(pack_format, message_length, self.requestID, op)
 		packed_data = packed_data + message
-		print "Packed data:", packed_data
 		self.socket.sendall(packed_data)
 		self.requestID += 1
+
+		if op == GETVLENGTH:
+			self.parse_getvlength()
+
+		elif op == DISEMVOWEL:
+			self.parse_disemvowel()
 
 	def get_response(self):
 		# 1024 max payload + 5 for header
 		data = self.socket.recv(1029)
+
+	def parse_getvlength(self):
+		# TODO
+		print "TODO: parse_getvlength"
+
+	def parse_disemvowel(self):
+		# TODO
+		print "TODO: parse_disemvowel"
 
 
 
