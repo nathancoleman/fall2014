@@ -47,8 +47,14 @@ class ServerTCP:
 
 if __name__ == "__main__":
     
+	host, port = sys.argv[1:]
+	host = str(host)
+	port = int(port)
+
+	print 'Starting server at ' + host + ':' + str(port)
+
 	try:
-		server = ServerTCP('localhost', 8001)
+		server = ServerTCP(host, port)
 
 	except KeyboardInterrupt:
 		print "\nExiting..."

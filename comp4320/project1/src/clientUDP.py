@@ -39,8 +39,14 @@ class ClientUDP:
 
 if __name__ == "__main__":
     
+	host, port = sysargv[1:]
+	host = str(host)
+	port = int(port)
+
+	print 'Starting client at ' + host + ':' + str(port)
+
     try:
-    	client = ClientUDP('localhost', 8001)
+    	client = ClientUDP(host, port)
     	client.send_request(1, "Hello world")
 
     except KeyboardInterrupt:
