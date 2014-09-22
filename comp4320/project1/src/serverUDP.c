@@ -183,10 +183,13 @@ int main(int argc, char **argv) {
   	********************************************************/
   	char operation = buf[4];
   	//print out the operation
+  	printf("Operation recieved: ");
   	printf("%x\n", operation);
+
 
   	if(operation == 0x55) //0x55 is hex for vLength
   	{
+  		printf("%s\n", "operation == 0x55");
   		short packetLength = (short)((buf[0] << 8) + buf[1]);
   		char buffer[packetLength-5]; //-5 for known size
   		int i;
@@ -211,13 +214,13 @@ int main(int argc, char **argv) {
     	if (n < 0) 
       		error("ERROR in sendto");
   	}
-  	else if (operation == 0x55)
+  	else if (operation == -86) //hack
   	{
-  		//cout << "operation == 0x55" << endl;
+  		printf("%s\n", "operation == 0xAA");
   		short packetLength = (short)((buf[0] << 8) + buf[1]);
   		char buffer[packetLength-5];
   		int i;
-  		for (i = 0; i < sizeof(buffer); i++) //++i???
+  		for (i = 0; i < sizeof(buffer); i++) //i++???
   		{
   			buffer[i] = buf[i+5];
   		}
@@ -229,7 +232,7 @@ int main(int argc, char **argv) {
   		byteMessage[2] = buf[2];
   		byteMessage[3] = buf[3];
 
-  		for (i = 0; i < (length - 4); i++) //++i???
+  		for (i = 0; i < (length - 4); i++) //i++???
   		{
   			byteMessage[i+4] = stringV[i];
   		}
@@ -239,17 +242,7 @@ int main(int argc, char **argv) {
       		error("ERROR in sendto");
    	}
   
-    //printf("server received datagram from %s (%s)\n", 
-	  // hostp->h_name, hostaddrp);
-    //printf("server received %d/%d bytes: %s\n", strlen(buf), n, buf);
-    
-    /* 
-     * sendto: echo the input back to the client 
-     */
-    //n = sendto(sockfd, response, length, 0, 
-	  //     (struct sockaddr *) &clientaddr, clientlen);
-    //if (n < 0) 
-      //error("ERROR in sendto");
+
   }
 }
 
