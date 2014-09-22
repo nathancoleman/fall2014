@@ -184,7 +184,7 @@ int main(int argc, char **argv) {
   	char operation = buf[4];
   	//print out the operation
   	printf("Operation recieved: ");
-  	printf("%x\n", operation);
+  	printf("%i\n", operation);
 
 
   	if(operation == 0x55) //0x55 is hex for vLength
@@ -211,6 +211,7 @@ int main(int argc, char **argv) {
 		response[5] = (char)(numVowels & 0xff);
 		n = sendto(sockfd, response, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
+		printf("sent shit back after 0x55\n");
     	if (n < 0) 
       		error("ERROR in sendto");
   	}
@@ -238,6 +239,7 @@ int main(int argc, char **argv) {
   		}
   		n = sendto(sockfd, byteMessage, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
+		printf("sent shit back after 0xAA\n");
     	if (n < 0) 
       		error("ERROR in sendto");
    	}
