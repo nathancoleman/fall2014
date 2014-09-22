@@ -15,5 +15,8 @@ clientTCP.o: src/clientTCP.c
 pre-build:
 	@mkdir -p bin obj
 
+tar: clean
+	@tar -zcf ./project1.tar.gz *
+
 clean:
-	@rm -rf bin obj
+	@rm -rf bin obj *.tar.gz
