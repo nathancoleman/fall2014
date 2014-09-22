@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
   /* 
    * check command line arguments 
    */
-  if (argc != 2) {
+  if (argc != 2) { //change this to 5???
     fprintf(stderr, "usage: %s <port>\n", argv[0]);
     exit(1);
   }
@@ -113,16 +113,41 @@ int main(int argc, char **argv) {
     if (hostaddrp == NULL)
       error("ERROR on inet_ntoa\n");
 
+  	
+  	/*******************************************************
+		Starting new code not from example code
+  	********************************************************/
+  	char operation = buf[4];
+  	//print out the operation
+  	printf("%x\n", operation);
+
+  	if(operation == 0x55) //0x55 is hex for vLength
+  	{
+  		short packetLength = (short)((buf[0] << 8) + buf[1]);
+  		char buffer[packetLength-5]; //-5 for known size
+  		int i;
+  		for (i = 0; i < sizeof(buffer); i++)
+  		{
+  			buffer[i] = buf[i+5];
+  		}
+  		short numVowels = vowelNumber(buffer, sizeof(buffer));
+  		char response[6];
+  		short length = (short) sizeof(response);
+  	/*******************************************************
+		implement response message to send back below
+  	********************************************************/
+
+  	}
 
   
-    printf("server received datagram from %s (%s)\n", 
-	   hostp->h_name, hostaddrp);
-    printf("server received %d/%d bytes: %s\n", strlen(buf), n, buf);
+    //printf("server received datagram from %s (%s)\n", 
+	  // hostp->h_name, hostaddrp);
+    //printf("server received %d/%d bytes: %s\n", strlen(buf), n, buf);
     
     /* 
      * sendto: echo the input back to the client 
      */
-    n = sendto(sockfd, buf, strlen(buf), 0, 
+    n = sendto(sockfd, response, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
     if (n < 0) 
       error("ERROR in sendto");
