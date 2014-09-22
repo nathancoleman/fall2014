@@ -35,6 +35,70 @@ void error(char *msg) {
   exit(1);
 }
 
+/*
+This function counts the number of vowels in the buffer
+*/
+short vowelNumber(char* wordBuffer, size_t size) {
+	short vowelCount = 0;
+	unsigned int i;
+
+	for (i = 0; i < size; i++) 
+	{
+		switch(wordBuffer[i]) {
+			case 'a':
+			case 'A':
+			case 'e':
+			case 'E':
+			case 'i':
+			case 'I':
+			case 'o':
+			case 'O':
+			case 'u':
+			case 'U':
+					vowelCount += 1;
+					break;
+		}
+	}
+	return vowelCount;
+}
+
+int isaVowel(char a) 
+{
+	switch(a)
+	{
+		case 'a':
+		case 'A':
+		case 'e':
+		case 'E':
+		case 'i':
+		case 'I':
+		case 'o':
+		case 'O':
+		case 'u':
+		case 'U':
+			return TRUE;
+	}
+	return FALSE;
+}
+
+char* disemVoweling(char* wordBuffer, size_t size) 
+{
+	char* p = malloc(size - vowelNumber(wordBuffer, size)); //i +size??
+	unsigned int i, j=0;
+
+	for(i=0; i < size; i++)
+	{
+		if (isaVowel(wordBuffer[i]) == FALSE) //removing char if not a vowel
+		{
+			p[j] = wordBuffer[i];
+			j += 1;
+		}
+	}
+	p[j] = '\0'; //taking off last part of the array ??	
+	return p;
+}
+
+
 int main(int argc, char **argv) {
   int sockfd; /* socket */
   int portno; /* port to listen on */
@@ -136,9 +200,44 @@ int main(int argc, char **argv) {
   	/*******************************************************
 		implement response message to send back below
   	********************************************************/
-
+		response[0] = (char)(length >> 8);  //shifting the bits
+		response[1] = (char)(length & 0xff); //taking just the end
+		response[2] = buf[2];
+		response[3] = buf[3];
+		response[4] = (char)(numVowels >> 8);
+		response[5] = (char)(numVowels & 0xff);
+		n = sendto(sockfd, response, length, 0, 
+	       (struct sockaddr *) &clientaddr, clientlen);
+    	if (n < 0) 
+      		error("ERROR in sendto");
   	}
+  	else if (operation == 0x55)
+  	{
+  		//cout << "operation == 0x55" << endl;
+  		short packetLength = (short)((buf[0] << 8) + buf[1]);
+  		char buffer[packetLength-5];
+  		int i;
+  		for (i = 0; i < sizeof(buffer); i++) //++i???
+  		{
+  			buffer[i] = buf[i+5];
+  		}
+  		char* stringV = disemVoweling(buffer, sizeof(buffer));
+  		short length = (short)(strlen(stringV) + 4);
+  		char byteMessage[length];
+  		byteMessage[0] = (char)(length >> 8);
+  		byteMessage[1] = (char)(length & 0xff);
+  		byteMessage[2] = buf[2];
+  		byteMessage[3] = buf[3];
 
+  		for (i = 0; i < (length - 4); i++) //++i???
+  		{
+  			byteMessage[i+4] = stringV[i];
+  		}
+  		n = sendto(sockfd, byteMessage, length, 0, 
+	       (struct sockaddr *) &clientaddr, clientlen);
+    	if (n < 0) 
+      		error("ERROR in sendto");
+   	}
   
     //printf("server received datagram from %s (%s)\n", 
 	  // hostp->h_name, hostaddrp);
@@ -147,72 +246,10 @@ int main(int argc, char **argv) {
     /* 
      * sendto: echo the input back to the client 
      */
-    n = sendto(sockfd, response, length, 0, 
-	       (struct sockaddr *) &clientaddr, clientlen);
-    if (n < 0) 
-      error("ERROR in sendto");
+    //n = sendto(sockfd, response, length, 0, 
+	  //     (struct sockaddr *) &clientaddr, clientlen);
+    //if (n < 0) 
+      //error("ERROR in sendto");
   }
 }
 
-/*
-This function counts the number of vowels in the buffer
-*/
-short vowelNumber(char* wordBuffer, size_t size) {
-	short vowelCount = 0;
-	unsigned int i;
-
-	for (i = 0; i < size; i++) 
-	{
-		switch(wordBuffer[i]) {
-			case 'a':
-			case 'A':
-			case 'e':
-			case 'E':
-			case 'i':
-			case 'I':
-			case 'o':
-			case 'O':
-			case 'u':
-			case 'U':
-					vowelCount += 1;
-					break;
-		}
-	}
-	return vowelCount;
-}
-
-int isaVowel(char a) 
-{
-	switch(a)
-	{
-		case 'a':
-		case 'A':
-		case 'e':
-		case 'E':
-		case 'i':
-		case 'I':
-		case 'o':
-		case 'O':
-		case 'u':
-		case 'U':
-			return TRUE;
-	}
-	return FALSE;
-}
-
-char* disemVoweling(char* wordBuffer, size_t size) 
-{
-	char* p = malloc(i + size - vowelNumber(wordBuffer, size));
-	unsigned int i, j=0;
-
-	for(i=0; i < size; i++)
-	{
-		if (isaVowel(wordBuffer[i]) == FALSE) //removing char if not a vowel
-		{
-			p[j] = wordBuffer[i];
-			j += 1;
-		}
-	}
-	p[j] = '\0'; //taking off last part of the array ??	
-	return p;
-}
