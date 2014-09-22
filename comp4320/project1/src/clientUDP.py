@@ -41,7 +41,7 @@ class ClientUDP:
 	def parse_getvlength(self, data):
 		pack_format = 'HHH'
 		header = data[:6]
-		tml, rid, message_length = struct.unpack(pack_format, header)
+		tml, rid, vowel_count = struct.unpack(pack_format, header)
 
 	def parse_disemvowel(self, data):
 		pack_format = 'HH'
