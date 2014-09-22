@@ -5,13 +5,9 @@
 *	http://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/udpserver.c
 *
 *	Author: Lucas Saltz
-*
+*	Usage: ./serverUDP <port>
 */
 
-/* 
- * udpserver.c - A simple UDP echo server 
- * usage: udpserver <port>
- */
 
 #include <stdio.h>
 #include <unistd.h>
@@ -46,17 +42,35 @@ short vowelNumber(char* wordBuffer, size_t size) {
 	{
 		switch(wordBuffer[i]) {
 			case 'a':
+				vowelCount += 1;
+				break;
 			case 'A':
+				vowelCount += 1;
+				break;
 			case 'e':
+				vowelCount += 1;
+				break;
 			case 'E':
+				vowelCount += 1;
+				break;
 			case 'i':
+				vowelCount += 1;
+				break;
 			case 'I':
+				vowelCount += 1;
+				break;
 			case 'o':
+				vowelCount += 1;
+				break;
 			case 'O':
+				vowelCount += 1;
+				break;
 			case 'u':
+				vowelCount += 1;
+				break;
 			case 'U':
-					vowelCount += 1;
-					break;
+				vowelCount += 1;
+				break;
 		}
 	}
 	return vowelCount;
@@ -67,16 +81,27 @@ int isaVowel(char a)
 	switch(a)
 	{
 		case 'a':
+			return TRUE;
 		case 'A':
+			return TRUE;
 		case 'e':
+			return TRUE;
 		case 'E':
+			return TRUE;
 		case 'i':
+			return TRUE;
 		case 'I':
+			return TRUE;
 		case 'o':
+			return TRUE;
 		case 'O':
+			return TRUE;
 		case 'u':
+			return TRUE;
 		case 'U':
 			return TRUE;
+		default:
+			return FALSE;
 	}
 	return FALSE;
 }
@@ -94,7 +119,7 @@ char* disemVoweling(char* wordBuffer, size_t size)
 			j += 1;
 		}
 	}
-	p[j] = '\0'; //taking off last part of the array ??	
+	p[j] = '\0'; //taking off last part of the array?
 	return p;
 }
 
@@ -211,7 +236,7 @@ int main(int argc, char **argv) {
 		response[5] = (char)(numVowels & 0xff);
 		n = sendto(sockfd, response, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent shit back after 0x55\n");
+		printf("sent response back\n");
     	if (n < 0) 
       		error("ERROR in sendto");
   	}
@@ -239,7 +264,7 @@ int main(int argc, char **argv) {
   		}
   		n = sendto(sockfd, byteMessage, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent shit back after 0xAA\n");
+		printf("sent back to client\n");
     	if (n < 0) 
       		error("ERROR in sendto");
    	}
