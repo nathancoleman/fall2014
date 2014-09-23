@@ -242,7 +242,7 @@ int main(int argc, char **argv) {
   	}
   	else if (operation == -86) //hack
   	{
-  		printf("%s\n", "operation == 0xAA");
+  		//printf("%s\n", "operation == 0xAA");
   		short packetLength = (short)((buf[0] << 8) + buf[1]);
   		char buffer[packetLength-5];
   		int i;
@@ -264,7 +264,7 @@ int main(int argc, char **argv) {
   		}
   		n = sendto(sockfd, byteMessage, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent back to client\n");
+		//printf("sent back to client\n");
     	if (n < 0) 
       		error("ERROR in sendto");
    	}
