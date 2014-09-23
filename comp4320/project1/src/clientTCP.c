@@ -10,6 +10,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <unistd.h>
 
 const int GETVLENGTH = 0x55;
 const int DISEMVOWEL = 0xAA;
@@ -35,6 +38,15 @@ struct timeval request, response;
 typedef struct packed_outgoing packed_out;
 typedef struct packed_incoming packed_in;
 
+void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET) {
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
 int main(int argc, char** argv){
 	
 	/* First is bin/clientTCP, then we need hostname, port, op, and message */
@@ -45,7 +57,7 @@ int main(int argc, char** argv){
 	}
 
 	char *host = argv[1];
-	int port = atoi(argv[2]);
+	char *port = argv[2];
 	int op = atoi(argv[3]);
 	char *message = argv[4];
 
@@ -53,22 +65,61 @@ int main(int argc, char** argv){
 	char buffer[1029];
 	struct sockaddr_in serverAddr;
 	socklen_t addr_size;
-
-	clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-	bzero(&serverAddr,sizeof(serverAddr));
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(port);
-	serverAddr.sin_addr.s_addr = inet_addr(host);
-	addr_size = sizeof serverAddr;
 	
-	if (connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size) < 0)
-	{
-		printf("ERROR CONNECTING\n");
-		exit(1);
-	}
-	else
-		printf("CONNECTED\n");
+
+
+
+
+
+	int sockfd, numbytes;  
+    struct addrinfo hints, *servinfo, *p;
+    int rv;
+    char s[INET6_ADDRSTRLEN];
+
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((rv = getaddrinfo(host, port, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return 1;
+    }
+
+    // loop through all the results and connect to the first we can
+    for(p = servinfo; p != NULL; p = p->ai_next) {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype,
+                p->ai_protocol)) == -1) {
+            perror("client: socket");
+            continue;
+        }
+
+        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            close(sockfd);
+            perror("client: connect");
+            continue;
+        }
+
+        break;
+    }
+
+    if (p == NULL) {
+        fprintf(stderr, "client: failed to connect\n");
+        return 2;
+    }
+
+    inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
+            s, sizeof s);
+    printf("client: connecting to %s\n", s);
+
+    freeaddrinfo(servinfo); // all done with this structure
+
+
+
+
+
+
+
 
 	packed_out *pd = malloc(sizeof(packed_out));
 	pd->message_length = htons(5 + strlen(message));
@@ -78,11 +129,11 @@ int main(int argc, char** argv){
 
 	gettimeofday(&request, NULL);
 
-	send(clientSocket, pd, pd->message_length, 0);
+	send(sockfd, pd, pd->message_length, 0);
 
 	packed_in *pi = malloc(sizeof(packed_in));
 
-	recv(clientSocket, pi, 1029, 0);
+	recv(sockfd, pi, 1029, 0);
 
 	gettimeofday(&response, NULL);
 

@@ -37,7 +37,7 @@ class ServerTCP:
 			pack_format = '!HHB'
 			message_length, request_id, op = struct.unpack(pack_format, data[:5])
 			op = int(op)
-			message = data[5:]
+			message = data[5:5 + message_length]
 			
 			print "Request: {0} {1} {2} {3}".format(message_length, request_id, op, message)
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     
 	port = sys.argv[1]
 	port = int(port)
-	host = 'localhost'
+	host = ''
 
 	print 'Starting server at ' + host + ':' + str(port)
 
