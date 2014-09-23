@@ -264,7 +264,7 @@ int main(int argc, char **argv) {
   		}
   		n = sendto(sockfd, byteMessage, length, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
-		//printf("sent back to client\n");
+		printf("sent back to client\n");
     	if (n < 0) 
       		error("ERROR in sendto");
    	}
