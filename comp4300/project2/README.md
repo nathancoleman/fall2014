@@ -9,4 +9,7 @@
 
 ## Instructions
 ### Compile
-### Run
+This project includes a Makefile and requires g++ for compilation
+- From this directory, run ```make```
+- To force rebuild of all targets, run ```make -B``` or ```make --always-make```
+- To clean make-related files, run ```make clean```
