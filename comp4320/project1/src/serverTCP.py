@@ -86,9 +86,9 @@ class ServerTCP:
 
 if __name__ == "__main__":
     
-	host, port = sys.argv[1:]
-	host = str(host)
+	port = sys.argv[1]
 	port = int(port)
+	host = 'localhost'
 
 	print 'Starting server at ' + host + ':' + str(port)
 

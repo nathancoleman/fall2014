@@ -4,7 +4,7 @@
 	Author: Nathan Coleman
 """
 
-import socket, struct, sys
+import socket, struct, sys, time
 
 GETVLENGTH = 0x55
 DISEMVOWEL = 0xAA
@@ -20,9 +20,10 @@ class ClientUDP:
 
 	def send_request(self, op, message):
 		message_length = 5 + len(message) # 5 for required tml, id, and op
-		pack_format = "HHB"
+		pack_format = "!HHB"
 		packed_data = struct.pack(pack_format, message_length, self.requestID, op)
 		packed_data = packed_data + message
+		self.request_time = time.time()
 		self.socket.sendall(packed_data)
 		self.requestID += 1
 		self.get_response(op)
@@ -30,6 +31,7 @@ class ClientUDP:
 	def get_response(self, op):
 		# 1024 max payload + 5 for header
 		data = self.socket.recv(1029)
+		self.response_time = time.time()
 		data = data.strip()
 
 		if op == GETVLENGTH:
@@ -38,18 +40,21 @@ class ClientUDP:
 		elif op == DISEMVOWEL:
 			self.parse_disemvowel(data)
 
+		time_elapsed = int(round((self.response_time - self.request_time) * 1000000))
+		print "Roundtrip time:", time_elapsed, "microseconds"
+
 	def parse_getvlength(self, data):
-		pack_format = 'HHH'
+		pack_format = '!HHH'
 		header = data[:6]
 		tml, rid, vowel_count = struct.unpack(pack_format, header)
-		print int(vowel_count)
+		print "Vowel count received:", int(vowel_count)
 
 	def parse_disemvowel(self, data):
-		pack_format = 'HH'
+		pack_format = '!HH'
 		header = data[:4]
 		tml, rid = struct.unpack(pack_format, header)
 		message = data[4:]
-		print message
+		print "Disemvoweled message:", message
 
 
 
