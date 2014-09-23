@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
   portno = atoi(argv[1]);
-  printf("Waiting for connection:\n");
+  printf("Waiting for client to connect\n");
   /* 
    * socket: create the parent socket 
    */
@@ -208,13 +208,13 @@ int main(int argc, char **argv) {
   	********************************************************/
   	char operation = buf[4];
   	//print out the operation
-  	printf("Operation recieved: ");
-  	printf("%i\n", operation);
+  	//printf("Operation recieved: ");
+  	//printf("%i\n", operation);
 
 
   	if(operation == 0x55) //0x55 is hex for vLength
   	{
-  		printf("%s\n", "operation == 0x55");
+  		//printf("%s\n", "operation == 0x55");
   		short packetLength = (short)((buf[0] << 8) + buf[1]);
   		char buffer[packetLength-5]; //-5 for known size
   		int i;
