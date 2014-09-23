@@ -137,6 +137,7 @@ int main(int argc, char** argv){
 		printf("Disemvoweled message: %s\n", pi->message);
 	}
 
+	printf("Request ID: %d\n", ntohs(pi->request_id));
 	printf("Roundtrip time: %d microseconds\n", dt);
 
 	return 0;

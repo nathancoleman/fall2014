@@ -48,6 +48,7 @@ class ClientUDP:
 		header = data[:6]
 		tml, rid, vowel_count = struct.unpack(pack_format, header)
 		print "Vowel count received:", int(vowel_count)
+		print "Request ID:", rid
 
 	def parse_disemvowel(self, data):
 		pack_format = '!HH'
@@ -55,6 +56,7 @@ class ClientUDP:
 		tml, rid = struct.unpack(pack_format, header)
 		message = data[4:]
 		print "Disemvoweled message:", message
+		print "Request ID:", rid
 
 
 
