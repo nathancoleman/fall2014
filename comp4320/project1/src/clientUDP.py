@@ -42,7 +42,7 @@ class ClientUDP:
 		pack_format = 'HHH'
 		header = data[:6]
 		tml, rid, vowel_count = struct.unpack(pack_format, header)
-		print int(chr(vowel_count))
+		print int(vowel_count)
 
 	def parse_disemvowel(self, data):
 		pack_format = 'HH'
