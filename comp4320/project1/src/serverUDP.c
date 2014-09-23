@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
   portno = atoi(argv[1]);
-
+  printf("Waiting for connection:\n");
   /* 
    * socket: create the parent socket 
    */
