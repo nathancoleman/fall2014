@@ -5,7 +5,7 @@
 *	http://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/udpserver.c
 *
 *	Author: Lucas Saltz
-*	Usage: ./serverUDP <port>
+*	Usage: ./ServerUDP <port>
 */
 
 

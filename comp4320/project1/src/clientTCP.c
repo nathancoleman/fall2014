@@ -1,5 +1,6 @@
 /*
 *	This is the TCP Client for COMP4320 project1
+*
 *	Author: Lucas Saltz/Nathan Coleman
 */
 
