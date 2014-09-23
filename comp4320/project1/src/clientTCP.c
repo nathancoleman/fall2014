@@ -65,11 +65,6 @@ int main(int argc, char** argv){
 	char buffer[1029];
 	struct sockaddr_in serverAddr;
 	socklen_t addr_size;
-	
-
-
-
-
 
 	int sockfd, numbytes;  
     struct addrinfo hints, *servinfo, *p;
@@ -86,7 +81,6 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    // loop through all the results and connect to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
                 p->ai_protocol)) == -1) {
@@ -112,14 +106,7 @@ int main(int argc, char** argv){
             s, sizeof s);
     printf("client: connecting to %s\n", s);
 
-    freeaddrinfo(servinfo); // all done with this structure
-
-
-
-
-
-
-
+    freeaddrinfo(servinfo);
 
 	packed_out *pd = malloc(sizeof(packed_out));
 	pd->message_length = htons(5 + strlen(message));
