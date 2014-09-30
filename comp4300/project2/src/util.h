@@ -6,40 +6,43 @@
 
 using namespace std;
 
-#define ADD 	0b10101010
-#define SUB 	0b01010101
-#define MULT 	0b00001111
-#define DIV		0b11110000
-#define PUSH	0b11111111
-#define POP		0b00000000
-#define LOAD	0b11100001
-#define STORE	0b01110111
-#define END		0b10100101
+//	Instructions
+#define ADDI	0x00 //	Add Immediate
+#define B 		0x01 //	Branch to target
+#define BEQZ	0x10 // Branch on >= 0
+#define BGE		0x11 //	Branch on >=
+#define BNE		0x20 // Branch on Not Equal
+#define LA		0x21 // Load Address
+#define LB		0x22 // Load Byte
+#define LI 		0x30 // Load Immediate
+#define SUBI	0x31 // Subtract Immediate
+#define SYSCALL	0x32 // System Call
 
+//	Number of registers we have
 #define R_LENGTH 32
 
+//	The size of our data/text segs
 #define TEXT_SEG_LENGTH 200
 #define DATA_SEG_LENGTH 200
-#define STACK_SEG_LENGTH 200
 
+//	The first address in each seg
 #define TEXT_SEG_BASE 0x00200000
 #define DATA_SEG_BASE 0x00300000
-#define STACK_SEG_BASE 0x00400000
 
 typedef unsigned int int32;
 
-/* Memory */
+//	Memory types
 typedef int32 mem_addr; // Memory address
 typedef int32 mem_word; // Memory word
 
-/* Registers */
+//	Register types
 typedef int32 reg_word; // Register word
 
-/* Segments */
+//	Instruction type
 typedef int32 instruction;
 
 
-// Functions
+//	Functions
 instruction encode(string line);
 void printDebug(int min, int max);
 mem_word read(mem_addr address);

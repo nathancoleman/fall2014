@@ -55,50 +55,35 @@ int execute()
 		int32 op = instr >> 24;
 		mem_addr address = instr & ((1 << 24) - 1);
 		
-		if (op == LOAD) 
-		{
-			printf("LOAD [%x]\n", address);
-			
-			write(ACCUMULATOR, read(address));
-		}
+		if (op == ADDI) 
+		{}
 		
-		else if (op == STORE) 
-		{
-			printf("STORE [%x]\n", address);
-			
-			mem_word val1 = read(ACCUMULATOR);
+		else if (op == B) 
+		{}
+		
+		else if (op == BEQZ)
+		{}
+		
+		else if (op == BGE)
+		{}
+		
+		else if (op == BNE)
+		{}
 
-			write(address, val1);	
-		}
-		
-		else if (op == ADD)
-		{
-			printf("ADD\n");
-			
-			mem_word val1 = read(address);
-			mem_word val2 = read(ACCUMULATOR);
-						
-			write(ACCUMULATOR, val2 + val1);	
-		}
-		
-		
-		else if (op == MULT)
-		{
-			printf("MULT\n");
-	
-			mem_word val1 = read(address);
-			mem_word val2 = read(ACCUMULATOR);
-			
-			write(ACCUMULATOR, val2 * val1);
-		}
-		
-		
-		else if (op == END)
-		{
-			printf("END\n");
-			printf("ANSWER: %i\n", read(ACCUMULATOR));
-			break;	
-		}
+		else if (op == LA)
+		{}
+
+		else if (op == LB)
+		{}
+
+		else if (op == LI)
+		{}
+
+		else if (op == SUBI)
+		{}
+
+		else if (op == SYSCALL)
+		{}
 		
 		else
 		{
