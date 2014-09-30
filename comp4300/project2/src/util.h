@@ -16,7 +16,7 @@ using namespace std;
 #define STORE	0b01110111
 #define END		0b10100101
 
-#define R_LENGTH 8
+#define R_LENGTH 32
 
 #define TEXT_SEG_LENGTH 200
 #define DATA_SEG_LENGTH 200
