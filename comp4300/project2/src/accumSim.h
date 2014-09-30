@@ -1,9 +1,12 @@
 /*
 *	Accumulator Simulator
-*	by: Lucas Saltz
-*	for: COMP4300 Fall 2014
+*	
+*	By Lucas Saltz & Nathan Coleman
+*	Group 15
+*	COMP4300 - Computer Architecture
 *
-*	This simulates an instruction set for MIPS using an accumulator
+*	Project 1 - Due 12 September 2014
+*	Project 2 - Due 03 October 2014
 */
 
 #include "util.h"
