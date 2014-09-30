@@ -11,11 +11,6 @@
 
 #include "accumSim.h"
 
-mem_addr TEMP = 0x00300004;
-mem_addr ACCUMULATOR = 0x00300005;
-
-
-
 int main(int argc, char* argv[]) {
 	
 	if (argc > 1)
@@ -41,9 +36,7 @@ int main(int argc, char* argv[]) {
 
 /*
 *	This function handles execution of the instructions
-*	for the accumulator simulation. Values at given addresses 
-*	are either multiplied, added, loaded or stored with the 
-*	ACCUMULATOR.
+*	for the accumulator simulation.
 */
 int execute()
 {	
