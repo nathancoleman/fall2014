@@ -1,10 +1,12 @@
 /*
-Accumulator Simulator
-         
-By Lucas Saltz
-Group 15 with Nathan Coleman
-COMP4300 - Computer Architecture
-Project 1 - Due 12 September 2014
+*	Accumulator Simulator
+*         
+* 	By Lucas Saltz & Nathan Coleman
+*	Group 15
+*	COMP4300 - Computer Architecture
+*	
+*	Project 1 - Due 12 September 2014
+*	Project 2 - Due 03 October 2014
 */
 
 #include "accumSim.h"
