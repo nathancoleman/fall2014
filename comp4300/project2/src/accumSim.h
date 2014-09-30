@@ -22,7 +22,6 @@ extern mem_addr DATA_TOP;
 extern mem_addr TOS;
 extern mem_word TEXT_SEG[];
 extern mem_word DATA_SEG[];
-extern mem_word STACK_SEG[];
 extern string FILENAME;
 
 //Functions
