@@ -27,11 +27,11 @@ end_length_loop:
 test_loop:
 	bge $01, $2, is_palin
 
-	lb $t3, ($1)
-	lb $t4, ($2)
-	bne $t3, $t4, not_palin
+	lb $3, ($1)
+	lb $4, ($2)
+	bne $3, $4, not_palin
 
-	addi $1, $t1, 1
+	addi $1, $1, 1
 	subi $2, $2, 1
 	b test_loop
 
