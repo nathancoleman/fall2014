@@ -78,9 +78,7 @@ instruction encode(string line)
 	 *	ADDI Rdest, Rsrc1, Imm
 	 */
 	if(op == "addi")
-	{
-		instr = ADDI;
-		
+	{	
 		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -94,6 +92,18 @@ instruction encode(string line)
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tADDI: params - %d %d %d\n", dest, src, imm);
+
+		// Encode the instruction
+		instr = ADDI;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // second 5 bits are dest
+		instr |= src << 16; // third 5 bits are src
+		instr |= imm; // last 16 bits are immediate
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %x\n", instr >> 21);
+		printf("\t\t\tSrc: %x\n", (instr >> 16) & 0x001F);
+		printf("\t\t\tImm: %x\n", instr & 0x0000FFFF);
 	}
 	
 	/*
