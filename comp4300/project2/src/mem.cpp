@@ -48,24 +48,31 @@ struct instr_table_line instr_table[10];
 instruction encode(string line)
 {
 	instruction instr;
-	string op = line.substr(0, line.find(" "));
-
-	//if((line.find(" ")) != std::string::npos)
-	if(op == "syscall")
+	string op;
+	
+	// If there is a space, we can use it to
+	// find the op, params follow
+	if(line.find(" ") != std::string::npos)
 	{
-		// This must be an instruction with no param
-		// such as SYSCALL
-		//printf("%s\n", "op is syscall");
-		instr = SYSCALL;
-		instr = instr << 24;
+		op = line.substr(0, line.find(" "));
+	}
+
+	// Without space, we must use something else
+	// to find the op - since there are no params
+	// the \r immediate follows the op. If the \r
+	// is at index 0, this line contains no op
+	else if(line.find("\r") != 0)
+	{
+		op = line.substr(0, line.find("\r"));
+	}
+
+	// Line is empty (no op or params), so return
+	else
+	{
 		return instr;
 	}
-	
-	//string op = line.substr(line.find("\t") + 1, line.find(" "));
-	//string op = line.substr(line.find(" ") + 1, line.find(" "));
-	//string op = "addi";
 
-	//printf("OP is %s | line is now: %s\n", op.c_str(), line.c_str());
+	printf("\tEncoding instruction\n");
 	
 	/*
 	 *	ADDI Rdest, Rsrc1, Imm
@@ -244,6 +251,13 @@ instruction encode(string line)
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tSUBI: params - %d %d %d\n", dest, src, imm);
+	}
+
+	else if(op == "syscall")
+	{
+		instr = SYSCALL;
+		
+		printf("\t\tSYSCALL\n");
 	}
 
 	return instr;
@@ -427,7 +441,6 @@ int init()
 				if(line.find(":") == std::string::npos)
 				{
 					instruction instr = encode(line);
-					printf("\tEncoding instruction\n");
 					//write(TEXT_TOP, instr);
 				}
 				else
