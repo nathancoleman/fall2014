@@ -23,18 +23,7 @@ int alu_ops;
 int data_mem_accesses;
 int reg_file_writes;
 
-struct instr_table_line
-{
-	string instr;
-	int32 instr_mem_accesses;
-	int32 reg_file_reads;
-	int32 alu_ops;
-	int32 data_mem_accesses;
-	int32 reg_file_writes;
-	int32 total_ops;
-};
-
-struct instr_table_line instr_table[10];
+std::map<int, int> instruction_totals;
 
 /*
 *	This function is used when reading the text segment
@@ -591,132 +580,14 @@ int init()
 
 void init_instr_table()
 {
-	int i;
-	int instr_table_len = sizeof(instr_table)/sizeof(instr_table[0]);
-
-	for(i = 0; i < instr_table_len; i++)
-	{
-		instr_table_line line;
-
-		switch(i)
-		{
-			case ADDI:
-				line.instr = "addi";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 1;
-				line.total_ops = 6;
-				break;
-
-			case B:
-				line.instr = "b";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 0;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 0;
-				line.total_ops = 4;
-				break;
-
-			case BEQZ:
-				line.instr = "beqz";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 0;
-				line.total_ops = 5;
-				break;
-
-			case BGE:
-				line.instr = "bge";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 0;
-				line.total_ops = 5;
-				break;
-
-			case BNE:
-				line.instr = "bne";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 0;
-				line.total_ops = 5;
-				break;
-
-			case LA:
-				line.instr = "la";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 0;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 1;
-				line.total_ops = 5;
-				break;
-
-			case LB:
-				line.instr = "lb";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 1;
-				line.total_ops = 6;
-				break;
-
-			case LI:
-				line.instr = "li";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 0;
-				line.alu_ops = 0;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 1;
-				line.total_ops = 3;
-				break;
-
-			case SUBI:
-				line.instr = "subi";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 0;
-				line.reg_file_writes = 1;
-				line.total_ops = 6;
-				break;
-
-			case SYSCALL:
-				line.instr = "syscall";
-				line.instr_mem_accesses = 2;
-				line.reg_file_reads = 1;
-				line.alu_ops = 2;
-				line.data_mem_accesses = 2;
-				line.reg_file_writes = 1;
-				line.total_ops = 8;
-				break;
-		}
-	}	
-}
-
-int get_instr_op_total(string op_text)
-{
-	int total = 0;
-	int i;
-	int instr_table_len = sizeof(instr_table)/sizeof(instr_table[0]);
-
-	for(i = 0; i < instr_table_len; i++)
-	{
-		if(instr_table[i].instr == op_text)
-		{
-			total = instr_table[i].total_ops;
-			break;
-		}
-	}
-
-	return total;
+	instruction_totals[ADDI] = 6;
+	instruction_totals[B] = 4;
+	instruction_totals[BEQZ] = 5;
+	instruction_totals[BGE] = 5;
+	instruction_totals[BNE] = 5;
+	instruction_totals[LA] = 5;
+	instruction_totals[LB] = 6;
+	instruction_totals[LI] = 3;
+	instruction_totals[SUBI] = 6;
+	instruction_totals[SYSCALL] = 8;
 }

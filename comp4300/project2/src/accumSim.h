@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>
+#include <map>
 
 /*
 *	These are shared and are defined in util.cpp
@@ -33,7 +34,6 @@ extern int reg_file_reads;
 extern int alu_ops;
 extern int data_mem_accesses;
 extern int reg_file_writes;
-extern struct instr_table_line instr_table[10];
 
 //Functions
 int execute();
