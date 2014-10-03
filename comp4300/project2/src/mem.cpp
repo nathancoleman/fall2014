@@ -61,15 +61,9 @@ instruction encode(string line)
 	// to find the op - since there are no params
 	// the \r immediate follows the op. If the \r
 	// is at index 0, this line contains no op
-	else if(line.find("\r") != 0)
-	{
-		op = line.substr(0, line.find("\r"));
-	}
-
-	// Line is empty (no op or params), so return
 	else
 	{
-		return instr;
+		op = line.substr(0, line.find("\r"));
 	}
 
 	printf("\tEncoding instruction\n");
@@ -98,12 +92,12 @@ instruction encode(string line)
 		instr = instr << 26; // first 6 bits are op code
 		instr |= dest << 21; // second 5 bits are dest
 		instr |= src << 16; // third 5 bits are src
-		instr |= imm; // last 16 bits are immediate
+		instr |= (imm & 0xFFFF); // last 16 bits are immediate
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %x\n", instr >> 21);
-		printf("\t\t\tSrc: %x\n", (instr >> 16) & 0x001F);
-		printf("\t\t\tImm: %x\n", instr & 0x0000FFFF);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 	
 	/*
@@ -111,13 +105,19 @@ instruction encode(string line)
 	 */
 	else if(op == "b")
 	{
-		instr = B;
-		
 		line = line.substr(line.find(" ") + 1);
 
 		string label = line.substr(0, line.find("\r"));
 
 		printf("\t\tB: params - %s\n", label.c_str());
+
+		// Encode the instruction
+		instr = B;
+		instr = instr << 26; // first 6 bits are op code
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
 	}
 
 	/*
@@ -125,8 +125,6 @@ instruction encode(string line)
 	 */
 	else if(op == "beqz")
 	{
-		instr = BEQZ;
-		
 		line = line.substr(line.find("$") + 1);
 
 		int src = stoi(line.substr(0, line.find(" ")), 0, 0);
@@ -136,6 +134,16 @@ instruction encode(string line)
 		string label = line.substr(0, line.find("\r"));
 
 		printf("\t\tBEQZ: params - %d %s\n", src, label.c_str());
+
+		// Encode the instruction
+		instr = BEQZ;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= src << 21; // second 5 bits are src
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 	}
 
 	/*
@@ -143,8 +151,6 @@ instruction encode(string line)
 	 */
 	else if(op == "bge")
 	{
-		instr = BGE;
-
 		line = line.substr(line.find("$") + 1);
 
 		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -158,6 +164,18 @@ instruction encode(string line)
 		string label = line.substr(0, line.find("\r"));
 
 		printf("\t\tBGE: params - %d %d %s\n", src1, src2, label.c_str());
+
+		// Encode the instruction
+		instr = BGE;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= src1 << 21; // second 5 bits are src1
+		instr |= src2 << 16; // third 5 bits are src2
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tSrc1: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tSrc2: %d\n", (instr >> 16) & 0x1F);
 	}
 
 	/*
@@ -165,8 +183,6 @@ instruction encode(string line)
 	 */
 	else if(op == "bne")
 	{
-		instr = BNE;
-
 		line = line.substr(line.find("$") + 1);
 
 		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -180,6 +196,18 @@ instruction encode(string line)
 		string label = line.substr(0, line.find("\r"));
 
 		printf("\t\tBNE: params - %d %d %s\n", src1, src2, label.c_str());
+
+		// Encode the instruction
+		instr = BNE;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= src1 << 21; // second 5 bits are src1
+		instr |= src2 << 16; // third 5 bits are src2
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tSrc1: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tSrc2: %d\n", (instr >> 16) & 0x1F);
 	}
 
 	/*
@@ -187,8 +215,6 @@ instruction encode(string line)
 	 */
 	else if(op == "la")
 	{
-		instr = LA;
-
 		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -198,6 +224,16 @@ instruction encode(string line)
 		string label = line.substr(0, line.find("\r"));
 
 		printf("\t\tLA: params - %d %s\n", dest, label.c_str());
+
+		// Encode the instruction
+		instr = LA;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // second 5 bits are dest
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
 	}
 
 	/*
@@ -205,8 +241,6 @@ instruction encode(string line)
 	 */
 	else if(op == "lb")
 	{
-		instr = LA;
-
 		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -221,6 +255,16 @@ instruction encode(string line)
 		int addr = R[src];
 
 		printf("\t\tLB: params - %d %d\n", dest, addr);
+
+		// Encode the instruction
+		instr = LB;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // second 5 bits are dest
+
+		// TODO: Replace the label name with the actual value
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
 	}
 
 	/*
@@ -228,8 +272,6 @@ instruction encode(string line)
 	 */
 	else if(op == "li")
 	{
-		instr = LI;
-
 		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -239,6 +281,16 @@ instruction encode(string line)
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tLI: params - %d %d\n", dest, imm);
+
+		// Encode the instruction
+		instr = LI;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // second 5 bits are dest
+		instr |= (imm & 0xFFFF); // last 16 bits are immediate
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 
 	/*
@@ -246,8 +298,6 @@ instruction encode(string line)
 	 */
 	else if(op == "subi")
 	{
-		instr = SUBI;
-
 		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
@@ -261,13 +311,27 @@ instruction encode(string line)
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tSUBI: params - %d %d %d\n", dest, src, imm);
+
+		// Encode the instruction
+		instr = SUBI;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // seconds 5 bits are the dest
+		instr |= src << 16; // third 5 bits are the src
+		instr |= (imm & 0xFFFF); // last 16 bits are immediate
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 
 	else if(op == "syscall")
 	{
-		instr = SYSCALL;
-		
 		printf("\t\tSYSCALL\n");
+
+		// Encode the instruction
+		instr = SYSCALL;
+		instr = instr << 26; // first 6 bits are op code
 	}
 
 	return instr;
@@ -450,8 +514,12 @@ int init()
 
 				if(line.find(":") == std::string::npos)
 				{
-					instruction instr = encode(line);
-					//write(TEXT_TOP, instr);
+					// We don't want to encode an empty line
+					if(line.find("\r") != 0)
+					{
+						instruction instr = encode(line);
+						write(TEXT_TOP, instr);
+					}
 				}
 				else
 				{

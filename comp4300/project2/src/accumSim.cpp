@@ -80,31 +80,49 @@ int execute()
 		}
 		
 		else if (op == B) 
-		{}
+		{
+			printf("\tExecuting B\n");
+		}
 		
 		else if (op == BEQZ)
-		{}
+		{
+			printf("\tExecuting BEQZ\n");
+		}
 		
 		else if (op == BGE)
-		{}
+		{
+			printf("\tExecuting BGE\n");
+		}
 		
 		else if (op == BNE)
-		{}
+		{
+			printf("\tExecuting BNE\n");
+		}
 
 		else if (op == LA)
-		{}
+		{
+			printf("\tExecuting LA\n");
+		}
 
 		else if (op == LB)
-		{}
+		{
+			printf("\tExecuting LB\n");
+		}
 
 		else if (op == LI)
-		{}
+		{
+			printf("\tExecuting LI\n");
+		}
 
 		else if (op == SUBI)
-		{}
+		{
+			printf("\tExecuting SUBI\n");
+		}
 
 		else if (op == SYSCALL)
-		{}
+		{
+			printf("\tExecuting SYSCALL\n");
+		}
 		
 		else
 		{
