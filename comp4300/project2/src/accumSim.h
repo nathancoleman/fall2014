@@ -9,7 +9,7 @@
 *	Project 2 - Due 03 October 2014
 */
 
-#include "util.h"
+#include "mem.h"
 #include <stdio.h>
 #include <cstdlib>
 #include <fstream>
