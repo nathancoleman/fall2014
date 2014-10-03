@@ -50,6 +50,7 @@ int execute()
 		//mem_addr address = instr & ((1 << 24) - 1);
 		printf("%s\n", "Inside the while loop");
 
+
 		if (op == ADDI) 
 		{
 			/*
@@ -62,6 +63,7 @@ int execute()
 			R[dest] = R[src] + imm; //Registers array 
 
 			printf("%s\n", "addi function implemented");
+			instr_table_line entry = instr_table[ADDI];
 			//TODO
 			//increment total from the instr_table_line
 		}
@@ -94,7 +96,7 @@ int execute()
 			printf("\tExecuting BNE\n");
 
 			int src1 = instr << 21;
-			int src2 = << 16;
+			int src2 = instr << 16;
 			//TODO: obtain value of label to branch to
 		}
 
