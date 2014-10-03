@@ -15,6 +15,25 @@ mem_addr DATA_TOP = DATA_SEG_BASE;
 mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 mem_word DATA_SEG[DATA_SEG_LENGTH];
 
+//	Function counters
+int instr_mem_accesses;
+int reg_file_reads;
+int alu_ops;
+int data_mem_accesses;
+int reg_file_writes;
+
+struct instr_table_line
+{
+	string instr;
+	int32 instr_mem_accesses;
+	int32 reg_file_reads;
+	int32 alu_ops;
+	int32 data_mem_accesses;
+	int32 reg_file_writes;
+};
+
+struct instr_table_line instr_table[10];
+
 /*
 *	This function is used when reading the text segment
 *	of the file given as an argument on the command line.
