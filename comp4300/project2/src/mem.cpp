@@ -49,8 +49,89 @@ instruction encode(string line)
 {
 	instruction instr;
 	
-	string op = line.substr(0, line.find(" "));
-		
+	string op = line.substr(line.find("\t") + 1, line.find(" "));
+
+	
+	/*
+	 *	ADDI Rdest, Rsrc1, Imm
+	 */
+	if(op == "addi")
+	{
+		instr = ADDI;
+	}
+	
+	/*
+	 *	B label
+	 */
+	else if(op == "b")
+	{
+		instr = B;
+	}
+
+	/*
+	 *	BEQZ Rsrc1, label
+	 */
+	else if(op == "beqz")
+	{
+		instr = BEQZ;
+	}
+
+	/*
+	 *	BGE Rsrc1, Rsrc2, label
+	 */
+	else if(op == "bge")
+	{
+		instr = BGE;
+	}
+
+	/*
+	 *	BNE Rsrc1, Rsrc2, label
+	 */
+	else if(op == "bne")
+	{
+		instr = BNE;
+	}
+
+	/*
+	 *	LA Rdest, label
+	 */
+	else if(op == "la")
+	{
+		instr = LA;
+	}
+
+	/*
+	 *	LB Rdest, label
+	 */
+	else if(op == "lb")
+	{
+		instr = LB;
+	}
+
+	/*
+	 *	LI Rdest, Imm
+	 */
+	else if(op == "li")
+	{
+		instr = LI;
+	}
+
+	/*
+	 *	SUBI Rdest, Rsrc1, Imm
+	 */
+	else if(op == "subi")
+	{
+		instr = SUBI;
+	}
+
+	/*
+	 *	SYSCALL
+	 */
+	else if(op == "syscall")
+	{
+		instr = SYSCALL;
+	}
+
 	return instr;
 }
 
