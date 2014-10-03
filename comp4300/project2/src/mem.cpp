@@ -319,18 +319,16 @@ int init()
 			{
 				printf("\tProcessing text segment line\n");
 				
-				instruction instr;
-				
+
 				if(line.find(":") == std::string::npos)
 				{
-					instr = encode(line);
+					instruction instr = encode(line);
+					write(TEXT_TOP, instr);
 				}
 				else
 				{
 					// This is a label
 				}
-				
-				write(TEXT_TOP, instr);
 			}		
 		
 		}
