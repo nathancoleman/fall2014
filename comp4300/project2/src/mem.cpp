@@ -48,18 +48,23 @@ struct instr_table_line instr_table[10];
 instruction encode(string line)
 {
 	instruction instr;
+	string op = line.substr(0, line.find(" "));
 
-	if(line.find(" ") != std::string::npos)
+	//if((line.find(" ")) != std::string::npos)
+	if(op == "syscall")
 	{
 		// This must be an instruction with no param
 		// such as SYSCALL
+		//printf("%s\n", "op is syscall");
 		instr = SYSCALL;
 		return instr;
 	}
 	
-	string op = line.substr(line.find("\t") + 1, line.find(" "));
+	//string op = line.substr(line.find("\t") + 1, line.find(" "));
+	//string op = line.substr(line.find(" ") + 1, line.find(" "));
+	//string op = "addi";
 
-	printf("OP is %s | line is now: %s\n", op.c_str(), line.c_str());
+	//printf("OP is %s | line is now: %s\n", op.c_str(), line.c_str());
 	
 	/*
 	 *	ADDI Rdest, Rsrc1, Imm
@@ -67,7 +72,14 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
+		int dest 	= 	std::stoi(line.substr(6, 1), 0, 0);
+		int src 	=  	std::stoi(line.substr(10, 1), 0, 0);
+		int imm 	= 	std::stoi(line.substr(13, 1), 0, 0);
 
+
+		//printf("%s\n", "print shit");
+		//instr = ADDI | dest | src | imm; //this is shity and doesn't work
+		//printf("ADDI Instruction is %u\n", instr);
 	}
 	
 	/*
@@ -307,7 +319,7 @@ int init()
 			*/
 			else if (segment == "data")
 			{
-				printf("\tProcessing data segment line\n");
+				//printf("\tProcessing data segment line\n");
 			}
 			
 			/*
@@ -317,7 +329,7 @@ int init()
 			*/
 			else if (segment == "text")
 			{
-				printf("\tProcessing text segment line\n");
+				//printf("\tProcessing text segment line\n");
 				
 
 				if(line.find(":") == std::string::npos)
