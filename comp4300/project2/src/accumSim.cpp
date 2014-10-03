@@ -84,7 +84,7 @@ int execute()
 			if (val == 0)
 			{
 				printf("\t\tMoving to offset %d\n", offset);
-				PC = TEXT_SEG_BASE + offset;
+				PC = TEXT_SEG_BASE + offset - 1; // Account for increment at the end of this loop
 			}
 		}
 		
