@@ -30,6 +30,7 @@ struct instr_table_line
 	int32 alu_ops;
 	int32 data_mem_accesses;
 	int32 reg_file_writes;
+	int32 total_ops;
 };
 
 struct instr_table_line instr_table[10];
@@ -264,6 +265,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 1;
+				line.total_ops = 6;
 				break;
 
 			case B:
@@ -273,6 +275,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 0;
+				line.total_ops = 4;
 				break;
 
 			case BEQZ:
@@ -282,6 +285,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 0;
+				line.total_ops = 5;
 				break;
 
 			case BGE:
@@ -291,6 +295,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 0;
+				line.total_ops = 5;
 				break;
 
 			case BNE:
@@ -300,6 +305,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 0;
+				line.total_ops = 5;
 				break;
 
 			case LA:
@@ -309,6 +315,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 1;
+				line.total_ops = 5;
 				break;
 
 			case LB:
@@ -318,6 +325,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 1;
+				line.total_ops = 6;
 				break;
 
 			case LI:
@@ -327,6 +335,7 @@ void init_instr_table()
 				line.alu_ops = 0;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 1;
+				line.total_ops = 3;
 				break;
 
 			case SUBI:
@@ -336,6 +345,7 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 0;
 				line.reg_file_writes = 1;
+				line.total_ops = 6;
 				break;
 
 			case SYSCALL:
@@ -345,7 +355,26 @@ void init_instr_table()
 				line.alu_ops = 2;
 				line.data_mem_accesses = 2;
 				line.reg_file_writes = 1;
+				line.total_ops = 8;
 				break;
 		}
 	}	
+}
+
+int get_instr_op_total(string op_text)
+{
+	int total = 0;
+	int i;
+	int instr_table_len = sizeof(instr_table)/sizeof(instr_table[0]);
+
+	for(i = 0; i < instr_table_len; i++)
+	{
+		if(instr_table[i].instr == op_text)
+		{
+			total = instr_table[i].total_ops;
+			break;
+		}
+	}
+
+	return total;
 }

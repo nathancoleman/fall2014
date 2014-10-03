@@ -47,4 +47,5 @@ void printDebug(int min, int max);
 mem_word read(mem_addr address);
 int write(mem_addr address, mem_word data, bool increment_top = true);
 void init_instr_table();
+int get_instr_op_total();
 int init();
