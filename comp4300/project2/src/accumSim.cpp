@@ -45,11 +45,36 @@ int execute()
 	while(PC < TEXT_TOP)
 	{
 		mem_word instr = read(PC);
-		int32 op = instr >> 24;
-		mem_addr address = instr & ((1 << 24) - 1);
-		
+		int32 op = instr >> 26;
+		//mem_addr address = instr & ((1 << 24) - 1);
+		printf("%s\n", "Inside the while loop");
+		// Encode the instruction
+		//instr = ADDI;
+		//instr = instr << 26; // first 6 bits are op code
+		//instr |= dest << 21; // second 5 bits are dest
+		//instr |= src << 16; // third 5 bits are src
+		//instr |= imm; // last 16 bits are immediate
+
+		//printf("\t\t\tOp Code: %x\n", instr >> 26);
+		//printf("\t\t\tDest: %x\n", instr >> 21);
+		//printf("\t\t\tSrc: %x\n", (instr >> 16) & 0x001F);
+		//printf("\t\t\tImm: %x\n", instr & 0x0000FFFF);
+
+
 		if (op == ADDI) 
-		{}
+		{
+			/*
+				Pulling out registers from instruction
+			*/
+			int dest =  instr >> 21; 
+			int src = instr >> 16;
+			int imm = instr & 0x0000FFFF;
+
+			R[dest] = R[src] + imm; //Registers array 
+
+			printf("%s\n", "addi function implemented");
+			
+		}
 		
 		else if (op == B) 
 		{}
