@@ -109,7 +109,16 @@ instruction encode(string line)
 	else if(op == "beqz")
 	{
 		instr = BEQZ;
-		instr = instr << 24;
+		
+		line = line.substr(line.find("$") + 1);
+
+		int src = stoi(line.substr(0, line.find(" ")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		string label = line.substr(0, line.find("\r"));
+
+		printf("\t\tBEQZ: params - %d %s\n", src, label.c_str());
 	}
 
 	/*
@@ -118,7 +127,20 @@ instruction encode(string line)
 	else if(op == "bge")
 	{
 		instr = BGE;
-		instr = instr << 24;
+
+		line = line.substr(line.find("$") + 1);
+
+		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		int src2 = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		string label = line.substr(0, line.find("\r"));
+
+		printf("\t\tBGE: params - %d %d %s\n", src1, src2, label.c_str());
 	}
 
 	/*
@@ -127,7 +149,20 @@ instruction encode(string line)
 	else if(op == "bne")
 	{
 		instr = BNE;
-		instr = instr << 24;
+
+		line = line.substr(line.find("$") + 1);
+
+		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		int src2 = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		string label = line.substr(0, line.find("\r"));
+
+		printf("\t\tBNE: params - %d %d %s\n", src1, src2, label.c_str());
 	}
 
 	/*
@@ -136,16 +171,36 @@ instruction encode(string line)
 	else if(op == "la")
 	{
 		instr = LA;
-		instr = instr << 24;
+
+		line = line.substr(line.find("$") + 1);
+
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		string label = line.substr(0, line.find("\r"));
+
+		printf("\t\tLA: params - %d %s\n", dest, label.c_str());
 	}
 
 	/*
-	 *	LB Rdest, label
+	 *	LB Rdest, offset(address)
 	 */
 	else if(op == "lb")
 	{
-		instr = LB;
-		instr = instr << 24;
+		instr = LA;
+
+		line = line.substr(line.find("$") + 1);
+
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		// TODO: get the address from src register and store it instead
+
+		int src = stoi(line.substr(0, line.find(")")), 0, 0);
+
+		printf("\t\tLB: params - %d %d\n", dest, src);
 	}
 
 	/*
@@ -154,7 +209,16 @@ instruction encode(string line)
 	else if(op == "li")
 	{
 		instr = LI;
-		instr = instr << 24;
+
+		line = line.substr(line.find("$") + 1);
+
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+
+		printf("\t\tLI: params - %d %d\n", dest, imm);
 	}
 
 	/*
@@ -163,7 +227,20 @@ instruction encode(string line)
 	else if(op == "subi")
 	{
 		instr = SUBI;
-		instr = instr << 24;
+
+		line = line.substr(line.find("$") + 1);
+
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		int src = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+
+		printf("\t\tSUBI: params - %d %d %d\n", dest, src, imm);
 	}
 
 	return instr;
