@@ -54,6 +54,7 @@ instruction encode(string line)
 		// This must be an instruction with no param
 		// such as SYSCALL
 		instr = SYSCALL;
+		instr = instr << 24;
 		return instr;
 	}
 	
@@ -67,7 +68,7 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
-
+		instr = instr << 24;
 	}
 	
 	/*
@@ -76,6 +77,7 @@ instruction encode(string line)
 	else if(op == "b")
 	{
 		instr = B;
+		instr = instr << 24;
 	}
 
 	/*
@@ -84,6 +86,7 @@ instruction encode(string line)
 	else if(op == "beqz")
 	{
 		instr = BEQZ;
+		instr = instr << 24;
 	}
 
 	/*
@@ -92,6 +95,7 @@ instruction encode(string line)
 	else if(op == "bge")
 	{
 		instr = BGE;
+		instr = instr << 24;
 	}
 
 	/*
@@ -100,6 +104,7 @@ instruction encode(string line)
 	else if(op == "bne")
 	{
 		instr = BNE;
+		instr = instr << 24;
 	}
 
 	/*
@@ -108,6 +113,7 @@ instruction encode(string line)
 	else if(op == "la")
 	{
 		instr = LA;
+		instr = instr << 24;
 	}
 
 	/*
@@ -116,6 +122,7 @@ instruction encode(string line)
 	else if(op == "lb")
 	{
 		instr = LB;
+		instr = instr << 24;
 	}
 
 	/*
@@ -124,6 +131,7 @@ instruction encode(string line)
 	else if(op == "li")
 	{
 		instr = LI;
+		instr = instr << 24;
 	}
 
 	/*
@@ -132,14 +140,7 @@ instruction encode(string line)
 	else if(op == "subi")
 	{
 		instr = SUBI;
-	}
-
-	/*
-	 *	SYSCALL
-	 */
-	else if(op == "syscall")
-	{
-		instr = SYSCALL;
+		instr = instr << 24;
 	}
 
 	return instr;
