@@ -72,6 +72,8 @@ int execute()
 		else if (op == B) 
 		{
 			printf("\tExecuting B\n");
+
+			PC = TEXT_SEG_BASE + offset - 1; // Account for increment at the end of this loop
 		}
 		
 		else if (op == BEQZ)
