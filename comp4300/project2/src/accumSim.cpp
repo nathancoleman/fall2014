@@ -63,7 +63,7 @@ int execute()
 			R[dest] = R[src] + imm; //Registers array 
 
 			printf("%s\n", "addi function implemented");
-			instr_table_line entry = instr_table[ADDI];
+			//instr_table_line entry = instr_table[ADDI];
 			//TODO
 			//increment total from the instr_table_line
 		}
@@ -77,7 +77,7 @@ int execute()
 		{
 			printf("\tExecuting BEQZ\n");
 
-			int src = instr << 21;
+			int src = instr >> 21;
 			//TODO: obtain value of label to branch to
 
 		}
@@ -85,8 +85,8 @@ int execute()
 		else if (op == BGE)
 		{
 			printf("\tExecuting BGE\n");
-			int src1 = instr << 21;
-			int src2 = instr << 16;
+			int src1 = instr >> 21;
+			int src2 = instr >> 16;
 
 			//TODO: obtain value of label to branch to
 		}
@@ -95,8 +95,8 @@ int execute()
 		{
 			printf("\tExecuting BNE\n");
 
-			int src1 = instr << 21;
-			int src2 = instr << 16;
+			int src1 = instr >> 21;
+			int src2 = instr >> 16;
 			//TODO: obtain value of label to branch to
 		}
 
@@ -104,7 +104,7 @@ int execute()
 		{
 			printf("\tExecuting LA\n");
 
-			int dest = instr << 21;
+			int dest = instr >> 21;
 
 			//TODO: obtain value of label(address)
 		}
@@ -113,7 +113,7 @@ int execute()
 		{
 			printf("\tExecuting LB\n");
 
-			int src = instr << 21;
+			int src = instr >> 21;
 			//TODO: Grab offset of second param
 		}
 
@@ -121,21 +121,21 @@ int execute()
 		{
 			printf("\tExecuting LI\n");
 
-			int dest = instr << 21;
-			int imm = 0x0000FFFF; //grabbing last 16bits for imm value???
-			R[dest] = imm;
+			int dest = instr >> 21;
+			int imm = instr & 0xFFFF; //grabbing last 16bits for imm value???
+			//R[dest] = imm;
 		}
 
 		else if (op == SUBI)
 		{
 			printf("\tExecuting SUBI\n");
 
-			int dest = instr << 21;
-			int src = instr << 16;
+			int dest = instr >> 21;
+			int src = instr >> 16;
 
 			//////////////////////////////////////
 			int imm; 
-			imm = instr & 0x0000FFFF; //grabbing last 16 bits?
+			imm = instr & 0xFFFF; //grabbing last 16 bits?
 			//OR
 			//imm = instr << 0x0000FFFF;
 			/////////////////////////////////////
