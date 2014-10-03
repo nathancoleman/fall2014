@@ -57,6 +57,7 @@ instruction encode(string line)
 		// such as SYSCALL
 		//printf("%s\n", "op is syscall");
 		instr = SYSCALL;
+		instr = instr << 24;
 		return instr;
 	}
 	
@@ -72,6 +73,7 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
+<<<<<<< HEAD
 		int dest 	= 	std::stoi(line.substr(6, 1), 0, 0);
 		int src 	=  	std::stoi(line.substr(10, 1), 0, 0);
 		int imm 	= 	std::stoi(line.substr(13, 1), 0, 0);
@@ -80,6 +82,9 @@ instruction encode(string line)
 		//printf("%s\n", "print shit");
 		//instr = ADDI | dest | src | imm; //this is shity and doesn't work
 		//printf("ADDI Instruction is %u\n", instr);
+=======
+		instr = instr << 24;
+>>>>>>> FETCH_HEAD
 	}
 	
 	/*
@@ -88,6 +93,7 @@ instruction encode(string line)
 	else if(op == "b")
 	{
 		instr = B;
+		instr = instr << 24;
 	}
 
 	/*
@@ -96,6 +102,7 @@ instruction encode(string line)
 	else if(op == "beqz")
 	{
 		instr = BEQZ;
+		instr = instr << 24;
 	}
 
 	/*
@@ -104,6 +111,7 @@ instruction encode(string line)
 	else if(op == "bge")
 	{
 		instr = BGE;
+		instr = instr << 24;
 	}
 
 	/*
@@ -112,6 +120,7 @@ instruction encode(string line)
 	else if(op == "bne")
 	{
 		instr = BNE;
+		instr = instr << 24;
 	}
 
 	/*
@@ -120,6 +129,7 @@ instruction encode(string line)
 	else if(op == "la")
 	{
 		instr = LA;
+		instr = instr << 24;
 	}
 
 	/*
@@ -128,6 +138,7 @@ instruction encode(string line)
 	else if(op == "lb")
 	{
 		instr = LB;
+		instr = instr << 24;
 	}
 
 	/*
@@ -136,6 +147,7 @@ instruction encode(string line)
 	else if(op == "li")
 	{
 		instr = LI;
+		instr = instr << 24;
 	}
 
 	/*
@@ -144,14 +156,7 @@ instruction encode(string line)
 	else if(op == "subi")
 	{
 		instr = SUBI;
-	}
-
-	/*
-	 *	SYSCALL
-	 */
-	else if(op == "syscall")
-	{
-		instr = SYSCALL;
+		instr = instr << 24;
 	}
 
 	return instr;
