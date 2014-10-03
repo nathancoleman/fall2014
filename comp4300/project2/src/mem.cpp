@@ -73,17 +73,20 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
-		line = line.substr(line.find("$") + 1); // Remove the op and $
+		
+		line = line.substr(line.find("$") + 1);
 
 		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
 
-		line = line.substr(line.find("$") + 1); // Remove next $
+		line = line.substr(line.find("$") + 1);
 		
 		int src = stoi(line.substr(0, line.find(",")), 0, 0);
 
 		line = line.substr(line.find(" ") + 1);
 
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+
+		printf("\t\tADDI: params - %d %d %d\n", dest, src, imm);
 	}
 	
 	/*
@@ -92,7 +95,12 @@ instruction encode(string line)
 	else if(op == "b")
 	{
 		instr = B;
-		instr = instr << 24;
+		
+		line = line.substr(line.find(" ") + 1);
+
+		string label = line.substr(0, line.find("\r"));
+
+		printf("\t\tB: params - %s\n", label.c_str());
 	}
 
 	/*
@@ -339,7 +347,7 @@ int init()
 				if(line.find(":") == std::string::npos)
 				{
 					instruction instr = encode(line);
-					printf("Encoding instruction\n");
+					printf("\tEncoding instruction\n");
 					//write(TEXT_TOP, instr);
 				}
 				else
