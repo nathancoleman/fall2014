@@ -87,41 +87,91 @@ int execute()
 		else if (op == BEQZ)
 		{
 			printf("\tExecuting BEQZ\n");
+
+			int src = instr << 21;
+			//TODO: obtain value of label to branch to
+
 		}
 		
 		else if (op == BGE)
 		{
 			printf("\tExecuting BGE\n");
+			int src1 = instr << 21;
+			int src2 = instr << 16;
+
+			//TODO: obtain value of label to branch to
 		}
 		
 		else if (op == BNE)
 		{
 			printf("\tExecuting BNE\n");
+
+			int src1 = instr << 21;
+			int src2 = << 16;
+			//TODO: obtain value of label to branch to
 		}
 
 		else if (op == LA)
 		{
 			printf("\tExecuting LA\n");
+
+			int dest = instr << 21;
+
+			//TODO: obtain value of label(address)
 		}
 
 		else if (op == LB)
 		{
 			printf("\tExecuting LB\n");
+
+			int src = instr << 21;
+			//TODO: Grab offset of second param
 		}
 
 		else if (op == LI)
 		{
 			printf("\tExecuting LI\n");
+
+			int dest = instr << 21;
+			int imm = 0x0000FFFF; //grabbing last 16bits for imm value???
+			R[dest] = imm;
 		}
 
 		else if (op == SUBI)
 		{
 			printf("\tExecuting SUBI\n");
+
+			int dest = instr << 21;
+			int src = instr << 16;
+
+			//////////////////////////////////////
+			int imm; 
+			imm = instr & 0x0000FFFF; //grabbing last 16 bits?
+			//OR
+			//imm = instr << 0x0000FFFF;
+			/////////////////////////////////////
+
+			R[dest] = R[src] - imm;
 		}
 
+
+		/*
+		Idea: Syscall looks at the following registers and their values:
+		$v0 =	$20
+		$a0 =	$10
+		$a1 =	$11
+		$v0 codes:
+			4	-	$a0 = address of string in memory 
+			8	-	$a0 = memory address of string input buffer
+					$a1 = length of string buffer (n)
+			10	-	$a0 = amount , results: address in $v0
+		*/
 		else if (op == SYSCALL)
 		{
 			printf("\tExecuting SYSCALL\n");
+
+		//TODO: Comeplete
+
 		}
 		
 		else
