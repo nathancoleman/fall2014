@@ -53,16 +53,17 @@ int execute()
 
 		if (op == ADDI) 
 		{
+			printf("\tExecuting ADDI\n");
 			/*
 				Pulling out registers from instruction
 			*/
-			int dest =  instr >> 21; 
-			int src = instr >> 16;
-			int imm = instr & 0x0000FFFF;
+			int dest =  (instr >> 21) & 0x1F; 
+			int src = (instr >> 16) & 0x1F;
+			int imm = instr & 0xFFFF;
 
 			R[dest] = R[src] + imm; //Registers array 
 
-			printf("%s\n", "addi function implemented");
+			printf("\t\tRESULT: %d\n", R[dest]);
 			//instr_table_line entry = instr_table[ADDI];
 			//TODO
 			//increment total from the instr_table_line
@@ -77,9 +78,14 @@ int execute()
 		{
 			printf("\tExecuting BEQZ\n");
 
-			int src = instr >> 21;
-			//TODO: obtain value of label to branch to
-
+			int src = (instr >> 21) & 0x1F;
+			int offset = instr & 0xFFFF;
+			int val = R[src];
+			if (val == 0)
+			{
+				printf("\t\tMoving to offset %d\n", offset);
+				PC = TEXT_SEG_BASE + offset;
+			}
 		}
 		
 		else if (op == BGE)
@@ -130,8 +136,8 @@ int execute()
 		{
 			printf("\tExecuting SUBI\n");
 
-			int dest = instr >> 21;
-			int src = instr >> 16;
+			int dest = (instr >> 21) & 0x1F;
+			int src = (instr >> 16) & 0x1F;
 
 			//////////////////////////////////////
 			int imm; 
@@ -141,6 +147,7 @@ int execute()
 			/////////////////////////////////////
 
 			R[dest] = R[src] - imm;
+			printf("\t\tRESULT: %d\n", R[dest]);
 		}
 
 
