@@ -41,6 +41,12 @@ typedef int32 reg_word; // Register word
 //	Instruction type
 typedef int32 instruction;
 
+//	Function counters
+int instr_mem_accesses;
+int register_file_reads;
+int register_file_writes;
+int alu_ops;
+int data_mem_accesses;
 
 //	Functions
 instruction encode(string line);
