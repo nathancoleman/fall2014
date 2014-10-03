@@ -48,9 +48,18 @@ struct instr_table_line instr_table[10];
 instruction encode(string line)
 {
 	instruction instr;
+
+	if(line.find(" ") != std::string::npos)
+	{
+		// This must be an instruction with no param
+		// such as SYSCALL
+		instr = SYSCALL;
+		return instr;
+	}
 	
 	string op = line.substr(line.find("\t") + 1, line.find(" "));
 
+	printf("OP is %s | line is now: %s\n", op.c_str(), line.c_str());
 	
 	/*
 	 *	ADDI Rdest, Rsrc1, Imm
@@ -58,6 +67,7 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
+
 	}
 	
 	/*
@@ -273,19 +283,21 @@ int init()
 		
 		while (getline(file, line))
 		{
-			if (line == ".text")
+			if (line == ".text\r")
 			{
+				printf("Setting segment to text\n");
 				segment = "text";
 			}
 				
-			else if (line == ".data")
+			else if (line == ".data\r")
 			{
+				printf("Setting segment to data\n");
 				segment = "data";
 			}
 				
 			else if (line.length() == 0)
 			{
-				segment = "";
+				// Do nothing
 			}
 			
 			/*
@@ -295,10 +307,7 @@ int init()
 			*/
 			else if (segment == "data")
 			{
-				mem_addr address = stoi(line.substr(0, line.find(":")), 0, 0);
-				mem_word data = stoi(line.substr(line.find(":") + 1));
-				
-				write(address, data);
+				printf("\tProcessing data segment line\n");
 			}
 			
 			/*
@@ -308,7 +317,18 @@ int init()
 			*/
 			else if (segment == "text")
 			{
-				instruction instr = encode(line);
+				printf("\tProcessing text segment line\n");
+				
+				instruction instr;
+				
+				if(line.find(":") == std::string::npos)
+				{
+					instr = encode(line);
+				}
+				else
+				{
+					// This is a label
+				}
 				
 				write(TEXT_TOP, instr);
 			}		
