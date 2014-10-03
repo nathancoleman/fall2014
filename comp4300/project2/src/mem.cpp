@@ -240,6 +240,112 @@ int init()
 		throw runtime_error("Failed to open input file");
 	}
 
+	init_instr_table();
+
 	printf("Initialization complete!\n");
 	return 0;
+}
+
+void init_instr_table()
+{
+	int i;
+	int instr_table_len = sizeof(instr_table)/sizeof(instr_table[0]);
+
+	for(i = 0; i < instr_table_len; i++)
+	{
+		instr_table_line line;
+
+		switch(i)
+		{
+			case ADDI:
+				line.instr = "addi";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 1;
+				break;
+
+			case B:
+				line.instr = "b";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 0;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 0;
+				break;
+
+			case BEQZ:
+				line.instr = "beqz";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 0;
+				break;
+
+			case BGE:
+				line.instr = "bge";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 0;
+				break;
+
+			case BNE:
+				line.instr = "bne";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 0;
+				break;
+
+			case LA:
+				line.instr = "la";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 0;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 1;
+				break;
+
+			case LB:
+				line.instr = "lb";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 1;
+				break;
+
+			case LI:
+				line.instr = "li";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 0;
+				line.alu_ops = 0;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 1;
+				break;
+
+			case SUBI:
+				line.instr = "subi";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 0;
+				line.reg_file_writes = 1;
+				break;
+
+			case SYSCALL:
+				line.instr = "syscall";
+				line.instr_mem_accesses = 2;
+				line.reg_file_reads = 1;
+				line.alu_ops = 2;
+				line.data_mem_accesses = 2;
+				line.reg_file_writes = 1;
+				break;
+		}
+	}	
 }

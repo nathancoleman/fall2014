@@ -9,14 +9,14 @@ using namespace std;
 //	Instructions
 #define ADDI	0x00 //	Add Immediate
 #define B 		0x01 //	Branch to target
-#define BEQZ	0x10 // Branch on >= 0
-#define BGE		0x11 //	Branch on >=
-#define BNE		0x20 // Branch on Not Equal
-#define LA		0x21 // Load Address
-#define LB		0x22 // Load Byte
-#define LI 		0x30 // Load Immediate
-#define SUBI	0x31 // Subtract Immediate
-#define SYSCALL	0x32 // System Call
+#define BEQZ	0x02 // Branch on >= 0
+#define BGE		0x03 //	Branch on >=
+#define BNE		0x04 // Branch on Not Equal
+#define LA		0x05 // Load Address
+#define LB		0x06 // Load Byte
+#define LI 		0x07 // Load Immediate
+#define SUBI	0x08 // Subtract Immediate
+#define SYSCALL	0x09 // System Call
 
 //	Number of registers we have
 #define R_LENGTH 32
@@ -46,4 +46,5 @@ instruction encode(string line);
 void printDebug(int min, int max);
 mem_word read(mem_addr address);
 int write(mem_addr address, mem_word data, bool increment_top = true);
+void init_instr_table();
 int init();
