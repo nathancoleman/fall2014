@@ -73,18 +73,17 @@ instruction encode(string line)
 	if(op == "addi")
 	{
 		instr = ADDI;
-<<<<<<< HEAD
-		int dest 	= 	std::stoi(line.substr(6, 1), 0, 0);
-		int src 	=  	std::stoi(line.substr(10, 1), 0, 0);
-		int imm 	= 	std::stoi(line.substr(13, 1), 0, 0);
+		line = line.substr(line.find("$") + 1); // Remove the op and $
 
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
 
-		//printf("%s\n", "print shit");
-		//instr = ADDI | dest | src | imm; //this is shity and doesn't work
-		//printf("ADDI Instruction is %u\n", instr);
-=======
-		instr = instr << 24;
->>>>>>> FETCH_HEAD
+		line = line.substr(line.find("$") + 1); // Remove next $
+		
+		int src = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find(" ") + 1);
+
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 	}
 	
 	/*
@@ -340,7 +339,8 @@ int init()
 				if(line.find(":") == std::string::npos)
 				{
 					instruction instr = encode(line);
-					write(TEXT_TOP, instr);
+					printf("Encoding instruction\n");
+					//write(TEXT_TOP, instr);
 				}
 				else
 				{
