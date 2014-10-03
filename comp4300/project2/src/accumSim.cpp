@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
 int execute()
 {	
 	printf("Executing...\n");
+	printf("Program counter:%x\n", PC);
+	printf("TEXT_TOP: %x\n", TEXT_TOP);
 	
 	while(PC < TEXT_TOP)
 	{
@@ -73,7 +75,8 @@ int execute()
 			R[dest] = R[src] + imm; //Registers array 
 
 			printf("%s\n", "addi function implemented");
-			
+			//TODO
+			//increment total from the instr_table_line
 		}
 		
 		else if (op == B) 
