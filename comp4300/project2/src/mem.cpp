@@ -196,11 +196,14 @@ instruction encode(string line)
 
 		line = line.substr(line.find("$") + 1);
 
-		// TODO: get the address from src register and store it instead
+		// Here we get the src for the address of the byte we
+		// want to load, then retrieve the address from R[src]
 
 		int src = stoi(line.substr(0, line.find(")")), 0, 0);
 
-		printf("\t\tLB: params - %d %d\n", dest, src);
+		int addr = R[src];
+
+		printf("\t\tLB: params - %d %d\n", dest, addr);
 	}
 
 	/*
