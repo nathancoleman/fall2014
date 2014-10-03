@@ -14,6 +14,7 @@ mem_addr TEXT_TOP = TEXT_SEG_BASE;
 mem_addr DATA_TOP = DATA_SEG_BASE;
 mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 mem_word DATA_SEG[DATA_SEG_LENGTH];
+map<string, int> symbol_table;
 
 //	Function counters
 int instr_mem_accesses;
@@ -114,10 +115,10 @@ instruction encode(string line)
 		// Encode the instruction
 		instr = B;
 		instr = instr << 26; // first 6 bits are op code
-
-		// TODO: Replace the label name with the actual value
+		instr |= (symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tOffset: %d\n", instr & 0xFFFF);
 	}
 
 	/*
@@ -139,11 +140,13 @@ instruction encode(string line)
 		instr = BEQZ;
 		instr = instr << 26; // first 6 bits are op code
 		instr |= src << 21; // second 5 bits are src
+		instr |= (symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
-		// TODO: Replace the label name with the actual value
+		
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tOffset: %d\n", instr & 0xFFFF);
 	}
 
 	/*
@@ -170,12 +173,14 @@ instruction encode(string line)
 		instr = instr << 26; // first 6 bits are op code
 		instr |= src1 << 21; // second 5 bits are src1
 		instr |= src2 << 16; // third 5 bits are src2
+		instr |= (symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
 		// TODO: Replace the label name with the actual value
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tSrc1: %d\n", (instr >> 21) & 0x1F);
 		printf("\t\t\tSrc2: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tOffset: %d\n", instr & 0xFFFF);
 	}
 
 	/*
@@ -202,12 +207,14 @@ instruction encode(string line)
 		instr = instr << 26; // first 6 bits are op code
 		instr |= src1 << 21; // second 5 bits are src1
 		instr |= src2 << 16; // third 5 bits are src2
+		instr |= (symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
 		// TODO: Replace the label name with the actual value
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tSrc1: %d\n", (instr >> 21) & 0x1F);
 		printf("\t\t\tSrc2: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tOffset: %d\n", instr & 0xFFFF);
 	}
 
 	/*
@@ -456,6 +463,44 @@ int write(mem_addr address, mem_word data, bool increment_top)
 	return 0;
 }
 
+void index_symbols()
+{
+	printf("\tIndexing symbols...\n");
+
+	ifstream file (FILENAME, ios::in);
+	string line;
+	bool in_text_seg = false;
+	int offset = 0;
+
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			if (line.find(".text") != std::string::npos)
+			{
+				in_text_seg = true;
+			}
+			else
+			{
+				// If :, we have a symbol
+				if (line.find(":") != std::string::npos && in_text_seg)
+				{
+					string symbol_name = line.substr(0, line.find(":"));
+					printf("\t\tFound symbol %s at offset %d\n", symbol_name.c_str(), offset);
+					symbol_table[symbol_name] = offset;
+				}
+
+				else if(in_text_seg && line.find("\r") != 0)
+				{
+					offset++;
+				}
+			}
+		}
+	}
+
+	printf("\tIndexing COMPLETE... Found %d symbols!\n", (int)symbol_table.size());
+}
+
 /*
 *	This is the "all-powerful initialization routine".
 *	Reads in and initializes the data segment and the
@@ -465,6 +510,8 @@ int write(mem_addr address, mem_word data, bool increment_top)
 int init()
 {
 	printf("Initializing...\n");
+
+	index_symbols();
 	
 	string line;
 	ifstream file (FILENAME, ios::in);

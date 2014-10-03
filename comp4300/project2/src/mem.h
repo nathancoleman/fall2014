@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <cstddef>
+#include <map>
 
 using namespace std;
 
