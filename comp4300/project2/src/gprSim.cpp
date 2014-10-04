@@ -204,13 +204,11 @@ int execute()
 
 			if (R[29] == 8)
 			{
-				printf(":>");
+				printf("(input string):>");
 				string input;
 				getline(cin, input);
 				mem_addr address = R[30];
 				int size = R[31];
-
-				printf("\t\tAddress: %x\n", address);
 
 				int i;
 				for (i = 0; i < input.length(); i++)
@@ -219,8 +217,7 @@ int execute()
 					{
 						break;
 					}
-					printf("\t\tWRITING CHAR: %c\t%x\n", input[i], address);
-					write(address, input[i]);
+					write(address, input[i], false);
 					address++;
 				}
 			}
