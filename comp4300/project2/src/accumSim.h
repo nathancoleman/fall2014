@@ -35,6 +35,7 @@ extern int reg_file_reads;
 extern int alu_ops;
 extern int data_mem_accesses;
 extern int reg_file_writes;
+extern map<int, int> instruction_totals;
 
 extern map<int, string> string_table;
 

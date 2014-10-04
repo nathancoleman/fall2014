@@ -53,7 +53,7 @@ int execute()
 
 		if (op == ADDI) 
 		{
-			cycles += 6;
+			cycles += instruction_totals[ADDI];
 			IC += 1;
 			printf("\tExecuting ADDI\n");
 			int dest =  (instr >> 21) & 0x1F; 
@@ -67,7 +67,7 @@ int execute()
 		
 		else if (op == B) 
 		{
-			cycles += 4;
+			cycles += instruction_totals[B];
 			IC += 1;
 			printf("\tExecuting B\n");
 
@@ -80,7 +80,7 @@ int execute()
 		else if (op == BEQZ)
 		{
 			printf("\tExecuting BEQZ\n");
-			cycles += 5;
+			cycles += instruction_totals[BEQZ];
 			IC += 1;
 			int src = (instr >> 21) & 0x1F;
 			int offset = instr & 0xFFFF;
@@ -94,7 +94,7 @@ int execute()
 		
 		else if (op == BGE)
 		{
-			cycles += 5;
+			cycles += instruction_totals[BGE];
 			IC += 1;
 			printf("\tExecuting BGE\n");
 			int src1 = (instr >> 21) & 0x1F;
@@ -112,7 +112,7 @@ int execute()
 		else if (op == BNE)
 		{
 			printf("\tExecuting BNE\n");
-			cycles += 5;
+			cycles += instruction_totals[BNE];
 			IC += 1;
 			int src1 = (instr >> 21) & 0x1F;
 			int src2 = (instr >> 16) & 0x1F;
@@ -128,7 +128,7 @@ int execute()
 
 		else if (op == LA)
 		{
-			cycles += 5;
+			cycles += instruction_totals[LA];
 			IC += 1;
 			printf("\tExecuting LA\n");
 
@@ -140,7 +140,7 @@ int execute()
 
 		else if (op == LB)
 		{
-			cycles += 6;
+			cycles += instruction_totals[LB];
 			IC += 1;
 			printf("\tExecuting LB\n");
 
@@ -156,7 +156,7 @@ int execute()
 
 		else if (op == LI)
 		{
-			cycles += 3;
+			cycles += instruction_totals[LI];
 			IC += 1;
 			printf("\tExecuting LI\n");
 
@@ -168,7 +168,8 @@ int execute()
 
 		else if (op == SUBI)
 		{
-			cycles += 6;
+			//cycles += 6;
+			cycles += instruction_totals[SUBI];
 			IC += 1;
 			printf("\tExecuting SUBI\n");
 
@@ -196,7 +197,7 @@ int execute()
 		*/
 		else if (op == SYSCALL)
 		{
-			cycles += 8;
+			cycles += instruction_totals[SYSCALL];
 			IC += 1;
 			printf("\tExecuting SYSCALL\n");
 
@@ -221,25 +222,19 @@ int execute()
 
 	void writeResult(int instrC, int IC) 
 	{
-/*FILE *fp;
-char* str = "string";
-int x = 10;
-
-fp=fopen("test.txt", "w");
-if(fp == NULL)
-    exit(-1);
-fprintf(fp, "This is a string which is written to a file\n");
-fprintf(fp, "The string has %d words and keyword %s\n", x, str);
-fclose(fp);*/
-	int cycles = instrC; // looking for 82
-	int instructionCount = IC; //looking for 28
-	int speedUpRatio = (8*IC) / 1;// Replace 1 with C
+	//cycles == C
+	int cycles = instrC;
+	//instructionCount == IC
+	int instructionCount = IC; 
+	//8 * IC / C
+	float speedUpRatio = ((8*(float)instructionCount) / (float)cycles);
     FILE *fp;
     fp = fopen("result.txt", "w");
 
     fprintf(fp, "The total IC count: %d\n", instructionCount);
-    //fprintf(fp, "The total \n", );
-
+    fprintf(fp, "The C count: %d\n", cycles);
+    fprintf(fp, "The speedup:  %f\n", speedUpRatio);
+    
 
 	}
 

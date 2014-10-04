@@ -1,1 +1,3 @@
 The total IC count: 16
+The C count: 82
+The speedup:  1.560976
