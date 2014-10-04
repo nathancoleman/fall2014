@@ -146,12 +146,14 @@ int execute()
 
 			int dest = (instr >> 21) & 0x1F;
 			int src = (instr >> 16) & 0x1F;
+			printf("\t\tsrc: %x\n", src);
 			mem_addr address = R[src];
 			printf("\t\tAddress: %x\n", address);
 			// TODO!
-			// mem_word result = read(address);
-			// result = result & 0xFF; // First 8 bits is byte at address
-			// printf("\t\tResult: %d\n", result);
+			mem_word result = read(address);
+			result = result & 0xFF; // First 8 bits is byte at address
+			R[src] = result;
+			printf("\t\tResult: %d\n", result);
 		}
 
 		else if (op == LI)
