@@ -47,7 +47,7 @@ int execute()
 	{
 		mem_word instr = read(PC);
 		int32 op = instr >> 26;
-		printf("%s\n", "Inside the while loop");
+		// printf("%s\n", "Inside the while loop");
 
 
 		if (op == ADDI) 
@@ -139,6 +139,7 @@ int execute()
 			int dest = (instr >> 21) & 0x1F;
 			int src = (instr >> 16) & 0x1F;
 			mem_addr address = R[src];
+			printf("\t\tAddress: %x\n", address);
 			// TODO!
 			// mem_word result = read(address);
 			// result = result & 0xFF; // First 8 bits is byte at address

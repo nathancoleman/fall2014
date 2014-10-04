@@ -27,8 +27,8 @@ using namespace std;
 #define DATA_SEG_LENGTH 200
 
 //	The first address in each seg
-#define TEXT_SEG_BASE 0x00200000
-#define DATA_SEG_BASE 0x00300000
+#define TEXT_SEG_BASE 0x00002000
+#define DATA_SEG_BASE 0x00003000
 
 typedef unsigned int int32;
 

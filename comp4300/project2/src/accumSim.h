@@ -36,6 +36,7 @@ extern int alu_ops;
 extern int data_mem_accesses;
 extern int reg_file_writes;
 
+extern map<int, string> string_table;
 
 //Functions
 int execute();
