@@ -42,6 +42,7 @@ int execute()
 {	
 	printf("Executing...\n");
 
+	int cycles = 0;
 	int IC = 0;
 	while(PC < TEXT_TOP)
 	{
@@ -52,7 +53,8 @@ int execute()
 
 		if (op == ADDI) 
 		{
-			IC += 6;
+			cycles += 6;
+			IC += 1;
 			printf("\tExecuting ADDI\n");
 			int dest =  (instr >> 21) & 0x1F; 
 			int src = (instr >> 16) & 0x1F;
@@ -65,7 +67,8 @@ int execute()
 		
 		else if (op == B) 
 		{
-			IC += 4;
+			cycles += 4;
+			IC += 1;
 			printf("\tExecuting B\n");
 
 			int offset = instr & 0xFFFF;
@@ -77,7 +80,8 @@ int execute()
 		else if (op == BEQZ)
 		{
 			printf("\tExecuting BEQZ\n");
-			IC += 5;
+			cycles += 5;
+			IC += 1;
 			int src = (instr >> 21) & 0x1F;
 			int offset = instr & 0xFFFF;
 			int val = R[src];
@@ -90,7 +94,8 @@ int execute()
 		
 		else if (op == BGE)
 		{
-			IC += 5;
+			cycles += 5;
+			IC += 1;
 			printf("\tExecuting BGE\n");
 			int src1 = (instr >> 21) & 0x1F;
 			int src2 = (instr >> 16) & 0x1F;
@@ -107,7 +112,8 @@ int execute()
 		else if (op == BNE)
 		{
 			printf("\tExecuting BNE\n");
-			IC += 5;
+			cycles += 5;
+			IC += 1;
 			int src1 = (instr >> 21) & 0x1F;
 			int src2 = (instr >> 16) & 0x1F;
 			int offset = instr & 0xFFFF;
@@ -122,7 +128,8 @@ int execute()
 
 		else if (op == LA)
 		{
-			IC += 5;
+			cycles += 5;
+			IC += 1;
 			printf("\tExecuting LA\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -133,7 +140,8 @@ int execute()
 
 		else if (op == LB)
 		{
-			IC += 6;
+			cycles += 6;
+			IC += 1;
 			printf("\tExecuting LB\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -148,7 +156,8 @@ int execute()
 
 		else if (op == LI)
 		{
-			IC += 3;
+			cycles += 3;
+			IC += 1;
 			printf("\tExecuting LI\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -159,7 +168,8 @@ int execute()
 
 		else if (op == SUBI)
 		{
-			IC += 6;
+			cycles += 6;
+			IC += 1;
 			printf("\tExecuting SUBI\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -186,7 +196,8 @@ int execute()
 		*/
 		else if (op == SYSCALL)
 		{
-			IC += 8;
+			cycles += 8;
+			IC += 1;
 			printf("\tExecuting SYSCALL\n");
 
 		//TODO: Comeplete
@@ -204,11 +215,11 @@ int execute()
 
 	
 	printf("Execution complete!\n");
-	writeResult(IC);
+	writeResult(cycles, IC);
 	return 0;
 }
 
-	void writeResult(int instrCount) 
+	void writeResult(int instrC, int IC) 
 	{
 /*FILE *fp;
 char* str = "string";
@@ -220,12 +231,14 @@ if(fp == NULL)
 fprintf(fp, "This is a string which is written to a file\n");
 fprintf(fp, "The string has %d words and keyword %s\n", x, str);
 fclose(fp);*/
-	int IC = instrCount;
+	int cycles = instrC; // looking for 82
+	int instructionCount = IC; //looking for 28
 	int speedUpRatio = (8*IC) / 1;// Replace 1 with C
     FILE *fp;
     fp = fopen("result.txt", "w");
 
-    fprintf(fp, "The total IC count: %d\n", IC);
+    fprintf(fp, "The total IC count: %d\n", instructionCount);
+    //fprintf(fp, "The total \n", );
 
 
 	}

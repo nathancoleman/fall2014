@@ -40,4 +40,4 @@ extern map<int, string> string_table;
 
 //Functions
 int execute();
-void writeResult(int instrCount);
+void writeResult(int instrC, int IC);
