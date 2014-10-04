@@ -416,7 +416,7 @@ int write(mem_addr address, mem_word data, bool increment_top)
 	bool inDataSeg = (address >= DATA_SEG_BASE);
 	
 	if (inTextSeg)
-	{				
+	{
 		int32 localAdd = address - TEXT_SEG_BASE;
 		
 		if (localAdd > TEXT_SEG_LENGTH)
@@ -501,8 +501,8 @@ void index_symbols()
 					{
 						line = line.substr(line.find("\"") + 1);
 						string msg = line.substr(0, line.find("\""));
-						DATA_TOP++;
 						string_table[DATA_TOP] = msg;
+						DATA_TOP++;
 						printf("\t\t\tAllocating string: %s\n", msg.c_str());
 					}
 					else if (data_type == ".space")

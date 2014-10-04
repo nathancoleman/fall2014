@@ -204,11 +204,30 @@ int execute()
 
 			if (R[29] == 8)
 			{
-				printf("\t\tValue is 8\n");
+				printf(":>");
+				string input;
+				getline(cin, input);
+				mem_addr address = R[30];
+				int size = R[31];
+
+				printf("\t\tAddress: %x\n", address);
+
+				int i;
+				for (i = 0; i < input.length(); i++)
+				{
+					if (i > size)
+					{
+						break;
+					}
+					printf("\t\tWRITING CHAR: %c\t%x\n", input[i], address);
+					write(address, input[i]);
+					address++;
+				}
 			}
 			else if (R[29] == 4)
 			{
-				printf("\t\tValue is 4\n");
+				string msg = string_table[R[30]];
+				printf("\t\tMessage is: %s\n", msg.c_str());
 			}
 
 		}
