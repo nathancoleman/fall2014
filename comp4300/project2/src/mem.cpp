@@ -254,7 +254,7 @@ instruction encode(string line)
 
 		int addr = R[src];
 
-		printf("\t\tLB: params - %d %d\n", dest, addr);
+		printf("\t\tLB: params - %d %x -> %d\n", dest, src, addr);
 
 		// Encode the instruction
 		instr = LB;

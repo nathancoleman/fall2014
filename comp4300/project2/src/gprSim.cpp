@@ -62,7 +62,7 @@ int execute()
 
 			R[dest] = R[src] + imm; //Registers array 
 
-			printf("\t\tRESULT: %d\n", R[dest]);
+			printf("\t\tRESULT: %x\n", R[dest]);
 		}
 		
 		else if (op == B) 
@@ -83,8 +83,10 @@ int execute()
 			cycles += instruction_totals[BEQZ];
 			IC += 1;
 			int src = (instr >> 21) & 0x1F;
+			printf("\t\tSrc is %d\n", src);
 			int offset = instr & 0xFFFF;
-			int val = R[src];
+			int val = R[src] & 0xFF;
+			printf("\t\tValue in reg %x is %x\n", src, val);
 			if (val == 0)
 			{
 				printf("\t\tMoving to offset %d\n", offset);
@@ -135,6 +137,8 @@ int execute()
 			int dest = (instr >> 21) & 0x1F;
 			int address = instr & 0xFFFF;
 
+			printf("\t\tPlacing address %x in register %d\n", address, dest);
+
 			R[dest] = address;
 		}
 
@@ -146,14 +150,14 @@ int execute()
 
 			int dest = (instr >> 21) & 0x1F;
 			int src = (instr >> 16) & 0x1F;
-			printf("\t\tsrc: %x\n", src);
+			printf("\t\tsrc: %x\tdest: %x\n", src, dest);
 			mem_addr address = R[src];
 			printf("\t\tAddress: %x\n", address);
 			// TODO!
 			mem_word result = read(address);
-			result = result & 0xFF; // First 8 bits is byte at address
-			R[src] = result;
-			printf("\t\tResult: %d\n", result);
+			result = result & 0x000000FF; // First 8 bits is byte at address
+			R[dest] = result;
+			printf("\t\tResult: %c\n", R[dest]);
 		}
 
 		else if (op == LI)
@@ -220,6 +224,8 @@ int execute()
 					write(address, input[i], false);
 					address++;
 				}
+				write(address, '\n', false);
+				address++;
 			}
 			else if (R[29] == 4)
 			{
