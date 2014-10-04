@@ -47,16 +47,12 @@ int execute()
 	{
 		mem_word instr = read(PC);
 		int32 op = instr >> 26;
-		//mem_addr address = instr & ((1 << 24) - 1);
 		printf("%s\n", "Inside the while loop");
 
 
 		if (op == ADDI) 
 		{
 			printf("\tExecuting ADDI\n");
-			/*
-				Pulling out registers from instruction
-			*/
 			int dest =  (instr >> 21) & 0x1F; 
 			int src = (instr >> 16) & 0x1F;
 			int imm = instr & 0xFFFF;
@@ -64,15 +60,15 @@ int execute()
 			R[dest] = R[src] + imm; //Registers array 
 
 			printf("\t\tRESULT: %d\n", R[dest]);
-			//instr_table_line entry = instr_table[ADDI];
-			//TODO
-			//increment total from the instr_table_line
 		}
 		
 		else if (op == B) 
 		{
 			printf("\tExecuting B\n");
 
+			int offset = instr & 0xFFFF;
+
+			printf("\t\tMoving to offset %d\n", offset);
 			PC = TEXT_SEG_BASE + offset - 1; // Account for increment at the end of this loop
 		}
 		
@@ -93,44 +89,64 @@ int execute()
 		else if (op == BGE)
 		{
 			printf("\tExecuting BGE\n");
-			int src1 = instr >> 21;
-			int src2 = instr >> 16;
-
-			//TODO: obtain value of label to branch to
+			int src1 = (instr >> 21) & 0x1F;
+			int src2 = (instr >> 16) & 0x1F;
+			int offset = instr & 0xFFFF;
+			int val1 = R[src1];
+			int val2 = R[src2];
+			if (val1 >= val2)
+			{
+				printf("\t\tMoving to offset %d\n", offset);
+				PC = TEXT_SEG_BASE + offset - 1; // Account for increment at the end of this loop
+			}
 		}
 		
 		else if (op == BNE)
 		{
 			printf("\tExecuting BNE\n");
 
-			int src1 = instr >> 21;
-			int src2 = instr >> 16;
-			//TODO: obtain value of label to branch to
+			int src1 = (instr >> 21) & 0x1F;
+			int src2 = (instr >> 16) & 0x1F;
+			int offset = instr & 0xFFFF;
+			int val1 = R[src1];
+			int val2 = R[src2];
+			if (val1 != val2)
+			{
+				printf("\t\tMoving to offset %d\n", offset);
+				PC = TEXT_SEG_BASE + offset - 1; // Account for increment at the end of this loop	
+			}
 		}
 
 		else if (op == LA)
 		{
 			printf("\tExecuting LA\n");
 
-			int dest = instr >> 21;
+			int dest = (instr >> 21) & 0x1F;
+			int address = instr & 0xFFFF;
 
-			//TODO: obtain value of label(address)
+			R[dest] = address;
 		}
 
 		else if (op == LB)
 		{
 			printf("\tExecuting LB\n");
 
-			int src = instr >> 21;
-			//TODO: Grab offset of second param
+			int dest = (instr >> 21) & 0x1F;
+			int src = (instr >> 16) & 0x1F;
+			mem_addr address = R[src];
+			// TODO!
+			// mem_word result = read(address);
+			// result = result & 0xFF; // First 8 bits is byte at address
+			// printf("\t\tResult: %d\n", result);
 		}
 
 		else if (op == LI)
 		{
 			printf("\tExecuting LI\n");
 
-			int dest = instr >> 21;
+			int dest = (instr >> 21) & 0x1F;
 			int imm = instr & 0xFFFF; //grabbing last 16bits for imm value???
+			// TODO!
 			//R[dest] = imm;
 		}
 
@@ -141,12 +157,8 @@ int execute()
 			int dest = (instr >> 21) & 0x1F;
 			int src = (instr >> 16) & 0x1F;
 
-			//////////////////////////////////////
 			int imm; 
 			imm = instr & 0xFFFF; //grabbing last 16 bits?
-			//OR
-			//imm = instr << 0x0000FFFF;
-			/////////////////////////////////////
 
 			R[dest] = R[src] - imm;
 			printf("\t\tRESULT: %d\n", R[dest]);

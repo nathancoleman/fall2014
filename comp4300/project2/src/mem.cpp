@@ -256,6 +256,7 @@ instruction encode(string line)
 		instr = LB;
 		instr = instr << 26; // first 6 bits are op code
 		instr |= dest << 21; // second 5 bits are dest
+		instr |= src << 16; // third 5 bits are src
 
 		// TODO: Replace the label name with the actual value
 
