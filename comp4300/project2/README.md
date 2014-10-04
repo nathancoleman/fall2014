@@ -22,3 +22,6 @@ After running $ make:
 
 ### result.txt
 The output file called result.txt will be located in the current directory.
+
+### issues
+Branching when it should not, so false results for if a string is palindrome or not.
