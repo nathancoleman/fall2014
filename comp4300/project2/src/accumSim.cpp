@@ -42,7 +42,7 @@ int execute()
 {	
 	printf("Executing...\n");
 
-	
+	int IC = 0;
 	while(PC < TEXT_TOP)
 	{
 		mem_word instr = read(PC);
@@ -52,6 +52,7 @@ int execute()
 
 		if (op == ADDI) 
 		{
+			IC += 6;
 			printf("\tExecuting ADDI\n");
 			int dest =  (instr >> 21) & 0x1F; 
 			int src = (instr >> 16) & 0x1F;
@@ -64,6 +65,7 @@ int execute()
 		
 		else if (op == B) 
 		{
+			IC += 4;
 			printf("\tExecuting B\n");
 
 			int offset = instr & 0xFFFF;
@@ -75,7 +77,7 @@ int execute()
 		else if (op == BEQZ)
 		{
 			printf("\tExecuting BEQZ\n");
-
+			IC += 5;
 			int src = (instr >> 21) & 0x1F;
 			int offset = instr & 0xFFFF;
 			int val = R[src];
@@ -88,6 +90,7 @@ int execute()
 		
 		else if (op == BGE)
 		{
+			IC += 5;
 			printf("\tExecuting BGE\n");
 			int src1 = (instr >> 21) & 0x1F;
 			int src2 = (instr >> 16) & 0x1F;
@@ -104,7 +107,7 @@ int execute()
 		else if (op == BNE)
 		{
 			printf("\tExecuting BNE\n");
-
+			IC += 5;
 			int src1 = (instr >> 21) & 0x1F;
 			int src2 = (instr >> 16) & 0x1F;
 			int offset = instr & 0xFFFF;
@@ -119,6 +122,7 @@ int execute()
 
 		else if (op == LA)
 		{
+			IC += 5;
 			printf("\tExecuting LA\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -129,6 +133,7 @@ int execute()
 
 		else if (op == LB)
 		{
+			IC += 6;
 			printf("\tExecuting LB\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -142,6 +147,7 @@ int execute()
 
 		else if (op == LI)
 		{
+			IC += 3;
 			printf("\tExecuting LI\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -152,6 +158,7 @@ int execute()
 
 		else if (op == SUBI)
 		{
+			IC += 6;
 			printf("\tExecuting SUBI\n");
 
 			int dest = (instr >> 21) & 0x1F;
@@ -178,6 +185,7 @@ int execute()
 		*/
 		else if (op == SYSCALL)
 		{
+			IC += 8;
 			printf("\tExecuting SYSCALL\n");
 
 		//TODO: Comeplete
