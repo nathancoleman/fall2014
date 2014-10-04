@@ -233,7 +233,7 @@ instruction encode(string line)
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
-		printf("\t\t\tOffset: %d\n", instr & 0xFFFF);
+		printf("\t\t\tOffset: %x\n", instr & 0xFFFF);
 	}
 
 	/*

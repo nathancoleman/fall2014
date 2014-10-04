@@ -162,8 +162,7 @@ int execute()
 
 			int dest = (instr >> 21) & 0x1F;
 			int imm = instr & 0xFFFF; //grabbing last 16bits for imm value???
-			// TODO!
-			//R[dest] = imm;
+			R[dest] = imm;
 		}
 
 		else if (op == SUBI)
@@ -178,9 +177,9 @@ int execute()
 
 			int imm; 
 			imm = instr & 0xFFFF; //grabbing last 16 bits?
-
+			printf("\t\tORIGINAL: %x\n", R[src]);
 			R[dest] = R[src] - imm;
-			printf("\t\tRESULT: %d\n", R[dest]);
+			printf("\t\tRESULT: %x\n", R[dest]);
 		}
 
 
@@ -201,7 +200,14 @@ int execute()
 			IC += 1;
 			printf("\tExecuting SYSCALL\n");
 
-		//TODO: Comeplete
+			if (R[29] == 8)
+			{
+				printf("\t\tValue is 8\n");
+			}
+			else if (R[29] == 4)
+			{
+				printf("\t\tValue is 4\n");
+			}
 
 		}
 		

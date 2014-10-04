@@ -6,17 +6,17 @@ string_space: .space 1024
 .text
 main:
 
-la $10, string_space
-li $11, 1024
-li $20, 8
+la $30, string_space
+li $31, 1024
+li $29, 8
 syscall
 
-la $01, string_space
-la $02, string_space
+la $1, string_space
+la $2, string_space
 
 length_loop:
-lb $03, ($02)
-beqz $03, end_length_loop
+lb $3, ($2)
+beqz $3, end_length_loop
 
 addi $2, $2, 1
 b length_loop
@@ -25,7 +25,7 @@ end_length_loop:
 subi $2, $2, 2
 
 test_loop:
-bge $01, $2, is_palin
+bge $1, $2, is_palin
 
 lb $3, ($1)
 lb $4, ($2)
@@ -37,17 +37,17 @@ b test_loop
 
 is_palin:
 
-la $10, is_palin_msg
-li $20, 4
+la $30, is_palin_msg
+li $29, 4
 syscall
 b exit
 
 not_palin:
-la $10, not_palin_msg
-li $20, 4
+la $30, not_palin_msg
+li $29, 4
 syscall
 b exit
 
 exit:
-li $20, 10
+li $29, 10
 syscall
