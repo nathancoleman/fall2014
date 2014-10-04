@@ -199,8 +199,33 @@ int execute()
 		
 		PC++;
 	}
+
+
 	
 	printf("Execution complete!\n");
+	writeResult(IC);
 	return 0;
 }
+
+	void writeResult(int instrCount) 
+	{
+/*FILE *fp;
+char* str = "string";
+int x = 10;
+
+fp=fopen("test.txt", "w");
+if(fp == NULL)
+    exit(-1);
+fprintf(fp, "This is a string which is written to a file\n");
+fprintf(fp, "The string has %d words and keyword %s\n", x, str);
+fclose(fp);*/
+	int IC = instrCount;
+	int speedUpRatio = (8*IC) / 1;// Replace 1 with C
+    FILE *fp;
+    fp = fopen("result.txt", "w");
+
+    fprintf(fp, "The total IC count: %d\n", IC);
+
+
+	}
 

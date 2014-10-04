@@ -28,6 +28,7 @@ extern mem_word TEXT_SEG[];
 extern mem_word DATA_SEG[];
 extern string FILENAME;
 
+
 //	Function counters
 extern int instr_mem_accesses;
 extern int reg_file_reads;
@@ -35,5 +36,7 @@ extern int alu_ops;
 extern int data_mem_accesses;
 extern int reg_file_writes;
 
+
 //Functions
 int execute();
+void writeResult(int instrCount);
