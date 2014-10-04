@@ -9,7 +9,7 @@
 *	Project 2 - Due 03 October 2014
 */
 
-#include "accumSim.h"
+#include "gprSim.h"
 
 int main(int argc, char* argv[]) {
 	
