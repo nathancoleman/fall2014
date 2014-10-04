@@ -17,4 +17,4 @@ clean:
 	@rm -rf bin obj *.tar.gz
 
 tar: clean
-	@tar -zcf ./group15_project2.tar.gz *
+	@tar -zcf ./group15_project2.tgz *
