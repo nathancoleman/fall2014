@@ -12,6 +12,8 @@ typedef int32 mem_word;
 extern mem_address PC;
 extern mem_address DATA_TOP;
 extern mem_address TEXT_TOP;
+extern mem_address DATA_SEG_END;
+extern mem_address TEXT_SEG_END;
 extern mem_word DATA_SEG[];
 extern mem_word TEXT_SEG[];
 
