@@ -13,11 +13,6 @@ mem_address TEXT_SEG_END = TEXT_SEG_BASE + TEXT_SEG_LENGTH;
 mem_word DATA_SEG[DATA_SEG_LENGTH];
 mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 
-void init_segs()
-{
-	
-}
-
 void init_instr_table()
 {
 	instruction_totals[ADDI] = 6;
@@ -30,6 +25,161 @@ void init_instr_table()
 	instruction_totals[LI] = 3;
 	instruction_totals[SUBI] = 6;
 	instruction_totals[SYSCALL] = 8;
+}
+
+void index_symbols(std::string filename)
+{
+	printf("\tIndexing symbols...\n");
+
+	std::ifstream file (filename, std::ios::in);
+	std::string line;
+	bool in_text_seg = false, in_data_seg = false;
+	int offset = 0;
+
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			if (line.find(".text") != std::string::npos)
+			{
+				in_text_seg = true;
+				in_data_seg = true;
+			}
+			else if (line.find(".data") != std::string::npos)
+			{
+				in_data_seg = true;
+				in_text_seg = false;
+			}
+			else
+			{
+				// If :, we have a symbol
+				if (line.find(":") != std::string::npos && in_text_seg)
+				{
+					std::string symbol_name = line.substr(0, line.find(":"));
+					printf("\t\tFound symbol %s at offset %d\n", symbol_name.c_str(), offset);
+					text_symbol_table[symbol_name] = offset;
+				}
+
+				else if (line.find(":") != std::string::npos && in_data_seg)
+				{
+					std::string symbol_name = line.substr(0, line.find(":"));
+					printf("\t\tFound symbol %s. Assigned to address %x\n", symbol_name.c_str(), DATA_TOP);
+					data_symbol_table[symbol_name] = DATA_TOP;
+					line = line.substr(line.find("."));
+					std::string data_type = line.substr(0, line.find(" "));
+					if (data_type == ".asciiz")
+					{
+						line = line.substr(line.find("\"") + 1);
+						std::string msg = line.substr(0, line.find("\""));
+						string_table[DATA_TOP] = msg;
+						DATA_TOP++;
+						printf("\t\t\tAllocating string: %s\n", msg.c_str());
+					}
+					else if (data_type == ".space")
+					{
+						line = line.substr(line.find(" ") + 1);
+						int size = stoi(line.substr(0, line.find("\r")), 0, 0);
+						DATA_TOP += size;
+						printf("\t\t\tAllocating space of size %d\n", size);
+					}
+				}
+
+				else if(in_text_seg && line.find("\r") != 0)
+				{
+					offset++;
+				}
+			}
+		}
+	}
+
+	printf("\tIndexing COMPLETE... Found %d symbols!\n", (int)text_symbol_table.size());
+}
+
+/*
+*	This is the "all-powerful initialization routine".
+*	Reads in and initializes the data segment and the
+*	text segment from the file given as an argument on
+*	the command line
+*/
+void init_segs(std::string filename)
+{
+	printf("Initializing...\n");
+
+	index_symbols(filename);
+	
+	std::string line;
+	std::ifstream file (filename, std::ios::in);
+	
+	if (file.is_open())
+	{
+		std::string segment;
+		
+		while (getline(file, line))
+		{
+			if (line == ".text\r")
+			{
+				printf("Setting segment to text\n");
+				segment = "text";
+			}
+				
+			else if (line == ".data\r")
+			{
+				printf("Setting segment to data\n");
+				segment = "data";
+			}
+				
+			else if (line.length() == 0)
+			{
+				// Do nothing
+			}
+			
+			/*
+			*	If this is a line within the data block,
+			*	we need to store the data at the given
+			*	address in DATA_SEG
+			*/
+			else if (segment == "data")
+			{
+				//printf("\tProcessing data segment line\n");
+			}
+			
+			/*
+			*	If this is a line within the text block,
+			*	we need to store the instruction at the next
+			*	position in TEXT_SEG
+			*/
+			else if (segment == "text")
+			{
+				//printf("\tProcessing text segment line\n");
+				
+
+				if(line.find(":") == std::string::npos)
+				{
+					// We don't want to encode an empty line
+					if(line.find("\r") != 0)
+					{
+						instruction instr = encode_instruction(line);
+						write_mem(TEXT_TOP, instr);
+					}
+				}
+				else
+				{
+					// This is a label
+				}
+			}		
+		
+		}
+				
+		file.close();
+	}
+	else
+	{
+		throw std::runtime_error("*** RUNTIME ERROR *** : Failed to open input file");
+	}
+
+	init_instr_table();
+
+	printf("Initialization complete!\n");
 }
 
 instruction encode_instruction(std::string line)

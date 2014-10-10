@@ -21,7 +21,7 @@ void init()
 {
 	init_regs();
 
-	init_segs();
+	init_segs(FILENAME);
 
 	init_instr_table();
 }
