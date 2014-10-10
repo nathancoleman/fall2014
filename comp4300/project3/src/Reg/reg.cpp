@@ -8,7 +8,7 @@ void init_regs()
 	
 }
 
-int32 get(int index)
+int32 read(int index)
 {
 	if (index >= R_LENGTH)
 		throw std::runtime_error("*** MEMORY ERROR *** : Invalid register index");
@@ -16,10 +16,10 @@ int32 get(int index)
 	return R[index];
 }
 
-void set(int index, int32 val)
+void write(int index, int32 val)
 {
 	if (index >= R_LENGTH)
 		throw std::runtime_error("*** MEMORY ERROR *** : Invalid register index");
-	
+
 	R[index] = val;
 }
