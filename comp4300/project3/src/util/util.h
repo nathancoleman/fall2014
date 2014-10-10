@@ -1,5 +1,3 @@
-#include <string>
-
 #define ADDI	0x00 //	Add Immediate
 #define B 		0x01 //	Branch to target
 #define BEQZ	0x02 // Branch on >= 0
@@ -12,6 +10,3 @@
 #define SYSCALL	0x09 // System Call
 
 typedef unsigned int int32;
-typedef int32 instruction;
-
-instruction encode_instruction(std::string line);

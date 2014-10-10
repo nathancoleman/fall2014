@@ -8,18 +8,18 @@ void init_regs()
 	
 }
 
-int32 read(int index)
+reg_word read_reg(int index)
 {
 	if (index >= R_LENGTH)
-		throw std::runtime_error("*** MEMORY ERROR *** : Invalid register index");
+		throw std::runtime_error("*** REGISTER ERROR *** : Invalid register index");
 
 	return R[index];
 }
 
-void write(int index, int32 val)
+void write_reg(int index, reg_word val)
 {
 	if (index >= R_LENGTH)
-		throw std::runtime_error("*** MEMORY ERROR *** : Invalid register index");
+		throw std::runtime_error("*** REGISTER ERROR *** : Invalid register index");
 
 	R[index] = val;
 }

@@ -1,14 +1,20 @@
 #include "../util/util.h"
+#include "../reg/reg.h"
+#include <map>
 #include <stdexcept>
+#include <string>
 
 #define DATA_SEG_LENGTH 200
 #define TEXT_SEG_LENGTH 200
 #define DATA_SEG_BASE 0x100000
 #define TEXT_SEG_BASE 0x200000
 
+typedef int32 instruction;
 typedef int32 mem_address;
 typedef int32 mem_word;
 
+extern std::map<std::string, int32> data_symbol_table;
+extern std::map<std::string, int32> text_symbol_table;
 extern mem_address PC;
 extern mem_address DATA_TOP;
 extern mem_address TEXT_TOP;
@@ -18,5 +24,6 @@ extern mem_word DATA_SEG[];
 extern mem_word TEXT_SEG[];
 
 void init_segs();
-mem_word read(mem_address address);
-void write(mem_address address, mem_word data, bool increment_top = false);
+instruction encode_instruction(std::string line);
+mem_word read_mem(mem_address address);
+void write_mem(mem_address address, mem_word data, bool increment_top = false);
