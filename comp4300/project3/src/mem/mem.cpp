@@ -9,6 +9,11 @@ mem_address TEXT_SEG_END = TEXT_SEG_BASE + TEXT_SEG_LENGTH;
 mem_word DATA_SEG[DATA_SEG_LENGTH];
 mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 
+void init_segs()
+{
+	
+}
+
 mem_word read(mem_address address)
 {
 	if (DATA_SEG_BASE < address < DATA_SEG_END)

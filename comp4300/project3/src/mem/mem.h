@@ -17,5 +17,6 @@ extern mem_address TEXT_SEG_END;
 extern mem_word DATA_SEG[];
 extern mem_word TEXT_SEG[];
 
+void init_segs();
 mem_word read(mem_address address);
 void write(mem_address address, mem_word data, bool increment_top = false);
