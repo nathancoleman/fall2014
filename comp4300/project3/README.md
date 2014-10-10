@@ -15,6 +15,6 @@ This project includes a Makefile and requires g++ for compilation
 - To clean make-related files, run ```make clean```
 
 ### Run
-After running $ make:
+After running ```$ make```:
 - From this directory, ```$ bin/gprSim filename```
 - Running will produce an output file in the this directory, ```result.txt```
