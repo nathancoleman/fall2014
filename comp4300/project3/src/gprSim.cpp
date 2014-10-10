@@ -7,6 +7,7 @@
 *	
 *	Project 1 - Due 12 September 2014
 *	Project 2 - Due 03 October 2014
+*	Project 3 - Due 27 October 2014
 */
 
 #include "gprSim.h"
