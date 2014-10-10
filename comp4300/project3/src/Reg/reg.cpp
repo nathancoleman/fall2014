@@ -1,5 +1,8 @@
 #include "reg.h"
 
+/* Initialize externs */
+reg_word R[R_LENGTH];
+
 void init_regs()
 {
 	

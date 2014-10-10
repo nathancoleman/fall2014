@@ -4,7 +4,7 @@
 
 typedef int32 reg_word;
 
-reg_word R[R_LENGTH];
+extern reg_word R[];
 
 void init_regs();
 reg_word get(int index);
