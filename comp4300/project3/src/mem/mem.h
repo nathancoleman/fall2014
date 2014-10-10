@@ -1,4 +1,5 @@
 #include "../util/util.h"
+#include <stdexcept>
 
 #define DATA_SEG_LENGTH 200
 #define TEXT_SEG_LENGTH 200
