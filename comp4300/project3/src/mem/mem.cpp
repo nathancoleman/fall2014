@@ -3,6 +3,8 @@
 /* Initialize externs */
 std::map<std::string, int32> data_symbol_table;
 std::map<std::string, int32> text_symbol_table;
+std::map<int32, int32> instruction_totals;
+std::map<int32, std::string> string_table;
 mem_address PC = TEXT_SEG_BASE;
 mem_address DATA_TOP = DATA_SEG_BASE;
 mem_address TEXT_TOP = TEXT_SEG_BASE;
@@ -14,6 +16,20 @@ mem_word TEXT_SEG[TEXT_SEG_LENGTH];
 void init_segs()
 {
 	
+}
+
+void init_instr_table()
+{
+	instruction_totals[ADDI] = 6;
+	instruction_totals[B] = 4;
+	instruction_totals[BEQZ] = 5;
+	instruction_totals[BGE] = 5;
+	instruction_totals[BNE] = 5;
+	instruction_totals[LA] = 5;
+	instruction_totals[LB] = 6;
+	instruction_totals[LI] = 3;
+	instruction_totals[SUBI] = 6;
+	instruction_totals[SYSCALL] = 8;
 }
 
 instruction encode_instruction(std::string line)
