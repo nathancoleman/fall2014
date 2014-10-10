@@ -1,4 +1,5 @@
 #include "../util/util.h"
+#include <stdexcept>
 
 #define R_LENGTH 32
 
