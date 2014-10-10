@@ -16,9 +16,5 @@ This project includes a Makefile and requires g++ for compilation
 
 ### Run
 After running $ make:
-- From this directory, ```$ bin/gprSim palindrome.s```
-	Where bin/gprSim is the binary and "palindrome.s" is the filename input.
-
-### result.txt
-The output file called result.txt will be located in the current directory.
-
+- From this directory, ```$ bin/gprSim filename```
+- Running will produce an output file in the this directory, ```result.txt```
