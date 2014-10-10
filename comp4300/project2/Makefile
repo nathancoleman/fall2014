@@ -7,8 +7,11 @@ gprSim: pre-build mem.o gprSim.o
 gprSim.o: src/gprSim.cpp src/gprSim.h
 	@$(CC) -c src/gprSim.cpp -o obj/gprSim.o
 
-mem.o: src/mem.cpp src/mem.h
-	@$(CC) -c src/mem.cpp -std=gnu++0x -o obj/mem.o
+mem.o: src/mem/mem.cpp src/mem/mem.h
+	@$(CC) -c src/mem/mem.cpp -std=gnu++0x -o obj/mem.o
+
+reg.o: src/reg/reg.cpp src/reg/reg.h
+	@$(CC) -c src/reg/reg/cpp -std=gnu++0x -o obj/reg.o
 
 pre-build:
 	@mkdir -p bin obj

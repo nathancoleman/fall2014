@@ -1,5 +1,7 @@
 #include "mem.h"
 
+mem_address PC = TEXT_SEG_BASE;
+
 mem_word read(mem_address address)
 {
 	return 0;

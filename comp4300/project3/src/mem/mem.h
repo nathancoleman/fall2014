@@ -1,4 +1,4 @@
-#include "util.h"
+#include "../util/util.h"
 
 #define DATA_SEG_LENGTH 200
 #define TEXT_SEG_LENGTH 200
@@ -9,11 +9,13 @@
 typedef int32 mem_address;
 typedef int32 mem_word;
 
-mem_address DATA_TOP = DATA_SEG_BASE;
-mem_address TEXT_TOP = TEXT_SEG_BASE;
+extern mem_address PC;
 
-mem_word DATA_SEG[DATA_SEG_LENGTH];
-mem_word TEXT_SEG[TEXT_SEG_LENGTH];
+extern mem_address DATA_TOP;
+extern mem_address TEXT_TOP;
+
+extern mem_word DATA_SEG;
+extern mem_word TEXT_SEG;
 
 mem_word read(mem_address address);
 void write(mem_address address, mem_word data, bool increment_top = false);
