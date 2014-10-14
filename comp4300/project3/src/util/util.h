@@ -13,4 +13,17 @@
 #define SYSCALL	0x09 // System Call
 
 typedef unsigned int int32;
+
+struct if_id_latch
+{};
+
+struct id_ex_latch
+{};
+
+struct ex_mem_latch
+{};
+
+struct mem_wb_latch
+{};
+
 #endif
