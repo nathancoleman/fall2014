@@ -11,5 +11,5 @@ using namespace std;
 extern std::string FILENAME;
 
 void init();
-void execute();
+void run();
 void writeResult(int C, int IC);

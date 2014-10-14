@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 
 	init();
 
-	execute();
+	run();
 
 	return 0;
 }
@@ -26,7 +26,7 @@ void init()
 	init_instr_table();
 }
 
-void execute()
+void run()
 {
 	printf("Executing...\n");
 
