@@ -51,6 +51,7 @@ void run()
 		mem_wb_old = mem_wb_new;
 		mem_wb_new = mem_access(ex_mem_old);
 		write_back(mem_wb_old);
+		update_PC();
 
 		// Update var run here (this is just a placeholder)
 		run = false;
