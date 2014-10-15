@@ -11,7 +11,6 @@
 #define DATA_SEG_BASE 0x100000
 #define TEXT_SEG_BASE 0x200000
 
-typedef int32 instruction;
 typedef int32 mem_address;
 typedef int32 mem_word;
 

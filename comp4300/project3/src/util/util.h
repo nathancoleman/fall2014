@@ -13,17 +13,37 @@
 #define SYSCALL	0x09 // System Call
 
 typedef unsigned int int32;
+typedef int32 instruction;
 
 struct if_id_latch
-{};
+{
+	instruction ir;
+};
 
 struct id_ex_latch
-{};
+{
+	int32 op_code;
+	int32 rs, rt, rd;
+	int32 operand_A, operand_B;
+	int32 imm_offset;
+	int32 new_PC;
+};
 
 struct ex_mem_latch
-{};
+{
+	int32 op_code;
+	int32 alu_out;
+	int32 operand_B;
+	int32 rd;
+};
 
 struct mem_wb_latch
-{};
+{
+	int32 op_code;
+	int32 mdr;
+	int32 operand_B;
+	int32 alu_out;
+	int32 rd;
+};
 
 #endif
