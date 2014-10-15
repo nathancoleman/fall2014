@@ -38,23 +38,23 @@ class serverUDP:
 		self.arg = arg
 		
 	def checkCheckSum(self, message):
-		sumNum = int(0);
-		for i in message:
+		sumNum = int(0) #Initializing to the format I want. Python may not need this, but it is there anyway.
+		for i in message: #Using for loop to go and add bytes up
 			sumNum += int(i)
 			sumNum = (sumNum & 0xff) + (sumNum >> 8)
 			sumNum = sumNum & 0xff
 
 		return sumNum & 0xff
 
-	def checkSum(self, valueList):
-		sumNum = int(i)
+	def checkSum(self, valueList): ##function for checksum
+		sumNum = int(0) #Initializing to the format I want
 		for i in valueList:
 			sumNum += int(i)
 			sumNum = (sumNum & 0xff) + (sumNum >> 8)
 			sumNum = sumNum & 0xff
 
-			
-		return ~sumNum & 0xff
+
+		return ~sumNum & 0xff ## inverting bits (taking bitwise complement of sumNum)
 
 if __name__ == "__main__":
 	HOST = '' # Symbolic name meaning all available interfaces
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
 	while 1:
 		d = s.recfrom(1024)
-		data = bytearray(d[0])
+		data = bytearray(d[0]) #Byte array returns a new array of bytes
 		addr = d[1]
 
 		if not data:
@@ -119,7 +119,12 @@ if __name__ == "__main__":
 
 			s.sendto(sendingMessage, addr)
 		else:
-			print 'message was invalid = ' + bytes(checkValue)
+			print 'message was invalid = ' + bytes(checkValue) 
+			"""
+			A message is VALID if its checksum and length are correct. 
+			The checksum is correct if the sum of ALL  bytes composing the message (including the checksum)
+			add up to -1 (0xff).
+			"""
 			sendingMessage = bytearray()
 			sendingMessage.append(0)
 			sendingMessage.append(7)
