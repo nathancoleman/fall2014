@@ -100,3 +100,9 @@ void write_back(mem_wb_latch mem_wb_old)
 {
 	printf("\tWriting back...\n");
 }
+
+void update_PC()
+{
+	// Init could be modified so that we could increment this by 4
+	PC++;
+}
