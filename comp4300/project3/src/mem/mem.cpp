@@ -40,7 +40,12 @@ void index_symbols(std::string filename)
 	{
 		while (getline(file, line))
 		{
-			if (line.find(".text") != std::string::npos)
+			if (line.empty())
+			{
+				// Do nothing
+			}
+
+			else if (line.find(".text") != std::string::npos)
 			{
 				in_text_seg = true;
 				in_data_seg = true;
@@ -50,9 +55,10 @@ void index_symbols(std::string filename)
 				in_data_seg = true;
 				in_text_seg = false;
 			}
+
 			else
 			{
-				// If :, we have a symbol
+				// If this is a symbol in the text segment
 				if (line.find(":") != std::string::npos && in_text_seg)
 				{
 					std::string symbol_name = line.substr(0, line.find(":"));
@@ -60,6 +66,7 @@ void index_symbols(std::string filename)
 					text_symbol_table[symbol_name] = offset;
 				}
 
+				// If this is a symbol in the data segment
 				else if (line.find(":") != std::string::npos && in_data_seg)
 				{
 					std::string symbol_name = line.substr(0, line.find(":"));
@@ -84,7 +91,8 @@ void index_symbols(std::string filename)
 					}
 				}
 
-				else if(in_text_seg && line.find("\r") != 0)
+				// This is just a regular instruction
+				else if (in_text_seg)
 				{
 					offset++;
 				}
@@ -109,6 +117,8 @@ void init_segs(std::string filename)
 	
 	std::string line;
 	std::ifstream file (filename, std::ios::in);
+	bool in_text_seg = false;
+	bool in_data_seg = false;
 	
 	if (file.is_open())
 	{
@@ -116,19 +126,21 @@ void init_segs(std::string filename)
 		
 		while (getline(file, line))
 		{
-			if (line == ".text\r")
+			if (line.find(".text") != std::string::npos)
 			{
-				printf("Setting segment to text\n");
-				segment = "text";
+				printf("\tSetting segment to text\n");
+				in_text_seg = true;
+				in_data_seg = false;
 			}
 				
-			else if (line == ".data\r")
+			else if (line.find(".data") != std::string::npos)
 			{
-				printf("Setting segment to data\n");
-				segment = "data";
+				printf("\tSetting segment to data\n");
+				in_data_seg = true;
+				in_text_seg = false;
 			}
 				
-			else if (line.length() == 0)
+			else if (line.empty())
 			{
 				// Do nothing
 			}
@@ -138,7 +150,7 @@ void init_segs(std::string filename)
 			*	we need to store the data at the given
 			*	address in DATA_SEG
 			*/
-			else if (segment == "data")
+			else if (in_data_seg)
 			{
 				//printf("\tProcessing data segment line\n");
 			}
@@ -148,7 +160,7 @@ void init_segs(std::string filename)
 			*	we need to store the instruction at the next
 			*	position in TEXT_SEG
 			*/
-			else if (segment == "text")
+			else if (in_text_seg)
 			{
 				//printf("\tProcessing text segment line\n");
 				
@@ -507,14 +519,16 @@ mem_word read_mem(mem_address address)
 
 void write_mem(mem_address address, mem_word data, bool increment_top)
 {
-	if (DATA_SEG_BASE < address < DATA_SEG_END)
+	if ((DATA_SEG_BASE <= address) && (address < DATA_SEG_END))
 	{
+		printf("\tWriting to Data segment\n");
 		mem_address local_address = address - DATA_SEG_BASE;
 		DATA_SEG[local_address] = data;
 	}
 
-	else if (TEXT_SEG_BASE < address < TEXT_SEG_END)
+	else if ((TEXT_SEG_BASE <= address) && (address < TEXT_SEG_END))
 	{
+		printf("\tWriting to Text segment\n");
 		mem_address local_address = address - TEXT_SEG_BASE;
 		TEXT_SEG[local_address] = data;
 	}

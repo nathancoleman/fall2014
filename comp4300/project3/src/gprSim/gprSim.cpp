@@ -43,9 +43,9 @@ void run()
 	while (run)
 	{
 		if_id_old = if_id_new;
-		if_id_new = instr_fetch(&PC);
+		if_id_new = instr_fetch();
 		id_ex_old = id_ex_new;
-		id_ex_new = instr_decode(if_id_old, &PC);
+		id_ex_new = instr_decode(if_id_old);
 		ex_mem_old = ex_mem_new;
 		ex_mem_new = instr_execute(id_ex_old);
 		mem_wb_old = mem_wb_new;
@@ -60,7 +60,7 @@ void run()
 	printf("Execution complete!\n");
 }
 
-if_id_latch instr_fetch(mem_address *PC)
+if_id_latch instr_fetch()
 {
 	printf("\tFetching instruction...\n");
 
@@ -69,7 +69,7 @@ if_id_latch instr_fetch(mem_address *PC)
 	return if_id_old;
 }
 
-id_ex_latch instr_decode(if_id_latch if_id_old, mem_address *PC)
+id_ex_latch instr_decode(if_id_latch if_id_old)
 {
 	printf("\tDecoding instruction...\n");
 
