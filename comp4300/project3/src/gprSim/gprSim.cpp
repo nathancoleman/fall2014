@@ -65,6 +65,7 @@ if_id_latch instr_fetch()
 	printf("\tFetching instruction...\n");
 
 	if_id_latch if_id_old;
+	if_id_old.ir = read_mem(PC);
 
 	return if_id_old;
 }

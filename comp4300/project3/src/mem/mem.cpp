@@ -497,13 +497,13 @@ instruction encode_instruction(std::string line)
 
 mem_word read_mem(mem_address address)
 {
-	if (DATA_SEG_BASE < address < DATA_SEG_END)
+	if ((DATA_SEG_BASE <= address) && (address < DATA_SEG_END))
 	{
 		mem_address local_address = address - DATA_SEG_BASE;
 		return DATA_SEG[local_address];
 	}
 
-	else if (TEXT_SEG_BASE < address < TEXT_SEG_END)
+	else if ((TEXT_SEG_BASE <= address) && (address < TEXT_SEG_END))
 	{
 		mem_address local_address = address - TEXT_SEG_BASE;
 		return TEXT_SEG[local_address];
