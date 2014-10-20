@@ -64,10 +64,10 @@ if_id_latch instr_fetch()
 {
 	printf("\tFetching instruction...\n");
 
-	if_id_latch if_id_old;
-	if_id_old.ir = read_mem(PC);
+	if_id_latch if_id;
+	if_id.ir = read_mem(PC);
 
-	return if_id_old;
+	return if_id;
 }
 
 id_ex_latch instr_decode(if_id_latch if_id)
@@ -142,25 +142,25 @@ id_ex_latch instr_decode(if_id_latch if_id)
 	return id_ex;
 }
 
-ex_mem_latch instr_execute(id_ex_latch id_ex_old)
+ex_mem_latch instr_execute(id_ex_latch id_ex)
 {
 	printf("\tExecuting instruction...\n");
 
-	ex_mem_latch ex_mem_old;
+	ex_mem_latch ex_mem;
 
-	return ex_mem_old;
+	return ex_mem;
 }
 
-mem_wb_latch mem_access(ex_mem_latch ex_mem_old)
+mem_wb_latch mem_access(ex_mem_latch ex_mem)
 {
 	printf("\tAccessing memory...\n");
 
-	mem_wb_latch mem_wb_old;
+	mem_wb_latch mem_wb;
 
-	return mem_wb_old;
+	return mem_wb;
 }
 
-void write_back(mem_wb_latch mem_wb_old)
+void write_back(mem_wb_latch mem_wb)
 {
 	printf("\tWriting back...\n");
 }
