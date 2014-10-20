@@ -77,9 +77,15 @@ id_ex_latch instr_decode(if_id_latch if_id_old)
 	id_ex_latch id_ex_old;
 	id_ex_old.op_code = if_id_old.ir >> 26;
 
+	printf("\t\tOp code: %x\n", id_ex_old.op_code);
+
 	if (id_ex_old.op_code == ADDI)
 	{
-
+		// ADDI rt, rs, imm
+		id_ex_old.rt = (if_id_old.ir >> 21) & 0x1F;
+		id_ex_old.rs = (if_id_old.ir >> 16) & 0x1F;
+		id_ex_old.imm_offset = if_id_old.ir & 0xFFFF;
+		printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex_old.rt, id_ex_old.rs, id_ex_old.imm_offset);
 	}
 
 	else if (id_ex_old.op_code == B)
@@ -130,6 +136,7 @@ id_ex_latch instr_decode(if_id_latch if_id_old)
 	else
 	{
 		// This is an invalid op code
+		// Do nothing
 	}
 
 	return id_ex_old;
