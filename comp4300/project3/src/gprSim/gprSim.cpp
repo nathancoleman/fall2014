@@ -79,64 +79,47 @@ id_ex_latch instr_decode(if_id_latch if_id)
 
 	printf("\t\tOp code: %x\n", id_ex.op_code);
 
-	if (id_ex.op_code == ADDI)
+	switch (id_ex.op_code)
 	{
-		// ADDI rt, rs, imm
-		id_ex.rt = (if_id.ir >> 21) & 0x1F;
-		id_ex.rs = (if_id.ir >> 16) & 0x1F;
-		id_ex.imm_offset = if_id.ir & 0xFFFF;
-		printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex.rt, id_ex.rs, id_ex.imm_offset);
-	}
+		case ADDI:
+			// ADDI rt, rs, imm
+			id_ex.rt = (if_id.ir >> 21) & 0x1F;
+			id_ex.rs = (if_id.ir >> 16) & 0x1F;
+			id_ex.imm_offset = if_id.ir & 0xFFFF;
+			printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex.rt, id_ex.rs, id_ex.imm_offset);
+			break;
 
-	else if (id_ex.op_code == B)
-	{
+		case B:
+			break;
 
-	}
+		case BEQZ:
+			break;
 
-	else if (id_ex.op_code == BEQZ)
-	{
+		case BGE:
+			break;
 
-	}
+		case BNE:
+			break;
 
-	else if (id_ex.op_code == BGE)
-	{
+		case LA:
+			break;
 
-	}
+		case LB:
+			break;
 
-	else if (id_ex.op_code == BNE)
-	{
+		case LI:
+			break;
 
-	}
+		case SUBI:
+			break;
 
-	else if (id_ex.op_code == LA)
-	{
+		case SYSCALL:
+			break;
 
-	}
-
-	else if (id_ex.op_code == LB)
-	{
-
-	}
-
-	else if (id_ex.op_code == LI)
-	{
-
-	}
-
-	else if (id_ex.op_code == SUBI)
-	{
-
-	}
-
-	else if (id_ex.op_code == SYSCALL)
-	{
-
-	}
-
-	else
-	{
-		// This is an invalid op code
-		// Do nothing
+		default:
+			// This is an invalid op code
+			// Do nothing
+			break;
 	}
 
 	return id_ex;
