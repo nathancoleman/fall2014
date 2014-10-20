@@ -70,65 +70,65 @@ if_id_latch instr_fetch()
 	return if_id_old;
 }
 
-id_ex_latch instr_decode(if_id_latch if_id_old)
+id_ex_latch instr_decode(if_id_latch if_id)
 {
 	printf("\tDecoding instruction...\n");
 
-	id_ex_latch id_ex_old;
-	id_ex_old.op_code = if_id_old.ir >> 26;
+	id_ex_latch id_ex;
+	id_ex.op_code = if_id.ir >> 26;
 
-	printf("\t\tOp code: %x\n", id_ex_old.op_code);
+	printf("\t\tOp code: %x\n", id_ex.op_code);
 
-	if (id_ex_old.op_code == ADDI)
+	if (id_ex.op_code == ADDI)
 	{
 		// ADDI rt, rs, imm
-		id_ex_old.rt = (if_id_old.ir >> 21) & 0x1F;
-		id_ex_old.rs = (if_id_old.ir >> 16) & 0x1F;
-		id_ex_old.imm_offset = if_id_old.ir & 0xFFFF;
-		printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex_old.rt, id_ex_old.rs, id_ex_old.imm_offset);
+		id_ex.rt = (if_id.ir >> 21) & 0x1F;
+		id_ex.rs = (if_id.ir >> 16) & 0x1F;
+		id_ex.imm_offset = if_id.ir & 0xFFFF;
+		printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex.rt, id_ex.rs, id_ex.imm_offset);
 	}
 
-	else if (id_ex_old.op_code == B)
+	else if (id_ex.op_code == B)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == BEQZ)
+	else if (id_ex.op_code == BEQZ)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == BGE)
+	else if (id_ex.op_code == BGE)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == BNE)
+	else if (id_ex.op_code == BNE)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == LA)
+	else if (id_ex.op_code == LA)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == LB)
+	else if (id_ex.op_code == LB)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == LI)
+	else if (id_ex.op_code == LI)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == SUBI)
+	else if (id_ex.op_code == SUBI)
 	{
 
 	}
 
-	else if (id_ex_old.op_code == SYSCALL)
+	else if (id_ex.op_code == SYSCALL)
 	{
 
 	}
@@ -139,7 +139,7 @@ id_ex_latch instr_decode(if_id_latch if_id_old)
 		// Do nothing
 	}
 
-	return id_ex_old;
+	return id_ex;
 }
 
 ex_mem_latch instr_execute(id_ex_latch id_ex_old)
