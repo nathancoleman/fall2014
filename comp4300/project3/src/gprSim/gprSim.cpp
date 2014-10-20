@@ -75,6 +75,62 @@ id_ex_latch instr_decode(if_id_latch if_id_old)
 	printf("\tDecoding instruction...\n");
 
 	id_ex_latch id_ex_old;
+	id_ex_old.op_code = if_id_old.ir >> 26;
+
+	if (id_ex_old.op_code == ADDI)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == B)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == BEQZ)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == BGE)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == BNE)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == LA)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == LB)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == LI)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == SUBI)
+	{
+
+	}
+
+	else if (id_ex_old.op_code == SYSCALL)
+	{
+
+	}
+
+	else
+	{
+		// This is an invalid op code
+	}
 
 	return id_ex_old;
 }
