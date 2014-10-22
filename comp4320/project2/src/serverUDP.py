@@ -4,6 +4,12 @@
 	Run from command line $ python serverUDP.py "PORT#"
 
 	Author: Lucas Saltz
+
+	References:
+
+	http://www.tutorialspoint.com/python/bitwise_operators_example.htm
+	http://www.binarytides.com/programming-udp-sockets-in-python/
+
 """
 
 
@@ -41,8 +47,8 @@ class serverUDP:
 		sumNum = int(0) #Initializing to the format I want. Python may not need this, but it is there anyway.
 		for i in message: #Using for loop to go and add bytes up
 			sumNum += int(i)
-			sumNum = (sumNum & 0xff) + (sumNum >> 8)
-			sumNum = sumNum & 0xff
+			sumNum = (sumNum & 0xff) + (sumNum >> 8) #AND operator with 0xff (-1) added with the sum shifted right 8 bits
+			sumNum = sumNum & 0xff #ANDed with -1
 
 		return sumNum & 0xff
 
@@ -66,8 +72,7 @@ if __name__ == "__main__":
 	try:
 		s =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	except socket.error, msg:
-		print 'Failed to create the socket'
-	msg[1]
+		print 'Failed to create the socket' + msg[1]
 		sys.exit()
 	# Bind socket to local host and port
 	try:
@@ -76,8 +81,8 @@ if __name__ == "__main__":
 		print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
 		sys.exit()
 
-	while 1:
-		d = s.recfrom(1024)
+	while True:
+		d = s.recfrom(1024) 
 		data = bytearray(d[0]) #Byte array returns a new array of bytes
 		addr = d[1]
 
@@ -98,10 +103,10 @@ if __name__ == "__main__":
 
 			length = len(listOfHosts) * 4 + 5
 
-			sendingMessage = bytearray()
-			sendingMessage.append(length>>8)
-			sendingMessage.append(length & 0xff)
-			sendingMessage.append(0)
+			sendingMessage = bytearray() #initialize as byte array
+			sendingMessage.append(length>>8) #append length shifted 8 bits
+			sendingMessage.append(length & 0xff) #append length ANDed with 255
+			sendingMessage.append(0) 
 			sendingMessage.append(data[3])
 			sendingMessage.append(data[4])
 			for host in listOfHosts:
