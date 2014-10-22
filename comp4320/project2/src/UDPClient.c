@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 	unsigned int length = 6;
 	unsigned char gid = 16;
 	unsigned char reqID;
-	unsigned char delim = "~";
+	unsigned char delim = '~';
 	struct sockaddr_in serveraddr;
 	struct hostent *server;
 	int clientLen;
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
 	if (!(argc >= 5)) 
 	{
-		fprintf(stderr, "\n", "bad arguments"); //expand this error message 
+		fprintf(stderr, "bad arguments\n"); //expand this error message 
 		exit(1);
 	}
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	server = gethostbyname(hostname);
 	//error checks here
 
-	
+
 
 
 	
