@@ -89,13 +89,13 @@ id_ex_latch instr_decode(if_id_latch if_id)
 		{
 			case B:
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tB to offset %x\n", id_ex.new_PC);
+				printf("\t\tB %x\n", id_ex.new_PC);
 				break;
 
 			case BEQZ:
 				id_ex.rt = get_rt(if_id.ir);
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tBEQZ to offset %x possible\n", id_ex.new_PC);
+				printf("\t\tBEQZ %x\n", id_ex.new_PC);
 				break;
 
 			case BGE:
@@ -104,7 +104,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rt];
 				id_ex.operand_B = R[id_ex.rs];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tBGE to offset %x possible\n", id_ex.new_PC);
+				printf("\t\tBGE %x\n", id_ex.new_PC);
 				break;
 
 			case BNE:
@@ -113,7 +113,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rt];
 				id_ex.operand_B = R[id_ex.rs];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tBNE to offset %x possible\n", id_ex.new_PC);
+				printf("\t\tBNE %x\n", id_ex.new_PC);
 				break;
 
 			default:
