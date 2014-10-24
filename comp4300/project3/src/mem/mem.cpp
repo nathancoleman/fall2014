@@ -492,6 +492,15 @@ instruction encode_instruction(std::string line)
 		instr = instr << 26; // first 6 bits are op code
 	}
 
+	else if(op == "nop")
+	{
+		printf("\t\tNOP\n");
+
+		// Encode the isntruction
+		instr = NOP;
+		instr = instr << 26; // first 6 bits are op code
+	}
+
 	return instr;
 }
 
