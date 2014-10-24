@@ -47,4 +47,6 @@ struct mem_wb_latch
 	int32 rd;
 };
 
+bool is_branch_instr(instruction instr);
+
 #endif

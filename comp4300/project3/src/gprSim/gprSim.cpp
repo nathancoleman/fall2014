@@ -30,6 +30,8 @@ void run()
 {
 	if_id_latch if_id_old;
 	if_id_latch if_id_new;
+	if_id_new.ir = NOP; // Using pull method, so first instruction will be nothing
+	if_id_new.ir = if_id_new.ir << 26;
 	id_ex_latch id_ex_old;
 	id_ex_latch id_ex_new;
 	ex_mem_latch ex_mem_old;
@@ -54,7 +56,11 @@ void run()
 		update_PC();
 
 		// Update var run here (this is just a placeholder)
-		run = false;
+		if (PC > TEXT_TOP)
+		{
+			run = false;
+			printf("STOP RUNNING!\n");
+		}
 	}
 
 	printf("Execution complete!\n");
@@ -75,51 +81,44 @@ id_ex_latch instr_decode(if_id_latch if_id)
 	printf("\tDecoding instruction...\n");
 
 	id_ex_latch id_ex;
-	id_ex.op_code = if_id.ir >> 26;
+	id_ex.op_code = (if_id.ir >> 26);
+	id_ex.rt = (if_id.ir >> 21);
+	id_ex.rs = (if_id.ir >> 16) & 0x1F;
+	id_ex.imm_offset = if_id.ir & 0xFFFF;
+	printf("\t\top: %x\n\t\trt: %x\n\t\trs: %x\n\t\timm: %x\n", id_ex.op_code, id_ex.rt, id_ex.rs, id_ex.imm_offset);
 
-	printf("\t\tOp code: %x\n", id_ex.op_code);
-
-	switch (id_ex.op_code)
+	if (is_branch_instr(if_id.ir))
 	{
-		case ADDI:
-			// ADDI rt, rs, imm
-			id_ex.rt = (if_id.ir >> 21) & 0x1F;
-			id_ex.rs = (if_id.ir >> 16) & 0x1F;
-			id_ex.imm_offset = if_id.ir & 0xFFFF;
-			printf("id_ex_latch:\n\trt: %x\n\trs: %x\n\timm: %x\n", id_ex.rt, id_ex.rs, id_ex.imm_offset);
-			break;
+		printf("BRANCH INSTRUCTION FOUND\n");
+	}
 
-		case B:
-			break;
+	else
+	{
+		switch (id_ex.op_code)
+		{
+			case ADDI:
+				break;
 
-		case BEQZ:
-			break;
+			case LA:
+				break;
 
-		case BGE:
-			break;
+			case LB:
+				break;
 
-		case BNE:
-			break;
+			case LI:
+				break;
 
-		case LA:
-			break;
+			case SUBI:
+				break;
 
-		case LB:
-			break;
+			case SYSCALL:
+				break;
 
-		case LI:
-			break;
-
-		case SUBI:
-			break;
-
-		case SYSCALL:
-			break;
-
-		default:
-			// This is an invalid op code
-			// Do nothing
-			break;
+			default:
+				// This is an invalid op code
+				// Do nothing
+				break;
+		}
 	}
 
 	return id_ex;

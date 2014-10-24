@@ -515,6 +515,7 @@ mem_word read_mem(mem_address address)
 	else if ((TEXT_SEG_BASE <= address) && (address < TEXT_SEG_END))
 	{
 		mem_address local_address = address - TEXT_SEG_BASE;
+		printf("\t\tReading instr with op code: %x at local address %x\n", TEXT_SEG[local_address] >> 26, local_address);
 		return TEXT_SEG[local_address];
 	}
 
@@ -533,6 +534,9 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 		printf("\tWriting to Data segment\n");
 		mem_address local_address = address - DATA_SEG_BASE;
 		DATA_SEG[local_address] = data;
+
+		if (increment_top)
+			DATA_TOP++;
 	}
 
 	else if ((TEXT_SEG_BASE <= address) && (address < TEXT_SEG_END))
@@ -540,6 +544,9 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 		printf("\tWriting to Text segment\n");
 		mem_address local_address = address - TEXT_SEG_BASE;
 		TEXT_SEG[local_address] = data;
+
+		if (increment_top)
+			TEXT_TOP++;
 	}
 
 	else
