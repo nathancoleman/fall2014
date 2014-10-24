@@ -61,6 +61,29 @@ int main(int argc, char **argv) {
 
 
 
+	bzero(&servaddr,sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+ //   servaddr.sin_addr.s_addr=inet_addr(argv[1]);
+     servaddr.sin_port=htons(portno);
+
+
+     for (n = 4; n < argc; n++)
+     {
+     	if ((n+1) == argc) 
+     	{
+     		length += strlen(argv[n]);
+     	}
+     	else
+     	{
+     		length += strlen(argv[n]) + 1;
+     	}
+     }
+
+    //pack the message
+
+    // send the message
+
+
 
 	
 return 0;	
