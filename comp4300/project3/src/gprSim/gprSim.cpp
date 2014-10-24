@@ -88,15 +88,35 @@ id_ex_latch instr_decode(if_id_latch if_id)
 		switch (id_ex.op_code)
 		{
 			case B:
+				printf("\t\tB to offset %x\n", TEXT_SEG_BASE + get_imm(if_id.ir));
+				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir) - 1;
 				break;
 
 			case BEQZ:
+				printf("\t\tBEQZ to offset %x possible\n", TEXT_SEG_BASE + get_imm(if_id.ir));
+				id_ex.rt = get_rt(if_id.ir);
+				if (R[id_ex.rt] == 0)
+					id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir) - 1;
 				break;
 
 			case BGE:
+				printf("\t\tBGE to offset %x possible\n", TEXT_SEG_BASE + get_imm(if_id.ir));
+				id_ex.rt = get_rt(if_id.ir);
+				id_ex.rs = get_rs(if_id.ir);
+				id_ex.operand_A = R[id_ex.rt];
+				id_ex.operand_B = R[id_ex.rs];
+				if (id_ex.operand_A >= id_ex.operand_B)
+					id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir) -1;
 				break;
 
 			case BNE:
+				printf("\t\tBNE to offset %x possible\n", TEXT_SEG_BASE + get_imm(if_id.ir));
+				id_ex.rt = get_rt(if_id.ir);
+				id_ex.rs = get_rs(if_id.ir);
+				id_ex.operand_A = R[id_ex.rt];
+				id_ex.operand_B = R[id_ex.rs];
+				if (id_ex.operand_A != id_ex.operand_B)
+					id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir) -1;
 				break;
 
 			default:
