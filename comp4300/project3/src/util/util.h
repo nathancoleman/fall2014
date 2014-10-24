@@ -47,6 +47,12 @@ struct mem_wb_latch
 	int32 rd;
 };
 
+int32 get_op_code(instruction instr);
+int32 get_rs(instruction instr);
+int32 get_rt(instruction instr);
+int32 get_op_A(int32 rs);
+int32 get_op_B(int32 rt);
+int32 get_imm(instruction instr);
 bool is_branch_instr(instruction instr);
 
 #endif
