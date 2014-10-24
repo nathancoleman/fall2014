@@ -22,5 +22,8 @@ pre-build:
 clean:
 	@rm -rf bin obj *.tar.gz
 
+force:
+	@make --always-make
+
 tar: clean
 	@tar -zcf ./group15_project2.tgz *
