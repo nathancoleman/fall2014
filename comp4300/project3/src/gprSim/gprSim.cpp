@@ -55,11 +55,10 @@ void run()
 		write_back(mem_wb_old);
 		update_PC();
 
-		// Update var run here (this is just a placeholder)
 		if (PC > TEXT_TOP)
 		{
 			run = false;
-			printf("STOP RUNNING!\n");
+			printf("\tHALTING EXECUTION\n");
 		}
 	}
 
