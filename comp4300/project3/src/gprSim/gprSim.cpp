@@ -149,7 +149,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.rs = get_rs(if_id.ir);
 				id_ex.operand_A = R[id_ex.rs];
 				id_ex.imm_offset = get_imm(if_id.ir);
-				printf("\t\tSUBI $%x, %d. %d\n", id_ex.rt, id_ex.operand_A, id_ex.imm_offset);
+				printf("\t\tSUBI $%x, %d, %d\n", id_ex.rt, id_ex.operand_A, id_ex.imm_offset);
 				break;
 
 			case SYSCALL:
