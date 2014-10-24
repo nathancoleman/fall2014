@@ -89,7 +89,25 @@ id_ex_latch instr_decode(if_id_latch if_id)
 
 	if (is_branch_instr(if_id.ir))
 	{
-		printf("BRANCH INSTRUCTION FOUND\n");
+		switch (id_ex.op_code)
+		{
+			case B:
+				break;
+
+			case BEQZ:
+				break;
+
+			case BGE:
+				break;
+
+			case BNE:
+				break;
+
+			default:
+				// This is an invalid op code
+				// Do nothing
+				break;
+		}
 	}
 
 	else
