@@ -82,10 +82,6 @@ id_ex_latch instr_decode(if_id_latch if_id)
 
 	id_ex_latch id_ex;
 	id_ex.op_code = get_op_code(if_id.ir);
-	id_ex.rt = get_rt(if_id.ir);
-	id_ex.rs = get_rs(if_id.ir);
-	id_ex.imm_offset = get_imm(if_id.ir);
-	printf("\t\top: %x\n\t\trt: %x\n\t\trs: %x\n\t\timm: %x\n", id_ex.op_code, id_ex.rt, id_ex.rs, id_ex.imm_offset);
 
 	if (is_branch_instr(if_id.ir))
 	{
