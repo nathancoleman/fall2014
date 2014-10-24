@@ -154,6 +154,8 @@ id_ex_latch instr_decode(if_id_latch if_id)
 
 			case SYSCALL:
 				printf("\t\tSYSCALL\n");
+				// What do we do here?
+				// Needs to access mem and then write
 				break;
 
 			case NOP:
@@ -175,6 +177,33 @@ ex_mem_latch instr_execute(id_ex_latch id_ex)
 	printf("\tExecuting instruction...\n");
 
 	ex_mem_latch ex_mem;
+	ex_mem.op_code = id_ex.op_code;
+
+	switch (ex_mem.op_code)
+	{
+		case ADDI:
+			break;
+
+		case LA:
+			break;
+
+		case LB:
+			break;
+
+		case LI:
+			break;
+
+		case SYSCALL:
+			break;
+
+		case NOP:
+			break;
+
+		default:
+			// This is an invalid op code
+			// Do nothing
+			break;
+	}
 
 	return ex_mem;
 }
