@@ -28,34 +28,25 @@ void init()
 
 void run()
 {
-	if_id_latch if_id_old;
-	if_id_latch if_id_new;
-	if_id_new.ir = NOP; // Using pull method, so first instruction will be nothing
-	if_id_new.ir = if_id_new.ir << 26;
-	id_ex_latch id_ex_old;
-	id_ex_latch id_ex_new;
-	ex_mem_latch ex_mem_old;
-	ex_mem_latch ex_mem_new;
-	mem_wb_latch mem_wb_old;
-	mem_wb_latch mem_wb_new;
+	if_id_latch if_id;
+	id_ex_latch id_ex;
+	ex_mem_latch ex_mem;
+	mem_wb_latch mem_wb;
 	bool run = true;
 
 	printf("Executing...\n");
 
 	while (run)
 	{
-		if_id_old = if_id_new;
-		if_id_new = instr_fetch();
-		id_ex_old = id_ex_new;
-		id_ex_new = instr_decode(if_id_old);
-		ex_mem_old = ex_mem_new;
-		ex_mem_new = instr_execute(id_ex_old);
-		mem_wb_old = mem_wb_new;
-		mem_wb_new = mem_access(ex_mem_old);
-		write_back(mem_wb_old);
+		
+		if_id = instr_fetch();
+		id_ex = instr_decode(if_id);
+		ex_mem = instr_execute(id_ex);
+		mem_wb = mem_access(ex_mem);
+		write_back(mem_wb);
 		update_PC();
 
-		if (PC > TEXT_TOP)
+		if (PC == TEXT_TOP)
 		{
 			run = false;
 			printf("\tHALTING EXECUTION\n");
