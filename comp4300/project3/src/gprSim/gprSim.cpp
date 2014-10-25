@@ -73,7 +73,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 	id_ex_latch id_ex;
 	id_ex.op_code = get_op_code(if_id.ir);
 
-	if (is_branch_instr(if_id.ir))
+	if (is_branch_instr(id_ex.op_code))
 	{
 		switch (id_ex.op_code)
 		{

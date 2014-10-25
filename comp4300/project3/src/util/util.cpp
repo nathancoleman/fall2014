@@ -20,10 +20,8 @@ int32 get_imm(instruction instr)
 	return instr & 0xFFFF;
 }
 
-bool is_branch_instr(instruction instr)
+bool is_branch_instr(int32 op_code)
 {
-	int32 op_code = get_op_code(instr); // Op code is first 6 bits
-
 	switch (op_code)
 	{
 		case B:

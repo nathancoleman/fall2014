@@ -51,6 +51,6 @@ int32 get_op_code(instruction instr);
 int32 get_rs(instruction instr);
 int32 get_rt(instruction instr);
 int32 get_imm(instruction instr);
-bool is_branch_instr(instruction instr);
+bool is_branch_instr(int32 op_code);
 
 #endif
