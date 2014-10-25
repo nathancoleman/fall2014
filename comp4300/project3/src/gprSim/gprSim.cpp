@@ -193,6 +193,9 @@ ex_mem_latch instr_execute(id_ex_latch id_ex)
 		case LI:
 			break;
 
+		case SUBI:
+			break;
+
 		case SYSCALL:
 			break;
 
