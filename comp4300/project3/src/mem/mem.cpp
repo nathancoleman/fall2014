@@ -560,7 +560,7 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 {
 	if ((DATA_SEG_BASE <= address) && (address < DATA_SEG_END))
 	{
-		printf("\tWriting to Data segment\n");
+		printf("\t\tWriting to Data segment\n");
 		mem_address local_address = address - DATA_SEG_BASE;
 		DATA_SEG[local_address] = data;
 
@@ -570,7 +570,7 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 
 	else if ((TEXT_SEG_BASE <= address) && (address < TEXT_SEG_END))
 	{
-		printf("\tWriting to Text segment\n");
+		printf("\t\tWriting to Text segment\n");
 		mem_address local_address = address - TEXT_SEG_BASE;
 		TEXT_SEG[local_address] = data;
 

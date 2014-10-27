@@ -20,4 +20,4 @@ li $2, 1
 syscall
 
 li $2, 10
-syscall	
+syscall

@@ -26,6 +26,31 @@ void init()
 	init_instr_table();
 }
 
+void clear_latches(if_id_latch *if_id,id_ex_latch *id_ex,ex_mem_latch *ex_mem,mem_wb_latch *mem_wb)
+{
+	if_id->ir = 0;
+
+	id_ex->op_code = 0;
+	id_ex->rs = 0;
+	id_ex->rt = 0;
+	id_ex->rd = 0;
+	id_ex->operand_A = 0;
+	id_ex->operand_B = 0;
+	id_ex->imm_offset = 0;
+	id_ex->new_PC = 0;
+
+	ex_mem->op_code = 0;
+	ex_mem->alu_out = 0;
+	ex_mem->operand_B = 0;
+	ex_mem->rd = 0;
+
+	mem_wb->op_code = 0;
+	mem_wb->mdr = 0;
+	mem_wb->operand_B = 0;
+	mem_wb->alu_out = 0;
+	mem_wb->rd = 0;
+}
+
 void run()
 {
 	if_id_latch if_id;
@@ -39,24 +64,20 @@ void run()
 
 	while (run)
 	{
-		
+		clear_latches(&if_id, &id_ex, &ex_mem, &mem_wb);
+
 		if_id = instr_fetch();
 		id_ex = instr_decode(if_id);
-		ex_mem = instr_execute(id_ex);
+		ex_mem = instr_execute(id_ex, &run);
 		mem_wb = mem_access(ex_mem);
 		write_back(mem_wb);
 		update_PC();
 
 		if (PC == TEXT_TOP)
-		{
 			run = false;
-			printf("\tHALTING EXECUTION\n");
-		}
 
-		if (run_times > 250)
-			run = false;
-		else
-			run_times++;
+		if (!run)
+			printf("\tHALTING EXECUTION\n");
 	}
 
 	printf("Execution complete!\n");
@@ -110,7 +131,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rd];
 				id_ex.operand_B = R[id_ex.rt];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tBNE %x\n", id_ex.new_PC);
+				printf("\t\tBNE $%d (%d) $%d (%d) %x\n", id_ex.rd, id_ex.operand_A, id_ex.rt, id_ex.operand_B, id_ex.new_PC);
 				break;
 
 			default:
@@ -136,9 +157,9 @@ id_ex_latch instr_decode(if_id_latch if_id)
 			case ADDI:
 				id_ex.rd = get_rd(if_id.ir);
 				id_ex.rs = get_rt(if_id.ir);
-				id_ex.operand_A = R[id_ex.rt];
+				id_ex.operand_A = R[id_ex.rs];
 				id_ex.imm_offset = get_imm(if_id.ir);
-				printf("\t\tADDI $%x, %d, %d\n", id_ex.rd, id_ex.operand_A, id_ex.imm_offset);
+				printf("\t\tADDI $%d, $%d (%x), %d\n", id_ex.rd, id_ex.rs, id_ex.operand_A, id_ex.imm_offset);
 				break;
 
 			case LA:
@@ -189,7 +210,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 	return id_ex;
 }
 
-ex_mem_latch instr_execute(id_ex_latch id_ex)
+ex_mem_latch instr_execute(id_ex_latch id_ex, bool *user_mode)
 {
 	printf("\tExecuting instruction...\n");
 
@@ -251,6 +272,7 @@ ex_mem_latch instr_execute(id_ex_latch id_ex)
 				break;
 
 			case ADDI:
+				printf("\t\t%x + %d\n", id_ex.operand_A, id_ex.imm_offset);
 				ex_mem.alu_out = id_ex.operand_A + id_ex.imm_offset;
 				break;
 
@@ -259,6 +281,7 @@ ex_mem_latch instr_execute(id_ex_latch id_ex)
 				break;
 
 			case LB:
+				printf("\t\t%x\n", id_ex.operand_A);
 				ex_mem.alu_out = id_ex.operand_A;
 				break;
 
@@ -271,6 +294,47 @@ ex_mem_latch instr_execute(id_ex_latch id_ex)
 				break;
 
 			case SYSCALL:
+				printf("\t\tHit SYSCALL\n");
+				if (R[2] == 8)
+				{
+					printf("\t\t(input string):>");
+					string input;
+					getline(cin, input);
+					int32 address = R[4];
+					int size = R[5];
+
+					printf("\t\tAddress is %x, size is %d\n", address, size);
+
+					int i;
+					for (i = 0; i < input.length(); i++)
+					{
+						if (i > size)
+						{
+							break;
+						}
+						write_mem(address, input[i], false);
+						address++;
+					}
+					write_mem(address, '\n', false);
+					address++;
+				}
+				else if (R[2] == 4)
+				{
+					string msg = string_table[R[4]];
+					printf("\t\tMessage is: %s\n", msg.c_str());
+				}
+				else if (R[2] == 10)
+				{
+					*user_mode = false;
+				}
+				else if (R[2] == 1)
+				{
+					printf("\t\t%d\n", R[4]);
+				}
+				else
+				{
+					throw std::runtime_error("*** RUNTIME ERROR *** : Unknown SYSCALL type");
+				}
 				break;
 
 			case NOP:
@@ -299,7 +363,8 @@ mem_wb_latch mem_access(ex_mem_latch ex_mem)
 	switch (mem_wb.op_code)
 	{
 		case LB:
-			mem_wb.mdr = read_mem(ex_mem.alu_out) >> 24; // First 8 bits is byte
+			printf("\t\tReading from %x\n", ex_mem.alu_out);
+			mem_wb.mdr = read_mem(ex_mem.alu_out); // First 8 bits is byte
 			break;
 	}
 
@@ -317,24 +382,29 @@ void write_back(mem_wb_latch mem_wb)
 			break;
 
 		case ADDI:
+			printf("\t\tWriting %x to $%d\n", mem_wb.alu_out, mem_wb.rd);
 			R[mem_wb.rd] = mem_wb.alu_out;
 			break;
 
 		case LA:
+			printf("\t\tWriting %x to $%d\n", mem_wb.alu_out, mem_wb.rd);
 			R[mem_wb.rd] = mem_wb.alu_out;
 			break;
 
 		case LB:
-			printf("\t\tWriting %d to $%d\n", mem_wb.mdr, mem_wb.rd);
+			printf("\t\tWriting %c to $%d\n", mem_wb.mdr, mem_wb.rd);
 			R[mem_wb.rd] = mem_wb.mdr;
 			break;
 
 		case LI:
+			printf("\t\tWriting %d to $%d\n", mem_wb.alu_out, mem_wb.rd);
 			R[mem_wb.rd] = mem_wb.alu_out;
 			break;
 
 		case SUBI:
+			printf("\t\tWriting %x to $%d\n", mem_wb.alu_out, mem_wb.rd);
 			R[mem_wb.rd] = mem_wb.alu_out;
+			break;
 	}
 }
 

@@ -1,18 +1,18 @@
 #ifndef UTIL
 #define UTIL
 
-#define ADDI	0x00 //	Add Immediate
-#define B 		0x01 //	Branch to target
-#define BEQZ	0x02 // Branch on >= 0
-#define BGE		0x03 //	Branch on >=
-#define BNE		0x04 // Branch on Not Equal
-#define LA		0x05 // Load Address
-#define LB		0x06 // Load Byte
-#define LI 		0x07 // Load Immediate
-#define SUBI	0x08 // Subtract Immediate
-#define SYSCALL	0x09 // System Call
-#define NOP		0x0A // Null Op
-#define ADD 	0x0B // Add
+#define ADDI	0x01 //	Add Immediate
+#define B 		0x02 //	Branch to target
+#define BEQZ	0x03 // Branch on >= 0
+#define BGE		0x04 //	Branch on >=
+#define BNE		0x05 // Branch on Not Equal
+#define LA		0x06 // Load Address
+#define LB		0x07 // Load Byte
+#define LI 		0x08 // Load Immediate
+#define SUBI	0x09 // Subtract Immediate
+#define SYSCALL	0x0A // System Call
+#define NOP		0x0B // Null Op
+#define ADD 	0x0C // Add
 
 typedef unsigned int int32;
 typedef int32 instruction;
