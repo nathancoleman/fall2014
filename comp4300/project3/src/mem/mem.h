@@ -8,8 +8,8 @@
 
 #define DATA_SEG_LENGTH 200
 #define TEXT_SEG_LENGTH 200
-#define DATA_SEG_BASE 0x100000
-#define TEXT_SEG_BASE 0x200000
+#define DATA_SEG_BASE 0x1000
+#define TEXT_SEG_BASE 0x2000
 
 typedef int32 mem_address;
 typedef int32 mem_word;
