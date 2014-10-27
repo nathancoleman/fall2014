@@ -167,8 +167,8 @@ int main(int argc, char **argv) {
      memcpy(&sendBuffer[0], (char*)&rLength, 2);
      sendBuffer[2] = 0;
      memcpy(&sendBuffer[3], &gid, 1);
-     memcpy(&sendBuffer[4], &gid, 1);
-     memcpy(&sendBuffer[5], &gid, 1);
+     memcpy(&sendBuffer[4], &reqID, 1);
+     memcpy(&sendBuffer[5], &delim, 1);
      int position = 6;
      int count = 0;
      int isValid = FALSE;
@@ -192,11 +192,11 @@ int main(int argc, char **argv) {
     sendBuffer[2] = checkSum(sendBuffer, length);
     bzero(buf, BUFSIZE);
 
-    int trials;
+    int trys;
         printf("Sending messages\n");
-    for (trials = 0; trials < 7; ++trials) 
+    for (trys = 0; trys < 7; ++trys) 
     {
-    	printf("Sending Message #: %d\n", trials);
+    	printf("Sending Message #: %d\n", trys);
     	clientLen = sizeof(servaddr);
     	n = sendto(sockfd, sendBuffer, length, 0, (struct sockaddr*)&servaddr, clientLen);
     	if (n < 0)
@@ -210,16 +210,13 @@ int main(int argc, char **argv) {
     		error("Error in recvfrom");
     	}
     	unsigned char check  = checkOfCheckSum(buf, sizeof(buf));
-	printf("check = %d\n", check);     
+	//printf("check = %d\n", check);     
 	if (check == 255) 
     	{
     		short incLength = (unsigned short)((buf[0]<<8) + buf[1]);
-    		printf("incLength: %d\n", incLength);
+    		//printf("incLength: %d\n", incLength);
     		//printf("%s\n", n);
-    		if (incLength != n)
-    		{
-    			continue;
-    		}
+
     		if (n == 7)
     		{
     			printf("error has occured from server side");
