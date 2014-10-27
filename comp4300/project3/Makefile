@@ -20,10 +20,10 @@ pre-build:
 	@mkdir -p bin obj
 
 clean:
-	@rm -rf bin obj *.tar.gz
+	@rm -rf bin obj *.tar.gz *.tgz
 
 force:
 	@make --always-make
 
 tar: clean
-	@tar -zcf ./group15_project2.tgz *
+	@tar -zcf ./group15_project3.tgz *
