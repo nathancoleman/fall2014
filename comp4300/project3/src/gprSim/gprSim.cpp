@@ -57,26 +57,25 @@ void run()
 	id_ex_latch id_ex;
 	ex_mem_latch ex_mem;
 	mem_wb_latch mem_wb;
-	bool run = true;
-	int run_times = 0;
+	bool user_mode = true;
 
 	printf("Executing...\n");
 
-	while (run)
+	while (user_mode)
 	{
 		clear_latches(&if_id, &id_ex, &ex_mem, &mem_wb);
 
 		if_id = instr_fetch();
 		id_ex = instr_decode(if_id);
-		ex_mem = instr_execute(id_ex, &run);
+		ex_mem = instr_execute(id_ex, &user_mode);
 		mem_wb = mem_access(ex_mem);
 		write_back(mem_wb);
 		update_PC();
 
 		if (PC == TEXT_TOP)
-			run = false;
+			user_mode = false;
 
-		if (!run)
+		if (!user_mode)
 			printf("\tHALTING EXECUTION\n");
 	}
 
