@@ -7,10 +7,15 @@ int32 get_op_code(instruction instr)
 
 int32 get_rs(instruction instr)
 {
-	return (instr >> 16) & 0x1F;
+	return (instr >> 11) & 0x1F;
 }
 
 int32 get_rt(instruction instr)
+{
+	return (instr >> 16) & 0x1F;
+}
+
+int32 get_rd(instruction instr)
 {
 	return (instr >> 21) & 0x1F;
 }
