@@ -217,10 +217,40 @@ instruction encode_instruction(std::string line)
 
 	printf("\tEncoding instruction\n");
 	
+	if(op == "add")
+	{
+		// TODO: Implement this
+		line = line.substr(line.find("$") + 1);
+
+		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
+
+		line = line.substr(line.find("$") + 1);
+
+		int src = stoi(line.substr(0, line.find("\r")), 0, 0);
+
+		printf("\t\tADD: params - %d %d %d\n", dest, tar, src);
+
+		// Encode the instruction
+		instr = ADD;
+		instr = instr << 26; // first 6 bits are op code
+		instr |= dest << 21; // second 5 bits are dest
+		instr |= tar << 16; // third 5 bits are tar
+		instr |= src << 11; // fourth 5 bits are src
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 11) & 0x1F);
+	}
+
 	/*
 	 *	ADDI Rdest, Rsrc1, Imm
 	 */
-	if(op == "addi")
+	else if(op == "addi")
 	{	
 		line = line.substr(line.find("$") + 1);
 

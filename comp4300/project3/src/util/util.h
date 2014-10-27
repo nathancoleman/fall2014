@@ -12,6 +12,7 @@
 #define SUBI	0x08 // Subtract Immediate
 #define SYSCALL	0x09 // System Call
 #define NOP		0x0A // Null Op
+#define ADD 	0x0B // Add
 
 typedef unsigned int int32;
 typedef int32 instruction;
