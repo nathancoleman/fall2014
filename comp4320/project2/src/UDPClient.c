@@ -193,10 +193,10 @@ int main(int argc, char **argv) {
     bzero(buf, BUFSIZE);
 
     int trys;
-        printf("Sending messages\n");
+        //printf("Sending messages\n");
     for (trys = 0; trys < 7; ++trys) 
     {
-    	printf("Sending Message #: %d\n", trys);
+    	printf("Sending Message, try number#: %d\n", trys);
     	clientLen = sizeof(servaddr);
     	n = sendto(sockfd, sendBuffer, length, 0, (struct sockaddr*)&servaddr, clientLen);
     	if (n < 0)
