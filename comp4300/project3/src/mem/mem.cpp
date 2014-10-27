@@ -40,7 +40,7 @@ void index_symbols(std::string filename)
 	{
 		while (getline(file, line))
 		{
-			if (line.empty())
+			if (line.find_first_of("abcdefghijklmnopqrstuvwxyz0123456789") == std::string::npos)
 			{
 				// Do nothing
 			}
