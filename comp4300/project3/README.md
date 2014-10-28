@@ -18,7 +18,8 @@ This project includes a Makefile and requires g++ for compilation
 After running ```$ make```:
 - From this directory, ```$ bin/pipeSim filename```
 
-### Output for lab3c.s:
+## Output
+### lab3c.s:
 - Output: 8880
 - Total Clock Cycles: 51
 - Total Instructions Executed: 36
