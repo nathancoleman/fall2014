@@ -58,6 +58,7 @@ void run()
 	ex_mem_latch ex_mem;
 	mem_wb_latch mem_wb;
 	bool user_mode = true;
+	int cycle_count = 0, instr_count = 0, nop_count = 0;
 
 	printf("Executing...\n");
 
@@ -65,11 +66,28 @@ void run()
 	{
 		clear_latches(&if_id, &id_ex, &ex_mem, &mem_wb);
 
+		cycle_count++;
+
 		if_id = instr_fetch();
+
 		id_ex = instr_decode(if_id);
 		ex_mem = instr_execute(id_ex, &user_mode);
+
+		switch (ex_mem.op_code)
+		{
+			case NOP:
+				nop_count++;
+				break;
+
+			default:
+				instr_count++;
+				break;
+		}
+
 		mem_wb = mem_access(ex_mem);
+
 		write_back(mem_wb);
+
 		update_PC();
 
 		if (PC == TEXT_TOP)
@@ -80,6 +98,7 @@ void run()
 	}
 
 	printf("Execution complete!\n");
+	printf("\nTOTALS:\n\tCycles: %d\n\tInstructions: %d\n\tNOP: %d\n\n", cycle_count, instr_count, nop_count);
 }
 
 if_id_latch instr_fetch()
@@ -106,12 +125,19 @@ id_ex_latch instr_decode(if_id_latch if_id)
 			case B:
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
 				printf("\t\tB %x\n", id_ex.new_PC);
+				PC = id_ex.new_PC - 1;
+				id_ex.op_code = NOP;
 				break;
 
 			case BEQZ:
 				id_ex.rd = get_rd(if_id.ir);
 				id_ex.operand_A = R[id_ex.rd];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
+				if (id_ex.operand_A == 0)
+				{
+					PC = id_ex.new_PC - 1;
+					id_ex.op_code = NOP;
+				}
 				printf("\t\tBEQZ %x\n", id_ex.new_PC);
 				break;
 
@@ -121,6 +147,11 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rd];
 				id_ex.operand_B = R[id_ex.rt];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
+				if ((int)id_ex.operand_A >= (int)id_ex.operand_B)
+				{
+					PC = id_ex.new_PC - 1;
+					id_ex.op_code = NOP;
+				}
 				printf("\t\tBGE %x\n", id_ex.new_PC);
 				break;
 
@@ -130,6 +161,11 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rd];
 				id_ex.operand_B = R[id_ex.rt];
 				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
+				if (id_ex.operand_A != id_ex.operand_B)
+				{
+					PC = id_ex.new_PC - 1;
+					id_ex.op_code = NOP;
+				}
 				printf("\t\tBNE $%d (%d) $%d (%d) %x\n", id_ex.rd, id_ex.operand_A, id_ex.rt, id_ex.operand_B, id_ex.new_PC);
 				break;
 
@@ -218,132 +254,85 @@ ex_mem_latch instr_execute(id_ex_latch id_ex, bool *user_mode)
 	ex_mem.operand_B = id_ex.operand_B;
 	ex_mem.rd = id_ex.rd;
 
-	if (is_branch_instr(ex_mem.op_code))
+	
+	switch (ex_mem.op_code)
 	{
-		switch (ex_mem.op_code)
-		{
-			case B:
-				printf("\t\tBranching...\n");
-				PC = id_ex.new_PC - 1;
-				ex_mem.op_code = NOP;
-				break;
+		case ADD:
+			ex_mem.alu_out = id_ex.operand_A + id_ex.operand_B;
+			break;
 
-			case BEQZ:
-				if (id_ex.operand_A == 0)
+		case ADDI:
+			printf("\t\t%x + %d\n", id_ex.operand_A, id_ex.imm_offset);
+			ex_mem.alu_out = id_ex.operand_A + id_ex.imm_offset;
+			break;
+
+		case LA:
+			ex_mem.alu_out = id_ex.imm_offset;
+			break;
+
+		case LB:
+			printf("\t\t%x\n", id_ex.operand_A);
+			ex_mem.alu_out = id_ex.operand_A;
+			break;
+
+		case LI:
+			ex_mem.alu_out = id_ex.imm_offset;
+			break;
+
+		case SUBI:
+			ex_mem.alu_out = id_ex.operand_A - id_ex.imm_offset;
+			break;
+
+		case SYSCALL:
+			if (R[2] == 8)
+			{
+				printf("\t\t(input string):>");
+				string input;
+				getline(cin, input);
+				int32 address = R[4];
+				int size = R[5];
+
+				printf("\t\tAddress is %x, size is %d\n", address, size);
+
+				int i;
+				for (i = 0; i < input.length(); i++)
 				{
-					printf("\t\tBranching...\n");
-					PC = id_ex.new_PC - 1;
-					ex_mem.op_code = NOP;
-				}
-				break;
-
-			case BGE:
-				if ((int)id_ex.operand_A >= (int)id_ex.operand_B)
-				{
-					printf("\t\tBranching...\n");
-					PC = id_ex.new_PC - 1;
-					ex_mem.op_code = NOP;
-				}
-				break;
-
-			case BNE:
-				if (id_ex.operand_A != id_ex.operand_B)
-				{
-					printf("\t\tBranching...\n");
-					PC = id_ex.new_PC - 1;
-					ex_mem.op_code = NOP;
-				}
-				break;
-
-			default:
-				// This is an invalid op code
-				// Do nothing
-				break;
-		}
-	}
-
-	else
-	{
-		switch (ex_mem.op_code)
-		{
-			case ADD:
-				ex_mem.alu_out = id_ex.operand_A + id_ex.operand_B;
-				break;
-
-			case ADDI:
-				printf("\t\t%x + %d\n", id_ex.operand_A, id_ex.imm_offset);
-				ex_mem.alu_out = id_ex.operand_A + id_ex.imm_offset;
-				break;
-
-			case LA:
-				ex_mem.alu_out = id_ex.imm_offset;
-				break;
-
-			case LB:
-				printf("\t\t%x\n", id_ex.operand_A);
-				ex_mem.alu_out = id_ex.operand_A;
-				break;
-
-			case LI:
-				ex_mem.alu_out = id_ex.imm_offset;
-				break;
-
-			case SUBI:
-				ex_mem.alu_out = id_ex.operand_A - id_ex.imm_offset;
-				break;
-
-			case SYSCALL:
-				printf("\t\tHit SYSCALL\n");
-				if (R[2] == 8)
-				{
-					printf("\t\t(input string):>");
-					string input;
-					getline(cin, input);
-					int32 address = R[4];
-					int size = R[5];
-
-					printf("\t\tAddress is %x, size is %d\n", address, size);
-
-					int i;
-					for (i = 0; i < input.length(); i++)
+					if (i > size)
 					{
-						if (i > size)
-						{
-							break;
-						}
-						write_mem(address, input[i], false);
-						address++;
+						break;
 					}
-					write_mem(address, '\n', false);
+					write_mem(address, input[i], false);
 					address++;
 				}
-				else if (R[2] == 4)
-				{
-					string msg = string_table[R[4]];
-					printf("\t\tMessage is: %s\n", msg.c_str());
-				}
-				else if (R[2] == 10)
-				{
-					*user_mode = false;
-				}
-				else if (R[2] == 1)
-				{
-					printf("\t\t%d\n", R[4]);
-				}
-				else
-				{
-					throw std::runtime_error("*** RUNTIME ERROR *** : Unknown SYSCALL type");
-				}
-				break;
+				write_mem(address, '\n', false);
+				address++;
+			}
+			else if (R[2] == 4)
+			{
+				string msg = string_table[R[4]];
+				printf("\t\tMessage is: %s\n", msg.c_str());
+			}
+			else if (R[2] == 10)
+			{
+				*user_mode = false;
+			}
+			else if (R[2] == 1)
+			{
+				printf("\t\t%d\n", R[4]);
+			}
+			else
+			{
+				throw std::runtime_error("*** RUNTIME ERROR *** : Unknown SYSCALL type");
+			}
+			break;
 
-			case NOP:
-				break;
+		case NOP:
+			break;
 
-			default:
-				// This is an invalid op code
-				// Do nothing
-				break;
-		}
+		default:
+			// This is an invalid op code
+			// Do nothing
+			break;
 	}
 
 	return ex_mem;
