@@ -19,7 +19,9 @@ After running ```$ make```:
 - From this directory, ```$ bin/pipeSim filename```
 
 
+```lab3c.s```
 
-Total Clock Cycles: 
-Total Instructions Executed:
-Number of NOPs:
+Output: 8880
+Total Clock Cycles: 51
+Total Instructions Executed: 36
+Number of NOPs: 15
