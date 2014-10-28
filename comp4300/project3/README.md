@@ -16,5 +16,10 @@ This project includes a Makefile and requires g++ for compilation
 
 ### Run
 After running ```$ make```:
-- From this directory, ```$ bin/gprSim filename```
-- Running will produce an output file in the this directory, ```result.txt```
+- From this directory, ```$ bin/pipeSim filename```
+
+
+
+Total Clock Cycles: 
+Total Instructions Executed:
+Number of NOPs:
