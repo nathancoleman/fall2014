@@ -22,5 +22,5 @@ After running ```$ make```:
 ### lab3c.s:
 - Output: 8880
 - Total Clock Cycles: 51
-- Total Instructions Executed: 36
-- Number of NOPs: 15
+- Total Instructions Executed: 50
+- Number of NOPs: 1
