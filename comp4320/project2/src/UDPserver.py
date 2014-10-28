@@ -37,117 +37,119 @@ ii.	Port# is a port number. While developing your code, Port# must be set to 100
 import socket
 import sys
 
+class serverUDP(object):
 
-def checkCheckSum(message):
-	sumNum = int(0) #Initializing to the format I want. Python may not need this, but it is there anyway.
-	for i in message: #Using for loop to go and add bytes up
-		sumNum += int(i)
-		sumNum = (sumNum & 0xff) + (sumNum >> 8) #AND operator with 0xff (-1) added with the sum shifted right 8 bits
-		sumNum = sumNum & 0xff #ANDed with -1
+	def checkTheCheckSum(self,message):
+		checkSum = int(0) #Initializing to the format I want. Python may not need this, but it is there anyway.
+		for i in message: #Using for loop to go and add bytes up
+			checkSum += int(i)
+			checkSum = (checkSum & 0xff) + (checkSum >> 8) #AND operator with 0xff (-1) added with the sum shifted right 8 bits
+			checkSum = checkSum & 0xff #ANDed with -1
 
-	returnVal = sumNum & 0xff
-	return returnVal
+		returnVal = checkSum & 0xff
+		return returnVal
 
-def checkSum(valueList): ##function for checksum
-	sumNum = int(0) #Initializing to the format I want
-	for i in valueList:
-		sumNum += int(i)
-		sumNum = (sumNum & 0xff) + (sumNum >> 8)
-		sumNum = sumNum & 0xff
+	def checkSum(self, valueList): ##function for checksum
+		checkSum = int(0) #Initializing to the format I want
+		for i in valueList:
+			checkSum += int(i)
+			checkSum = (checkSum & 0xff) + (checkSum >> 8)
+			checkSum = checkSum & 0xff
 
-	returnVal = ~sumNum & 0xff ## inverting bits (taking bitwise complement of sumNum)
-	return returnVal
+		returnVal = ~checkSum & 0xff ## inverting bits (taking bitwise complement of sumNum)
+		return returnVal
 
+if __name__ == "__main__":
+	instance = serverUDP() #creating instance of serverUDP to call functions
+	HOST = '' # Symbolic name meaning all available interfaces
+	PORT = int(sys.argv[1]) # Port number from arguments
 
-HOST = '' # Symbolic name meaning all available interfaces
-PORT = int(sys.argv[1]) # Port number from arguments
+	print 'Starting server'
 
-print 'Starting server'
+	# Datagram (udp) socket
+	try:
+		s =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	except socket.error, msg:
+		print 'Failed to create the socket' + msg[1]
+		sys.exit()
+	# Bind socket to local host and port
+	try:
+		s.bind((socket.gethostname(), PORT))
+	except socket.error, msg:
+		print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+		sys.exit()
 
-# Datagram (udp) socket
-try:
-	s =  socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-except socket.error, msg:
-	print 'Failed to create the socket' + msg[1]
-	sys.exit()
-# Bind socket to local host and port
-try:
-	s.bind((socket.gethostname(), PORT))
-except socket.error, msg:
-	print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-	sys.exit()
+	while True:
+		d = s.recvfrom(1024) 
+		data = bytearray(d[0]) #Byte array returns a new array of bytes
+		addr = d[1]
 
-while True:
-	d = s.recvfrom(1024) 
-	data = bytearray(d[0]) #Byte array returns a new array of bytes
-	addr = d[1]
+		if not data:
+			break
 
-	if not data:
-		break
+		checkValue = instance.checkTheCheckSum(data) 
 
-	checkValue = checkCheckSum(data)
+		if checkValue == 255: #check to see if checksum is correct
+			print 'valid message = ' + bytes(checkValue)
+			lengthOfPacket = int((data[0]<< 8) + data[1]) & 0xffff
+			if lengthOfPacket != len(data):
+				#iii.	Sends a UDP datagram containing the formed message to 
+				#the server with name Servername on port number Port#  and waits for a response
+				errMessage = bytearray()
+				errMessage.append(0)
+				errMessage.append(7)
+				errMessage.append(checkValue)
+				errMessage.append(data[3])
+				errMessage.append(data[4])
+				errMessage.append(0)
+				errMessage.append(0)
+				errMessage[2] = checksum(errMessage)
+				s.sendto(errMessage, addr)
+				print 'WTF y u fail?!'
+				continue
+			actualMessage = bytearray(data[6:lengthOfPacket])
 
-	if checkValue == 255:
-		print 'valid message = ' + bytes(checkValue)
-		lengthOfPacket = int((data[0]<< 8) + data[1]) & 0xffff
-		if lengthOfPacket != len(data):
-			#iii.	Sends a UDP datagram containing the formed message to 
-			#the server with name Servername on port number Port#  and waits for a response
-			errMessage = bytearray()
-			errMessage.append(0)
-			errMessage.append(7)
-			errMessage.append(checkValue)
-			errMessage.append(data[3])
-			errMessage.append(data[4])
-			errMessage.append(0)
-			errMessage.append(0)
-			errMessage[2] = checksum(errMessage)
-			s.sendto(errMessage, addr)
-			print 'WTF y u fail?!'
-			continue
-		actualMessage = bytearray(data[6:lengthOfPacket])
+			stringOfActualMessage = actualMessage.decode('latin-1')
+			listOfHosts = stringOfActualMessage.split(chr(data[5]))
 
-		stringOfActualMessage = actualMessage.decode('latin-1')
-		listOfHosts = stringOfActualMessage.split(chr(data[5]))
+			length = len(listOfHosts) * 4 + 5
 
-		length = len(listOfHosts) * 4 + 5
+			sendingMessage = bytearray() #initialize as byte array
+			sendingMessage.append(length>>8) #append length shifted 8 bits
+			sendingMessage.append(length & 0xff) #append length ANDed with 255
+			sendingMessage.append(0) 
+			sendingMessage.append(data[3])
+			sendingMessage.append(data[4])
+			for host in listOfHosts:
+				try: 
+					address = socket.gethostbyname(host)
+					print 'got the address --> socket.gethostbyname(host)'
+					ip = address.split('.')
+					for num in ip:
+						sendingMessage.append(int(num) & 0xff)
+				except socket.error as error:
+					print 'error in "for host in listOfHosts"'
+					for i in range(4):
+						sendingMessage.append(0xff)
+			print 'finished for loop'
+			sendingMessage[2] = instance.checkSum(sendingMessage)
 
-		sendingMessage = bytearray() #initialize as byte array
-		sendingMessage.append(length>>8) #append length shifted 8 bits
-		sendingMessage.append(length & 0xff) #append length ANDed with 255
-		sendingMessage.append(0) 
-		sendingMessage.append(data[3])
-		sendingMessage.append(data[4])
-		for host in listOfHosts:
-			try: 
-				address = socket.gethostbyname(host)
-				print 'got the address --> socket.gethostbyname(host)'
-				ip = address.split('.')
-				for num in ip:
-					sendingMessage.append(int(num) & 0xff)
-			except socket.error as error:
-				print 'error in "for host in listOfHosts"'
-				for i in range(4):
-					sendingMessage.append(0xff)
-		print 'finished for loop'
-		sendingMessage[2] = checkSum(sendingMessage)
-
-		s.sendto(sendingMessage, addr)
-		print 'sent message'
-	else:
-		print 'message was invalid = ' + bytes(checkValue) 
-		"""
-		A message is VALID if its checksum and length are correct. 
-		The checksum is correct if the sum of ALL  bytes composing the message (including the checksum)
-		add up to -1 (0xff).
-		"""
-		sendingMessage = bytearray()
-		sendingMessage.append(0)
-		sendingMessage.append(7)
-		sendingMessage.append(checkValue)
-		sendingMessage.append(data[3])
-		sendingMessage.append(data[4])
-		sendingMessage.append(0)
-		sendingMessage.append(0)
-		
-		s.sendto(sendingMessage, addr)
+			s.sendto(sendingMessage, addr)
+			print 'sent message'
+		else:
+			print 'message was invalid = ' + bytes(checkValue) 
+			"""
+			A message is VALID if its checksum and length are correct. 
+			The checksum is correct if the sum of ALL  bytes composing the message (including the checksum)
+			add up to -1 (0xff).
+			"""
+			sendingMessage = bytearray()
+			sendingMessage.append(0)
+			sendingMessage.append(7)
+			sendingMessage.append(checkValue)
+			sendingMessage.append(data[3])
+			sendingMessage.append(data[4])
+			sendingMessage.append(0)
+			sendingMessage.append(0)
+			
+			s.sendto(sendingMessage, addr)
