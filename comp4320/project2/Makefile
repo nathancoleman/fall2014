@@ -1,25 +1,20 @@
 CC = gcc
 
-all: pre-build ServerUDP ClientTCP
+all: pre-build UDPClient
 
-ServerUDP: pre-build ServerUDP.o
-	@$(CC) -o bin/ServerUDP obj/ServerUDP.o
-ServerUDP.o: src/ServerUDP.c
-	@$(CC) -c src/ServerUDP.c -o obj/ServerUDP.o
-
-ClientTCP: pre-build ClientTCP.o
-	@$(CC) -o bin/ClientTCP obj/ClientTCP.o
-ClientTCP.o: src/ClientTCP.c
-	@$(CC) -c src/ClientTCP.c -o obj/ClientTCP.o
+UDPClient: pre-build UDPClient.o
+	@$(CC) -o bin/UDPClient obj/UDPClient.o
+UDPClient.o: src/UDPClient.c
+	@$(CC) -c src/UDPClient.c -o obj/UDPClient.o
 
 pre-build:
 	@mkdir -p bin obj
 
 tar: clean
-	@tar -zcf ./lab120.tar.gz *
+	@tar -zcf ./lab220.tar.gz *
 
 zip: clean
-	@zip -r ./lab120 ./
+	@zip -r ./lab220 ./
 
 clean:
 	@rm -rf bin obj *.tar.gz *.zip

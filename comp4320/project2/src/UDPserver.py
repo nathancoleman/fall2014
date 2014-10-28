@@ -50,7 +50,7 @@ class serverUDP(object):
 		return returnVal
 
 	def checkSum(self, valueList): ##function for checksum
-		checkSum = int(0) #Initializing to the format I want
+		checkSum = int(0) #Initializing to the format I want. 
 		for i in valueList:
 			checkSum += int(i)
 			checkSum = (checkSum & 0xff) + (checkSum >> 8)
@@ -142,6 +142,11 @@ if __name__ == "__main__":
 			A message is VALID if its checksum and length are correct. 
 			The checksum is correct if the sum of ALL  bytes composing the message (including the checksum)
 			add up to -1 (0xff).
+			 If the request is not valid because of the checksum, the server must return a message with the 
+			 header (Checksum, GID, RequestID) followed by 2 bytes set each to 0x00. If the request is not 
+			 valid because it is too short/lomgth (length mistmach), the server must return a message with 
+			 the header (Checksum, 127, 127) followed by 2 bytes set each to 0x00. If the message is a VALID 
+			 request, the server must resolve the IP address for each hostname and send back a message that contains: 
 			"""
 			sendingMessage = bytearray()
 			sendingMessage.append(0)
