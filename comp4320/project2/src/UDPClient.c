@@ -49,7 +49,7 @@ unsigned char checkSum(unsigned char *message, size_t nBytes) {
 	return check;
 }
 
-unsigned char checkOfCheckSum(unsigned char *message, size_t nBytes) {
+unsigned char checkTheCheckSum(unsigned char *message, size_t nBytes) {
 
 	unsigned short sum = 0;
 
@@ -66,18 +66,17 @@ unsigned char checkOfCheckSum(unsigned char *message, size_t nBytes) {
 
 void error(char *msg)
 {
-
 	perror(msg);
 	exit(1);
 }
 
 
 int main(int argc, char **argv) {
-	int sockfd, portno, n;
+	int sockfd, n, portno;
 	unsigned int length = 6;
-	unsigned char gid = 16;
-	unsigned char reqID;
+	unsigned char gid = 16; //GID: GID is the group ID of the group who sends the request. It is stored on one byte (Byte3).
 	unsigned char delim = '~';
+	unsigned char reqID;
 	struct sockaddr_in servaddr;
 	struct hostent *server;
 	int clientLen;
@@ -211,7 +210,7 @@ int main(int argc, char **argv) {
     	{
     		error("Error in recvfrom");
     	}
-    	unsigned char check  = checkOfCheckSum(buf, sizeof(buf));
+    	unsigned char check  = checkTheCheckSum(buf, sizeof(buf));
 		//printf("check = %d\n", check);     
 		if (check == 255) 
 	    	{
