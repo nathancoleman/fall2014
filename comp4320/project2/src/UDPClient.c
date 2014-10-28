@@ -2,11 +2,11 @@
 *	This is the UDP Client for COMP4320 project2
 *
 *	Based from: 
+*   http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#datagram
+*	http://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/udpserver.c
 *	
 *	Compile using gcc (not g++)
 *
-*	Author: Lucas Saltz
-*	Usage:  
 
 UDPClient Servername Port# requestID n1 n2 ..nm where 
 1.	UDPClient is your executable, 
@@ -100,6 +100,8 @@ int main(int argc, char **argv) {
 	hostname = argv[1];
 	portno = atoi(argv[2]);
 	reqID = atoi(argv[3]);
+	if(0 < reqID || reqID > 127)
+		printf("Error: request ID not valid - Continuing anyway...\n");
 
 	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	//do error checks here
@@ -194,7 +196,7 @@ int main(int argc, char **argv) {
 
     int trys;
         //printf("Sending messages\n");
-    for (trys = 0; trys < 7; ++trys) 
+    for (trys = 0; trys < 7; trys++) 
     {
     	printf("Sending Message, try number#: %d\n", trys);
     	clientLen = sizeof(servaddr);
@@ -210,35 +212,35 @@ int main(int argc, char **argv) {
     		error("Error in recvfrom");
     	}
     	unsigned char check  = checkOfCheckSum(buf, sizeof(buf));
-	//printf("check = %d\n", check);     
-	if (check == 255) 
-    	{
-    		short incLength = (unsigned short)((buf[0]<<8) + buf[1]);
-    		//printf("incLength: %d\n", incLength);
-    		//printf("%s\n", n);
+		//printf("check = %d\n", check);     
+		if (check == 255) 
+	    	{
+	    		short incLength = (unsigned short)((buf[0]<<8) + buf[1]);
+	    		//printf("incLength: %d\n", incLength);
+	    		//printf("%s\n", n);
 
-    		if (n == 7)
-    		{
-    			printf("error has occured from server side");
-    			break;
-    		}
-    		int i = 5;
-    		int e = 0;
-    		for (e; e < count; e++)
-    		{
-    			printf("Host %s has IP address: ", pNames[e]);
-    			if(buf[i] == 255)
-    			{
-    				printf("Issues with host name/IP address\n");
-    				i +=4;
-    			}
-    			printf("%d.", buf[i++]);
-    			printf("%d.", buf[i++]);
-    			printf("%d.", buf[i++]);
-    			printf("%d\n", buf[i++]);
-    		}
-    		isValid = TRUE;
-    	}
+	    		if (n == 7) // can only try 7 times
+	    		{
+	    			printf("error has occured from server side");
+	    			break;
+	    		}
+	    		int i = 5;
+	    		int e = 0;
+	    		for (e; e < count; e++)
+	    		{
+	    			printf("Host %s has IP address: ", pNames[e]);
+	    			if(buf[i] == 255)
+	    			{
+	    				printf("Issues with host name/IP address\n");
+	    				i +=4;
+	    			}
+	    			printf("%d.", buf[i++]);
+	    			printf("%d.", buf[i++]);
+	    			printf("%d.", buf[i++]);
+	    			printf("%d\n", buf[i++]);
+	    		}
+	    		isValid = TRUE;
+	    	}
     	else 
     		printf("Invalid response from server");
     	if (isValid == TRUE)
