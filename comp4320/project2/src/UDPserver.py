@@ -123,7 +123,7 @@ if __name__ == "__main__":
 			for host in listOfHosts:
 				try: 
 					address = socket.gethostbyname(host)
-					print 'got the address --> socket.gethostbyname(host)'
+					print 'got the address --> ' + address
 					ip = address.split('.')
 					for num in ip:
 						sendingMessage.append(int(num) & 0xff)
