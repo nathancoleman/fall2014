@@ -18,10 +18,8 @@ This project includes a Makefile and requires g++ for compilation
 After running ```$ make```:
 - From this directory, ```$ bin/pipeSim filename```
 
-
-```lab3c.s```
-
-Output: 8880
-Total Clock Cycles: 51
-Total Instructions Executed: 36
-Number of NOPs: 15
+lab3c.s:
+- Output: 8880
+- Total Clock Cycles: 51
+- Total Instructions Executed: 36
+- Number of NOPs: 15
