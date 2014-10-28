@@ -1,4 +1,4 @@
-#include "gprSim.h"
+#include "pipeSim.h"
 
 /* Initialize externs */
 std::string FILENAME;

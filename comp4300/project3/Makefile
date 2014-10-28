@@ -1,11 +1,11 @@
 CC = g++
 
-all: pre-build gprSim
+all: pre-build pipeSim
 
-gprSim: pre-build util.o mem.o reg.o gprSim.o
-	@$(CC) -o bin/gprSim obj/util.o obj/mem.o obj/reg.o obj/gprSim.o
-gprSim.o: src/gprSim/gprSim.cpp src/gprSim/gprSim.h
-	@$(CC) -c src/gprSim/gprSim.cpp -std=gnu++0x -o obj/gprSim.o
+pipeSim: pre-build util.o mem.o reg.o pipeSim.o
+	@$(CC) -o bin/pipeSim obj/util.o obj/mem.o obj/reg.o obj/pipeSim.o
+pipeSim.o: src/pipeSim/pipeSim.cpp src/pipeSim/pipeSim.h
+	@$(CC) -c src/pipeSim/pipeSim.cpp -std=gnu++0x -o obj/pipeSim.o
 
 util.o: src/util/util.cpp src/util/util.h
 	@$(CC) -c src/util/util.cpp -std=gnu++0x -o obj/util.o
