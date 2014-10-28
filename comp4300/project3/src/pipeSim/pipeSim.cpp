@@ -7,6 +7,7 @@ if_id_latch if_id;
 id_ex_latch id_ex;
 ex_mem_latch ex_mem;
 mem_wb_latch mem_wb;
+int cycle_count = 0, instr_count = 0, nop_count = 0;
 
 int main(int argc, char* argv[])
 {
@@ -63,7 +64,6 @@ void run()
 	// ex_mem_latch ex_mem;
 	// mem_wb_latch mem_wb;
 	bool user_mode = true;
-	int cycle_count = 0, instr_count = 0, nop_count = 0;
 
 	printf("Executing...\n");
 
@@ -76,23 +76,34 @@ void run()
 		if_id = instr_fetch();
 		id_ex = instr_decode(if_id);
 
+		// switch (id_ex.op_code)
+		// {
+		// 	case NOP:
+		// 		nop_count++;
+		// 		printf("INCREMENTING NOP COUNT\n");
+		// 		break;
+		// 	default:
+		// 		instr_count++;
+		// 		printf("INCREMENTING INSTR COUNT\n");
+		// 		break;
+		// }
+
 		ex_mem = instr_execute(id_ex, &user_mode);
 
 		cycle_count++;
 
-		switch (ex_mem.op_code)
-		{
-			case NOP:
-			case LA:
-			case LB:
-			case LI:
-				nop_count++;
-				break;
+		// switch (ex_mem.op_code)
+		// {
+		// 	case NOP:
+		// 		nop_count++;
+		// 		printf("INCREMENTING NOP_COUNT\n");
+		// 		break;
 
-			default:
-				instr_count++;
-				break;
-		}
+		// 	default:
+		// 		instr_count++;
+		// 		printf("INCREMENETING INSTR_COUNT\n");
+		// 		break;
+		// }
 
 		mem_wb = mem_access(ex_mem);
 		write_back(mem_wb);
@@ -136,6 +147,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				printf("\t\tB %x\n", id_ex.new_PC);
 				PC = id_ex.new_PC - 1;
 				id_ex.op_code = NOP;
+				instr_count++;
 				break;
 
 			case BEQZ:
@@ -148,6 +160,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 					id_ex.op_code = NOP;
 				}
 				printf("\t\tBEQZ %x\n", id_ex.new_PC);
+				instr_count++;
 				break;
 
 			case BGE:
@@ -163,6 +176,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 					id_ex.op_code = NOP;
 				}
 				printf("\t\tBGE %x\n", id_ex.new_PC);
+				instr_count++;
 				break;
 
 			case BNE:
@@ -177,6 +191,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 					id_ex.op_code = NOP;
 				}
 				printf("\t\tBNE $%d (%d) $%d (%d) %x\n", id_ex.rd, id_ex.operand_A, id_ex.rt, id_ex.operand_B, id_ex.new_PC);
+				instr_count++;
 				break;
 
 			default:
@@ -211,6 +226,7 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rs];
 				id_ex.operand_B = R[id_ex.rt];
 				printf("\t\tADD $%d, %d, %d\n", id_ex.rd, id_ex.operand_A, id_ex.operand_B);
+				instr_count++;
 				break;
 
 			case ADDI:
@@ -219,12 +235,14 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rs];
 				id_ex.imm_offset = if_id.ir & 0xFFFF;
 				printf("\t\tADDI $%d, $%d (%x), %d\n", id_ex.rd, id_ex.rs, id_ex.operand_A, id_ex.imm_offset);
+				instr_count++;
 				break;
 
 			case LA:
 				id_ex.rd = (if_id.ir >> 21) & 0x1F;
 				id_ex.imm_offset = if_id.ir & 0xFFFF;
 				printf("\t\tLA $%d, %x\n", id_ex.rd, id_ex.imm_offset);
+				instr_count++;
 				break;
 
 			case LB:
@@ -233,12 +251,14 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.imm_offset = if_id.ir & 0xFFFF;
 				id_ex.operand_A = R[id_ex.rs];
 				printf("\t\tLB $%d, $%d (Address: %x)\n", id_ex.rd, id_ex.rs, id_ex.operand_A);
+				instr_count++;
 				break;
 
 			case LI:
 				id_ex.rd = (if_id.ir >> 21) & 0x1F;
 				id_ex.imm_offset = if_id.ir & 0xFFFF;
 				printf("\t\tLI $%x, %d\n", id_ex.rd, id_ex.imm_offset);
+				instr_count++;
 				break;
 
 			case SUBI:
@@ -247,16 +267,19 @@ id_ex_latch instr_decode(if_id_latch if_id)
 				id_ex.operand_A = R[id_ex.rs];
 				id_ex.imm_offset = if_id.ir & 0xFFFF;
 				printf("\t\tSUBI $%x, %d, %d\n", id_ex.rd, id_ex.operand_A, id_ex.imm_offset);
+				instr_count++;
 				break;
 
 			case SYSCALL:
 				printf("\t\tSYSCALL\n");
+				instr_count++;
 				// What do we do here?
 				// Needs to access mem and then write
 				break;
 
 			case NOP:
 				printf("\t\tNOP\n");
+				nop_count++;
 				return id_ex;
 				break;
 
