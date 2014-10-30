@@ -25,5 +25,8 @@ clean:
 force:
 	@make --always-make
 
-tar: clean
+tar.gz: clean
 	@tar -zcf ./group15_project3.tar.gz *
+
+tgz: clean
+	@tar -zcf ./group15_project3.tgz *
