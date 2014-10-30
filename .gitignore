@@ -5,3 +5,4 @@ obj/
 *.txt
 lab120/
 comp4320/project2/src/serverUDP.py
+*.tgz
