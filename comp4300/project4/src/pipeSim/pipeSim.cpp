@@ -76,37 +76,12 @@ void run()
 		if_id = instr_fetch();
 		id_ex = instr_decode(if_id);
 
-		// switch (id_ex.op_code)
-		// {
-		// 	case NOP:
-		// 		nop_count++;
-		// 		printf("INCREMENTING NOP COUNT\n");
-		// 		break;
-		// 	default:
-		// 		instr_count++;
-		// 		printf("INCREMENTING INSTR COUNT\n");
-		// 		break;
-		// }
-
-		ex_mem = instr_execute(id_ex, &user_mode);
+		// ex_mem = instr_execute(id_ex, &user_mode);
 
 		cycle_count++;
 
-		// switch (ex_mem.op_code)
-		// {
-		// 	case NOP:
-		// 		nop_count++;
-		// 		printf("INCREMENTING NOP_COUNT\n");
-		// 		break;
-
-		// 	default:
-		// 		instr_count++;
-		// 		printf("INCREMENETING INSTR_COUNT\n");
-		// 		break;
-		// }
-
-		mem_wb = mem_access(ex_mem);
-		write_back(mem_wb);
+		// mem_wb = mem_access(ex_mem);
+		// write_back(mem_wb);
 
 		update_PC();
 
@@ -136,172 +111,13 @@ id_ex_latch instr_decode(if_id_latch if_id)
 	printf("\tDecoding instruction...\n");
 
 	id_ex_latch id_ex;
-	id_ex.op_code = get_op_code(if_id.ir);
-
-	if (is_branch_instr(id_ex.op_code))
-	{
-		switch (id_ex.op_code)
-		{
-			case B:
-				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				printf("\t\tB %x\n", id_ex.new_PC);
-				PC = id_ex.new_PC - 1;
-				id_ex.op_code = NOP;
-				instr_count++;
-				break;
-
-			case BEQZ:
-				id_ex.rd = get_rd(if_id.ir);
-				id_ex.operand_A = R[id_ex.rd];
-				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				if (id_ex.operand_A == 0)
-				{
-					PC = id_ex.new_PC - 1;
-					id_ex.op_code = NOP;
-				}
-				printf("\t\tBEQZ %x\n", id_ex.new_PC);
-				instr_count++;
-				break;
-
-			case BGE:
-				id_ex.rd = get_rd(if_id.ir);
-				id_ex.rt = get_rt(if_id.ir);
-				id_ex.operand_A = R[id_ex.rd];
-				id_ex.operand_B = R[id_ex.rt];
-				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-
-				if ((int)id_ex.operand_A >= (int)id_ex.operand_B)
-				{
-					PC = id_ex.new_PC - 1;
-					id_ex.op_code = NOP;
-				}
-				printf("\t\tBGE %x\n", id_ex.new_PC);
-				instr_count++;
-				break;
-
-			case BNE:
-				id_ex.rd = get_rd(if_id.ir);
-				id_ex.rt = get_rt(if_id.ir);
-				id_ex.operand_A = R[id_ex.rd];
-				id_ex.operand_B = R[id_ex.rt];
-				id_ex.new_PC = TEXT_SEG_BASE + get_imm(if_id.ir);
-				if (id_ex.operand_A != id_ex.operand_B)
-				{
-					PC = id_ex.new_PC - 1;
-					id_ex.op_code = NOP;
-				}
-				printf("\t\tBNE $%d (%d) $%d (%d) %x\n", id_ex.rd, id_ex.operand_A, id_ex.rt, id_ex.operand_B, id_ex.new_PC);
-				instr_count++;
-				break;
-
-			default:
-				// This is an invalid op code
-				// Do nothing
-				break;
-		}
-
-		/*Detect data hazards solved by forwarding through the register files*/
-		if (id_ex.rs == mem_wb.rd && id_ex.rs > 0)
-		{
-			printf("\t\tRS DATA HAZARD DETECTED\n");
-			id_ex.operand_A =  mem_wb.alu_out;
-		}
-
-		/*Detect data hazards that can be solved by forwarding through the register files*/
-		if (id_ex.rt == mem_wb.rd && id_ex.rt > 0)
-		{
-			printf("\t\tRT DATA HAZARD DETECTED\n");
-			id_ex.operand_B = mem_wb.alu_out;
-		}
-	}
-
-	else
-	{
-		switch (id_ex.op_code)
-		{
-			case ADD:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.rs = (if_id.ir >> 16) & 0x1F;
-				id_ex.rt = (if_id.ir >> 11) & 0x1F;
-				id_ex.operand_A = R[id_ex.rs];
-				id_ex.operand_B = R[id_ex.rt];
-				printf("\t\tADD $%d, %d, %d\n", id_ex.rd, id_ex.operand_A, id_ex.operand_B);
-				instr_count++;
-				break;
-
-			case ADDI:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.rs = (if_id.ir >> 16) & 0x1F;
-				id_ex.operand_A = R[id_ex.rs];
-				id_ex.imm_offset = if_id.ir & 0xFFFF;
-				printf("\t\tADDI $%d, $%d (%x), %d\n", id_ex.rd, id_ex.rs, id_ex.operand_A, id_ex.imm_offset);
-				instr_count++;
-				break;
-
-			case LA:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.imm_offset = if_id.ir & 0xFFFF;
-				printf("\t\tLA $%d, %x\n", id_ex.rd, id_ex.imm_offset);
-				instr_count++;
-				break;
-
-			case LB:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.rs = (if_id.ir >> 16) & 0x1F;
-				id_ex.imm_offset = if_id.ir & 0xFFFF;
-				id_ex.operand_A = R[id_ex.rs];
-				printf("\t\tLB $%d, $%d (Address: %x)\n", id_ex.rd, id_ex.rs, id_ex.operand_A);
-				instr_count++;
-				break;
-
-			case LI:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.imm_offset = if_id.ir & 0xFFFF;
-				printf("\t\tLI $%x, %d\n", id_ex.rd, id_ex.imm_offset);
-				instr_count++;
-				break;
-
-			case SUBI:
-				id_ex.rd = (if_id.ir >> 21) & 0x1F;
-				id_ex.rs = (if_id.ir >> 16) & 0x1F;
-				id_ex.operand_A = R[id_ex.rs];
-				id_ex.imm_offset = if_id.ir & 0xFFFF;
-				printf("\t\tSUBI $%x, %d, %d\n", id_ex.rd, id_ex.operand_A, id_ex.imm_offset);
-				instr_count++;
-				break;
-
-			case SYSCALL:
-				printf("\t\tSYSCALL\n");
-				instr_count++;
-				// What do we do here?
-				// Needs to access mem and then write
-				break;
-
-			case NOP:
-				printf("\t\tNOP\n");
-				nop_count++;
-				return id_ex;
-				break;
-
-			default:
-				// This is an invalid op code
-				// Do nothing
-				break;
-		}
-
-		// Detect data hazards and deal with forwarding
-		if (id_ex.rd == ex_mem.rd)
-		{
-			id_ex.operand_A = ex_mem.alu_out;
-			printf("\t\tRD DATA HAZARD DETECTED\n");
-		}
-		if (id_ex.rt == ex_mem.rd)
-		{
-			id_ex.operand_B = ex_mem.alu_out;
-			printf("\t\tRT DATA HAZARD DETECTED\n");
-		}
-
-	}
+	id_ex.op_code = getBits(if_id.ir, 26, 32);
+	id_ex.rs = getBits(if_id.ir, 21, 25);
+	id_ex.rt = getBits(if_id.ir, 16, 20);
+	id_ex.rd = getBits(if_id.ir, 11, 16);
+	id_ex.imm_offset = getBits(if_id.ir, 0, 15);
+	id_ex.operand_A = R[id_ex.rs];
+	id_ex.operand_B = R[id_ex.rt];
 
 	return id_ex;
 }

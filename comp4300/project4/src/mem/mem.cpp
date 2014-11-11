@@ -237,14 +237,14 @@ instruction encode_instruction(std::string line)
 		// Encode the instruction
 		instr = ADD;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // second 5 bits are dest
+		instr |= src << 21; // second 5 bits are dest
 		instr |= tar << 16; // third 5 bits are tar
-		instr |= src << 11; // fourth 5 bits are src
+		instr |= dest << 11; // fourth 5 bits are src
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tDest: %d\n", (instr >> 11) & 0x1F);
 		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
-		printf("\t\t\tSrc: %d\n", (instr >> 11) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 	}
 
 	/*
@@ -254,7 +254,7 @@ instruction encode_instruction(std::string line)
 	{	
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
 
 		line = line.substr(line.find("$") + 1);
 		
@@ -264,18 +264,18 @@ instruction encode_instruction(std::string line)
 
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
-		printf("\t\tADDI: params - %d %d %d\n", dest, src, imm);
+		printf("\t\tADDI: params - %d %d %d\n", tar, src, imm);
 
 		// Encode the instruction
 		instr = ADDI;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // second 5 bits are dest
-		instr |= src << 16; // third 5 bits are src
+		instr |= src << 21; // second 5 bits are dest
+		instr |= tar << 16; // third 5 bits are src
 		instr |= (imm & 0xFFFF); // last 16 bits are immediate
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
-		printf("\t\t\tSrc: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 	
@@ -488,7 +488,7 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
 
 		line = line.substr(line.find("$") + 1);
 
@@ -498,18 +498,18 @@ instruction encode_instruction(std::string line)
 
 		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
-		printf("\t\tSUBI: params - %d %d %d\n", dest, src, imm);
+		printf("\t\tSUBI: params - %d %d %d\n", tar, src, imm);
 
 		// Encode the instruction
 		instr = SUBI;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // seconds 5 bits are the dest
-		instr |= src << 16; // third 5 bits are the src
+		instr |= src << 21; // seconds 5 bits are the dest
+		instr |= tar << 16; // third 5 bits are the src
 		instr |= (imm & 0xFFFF); // last 16 bits are immediate
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
-		printf("\t\t\tSrc: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 
