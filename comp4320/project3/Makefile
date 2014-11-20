@@ -2,11 +2,10 @@ CC = gcc
 
 all: pre-build Server
 
-ServerUDP: pre-build ServerUDP.o
+Server: pre-build Server.o
 	@$(CC) -o bin/Server obj/Server.o
-ServerUDP.o: src/Server.c
+Server.o: src/Server.c
 	@$(CC) -c src/Server.c -o obj/Server.o
-
 
 pre-build:
 	@mkdir -p bin obj
