@@ -35,10 +35,10 @@ void error(char *msg) {
   exit(1);
 }
 
-int rangeCheck (short portno) 
+int rangeCheck (short portno, int gid) 
 {
-  int lowerRange = 10010 + (20 * 5);
-  int upperRange = 10010 + (20 * 5) + 4;
+  int lowerRange = 10010 + (gid * 5);
+  int upperRange = lowerRange + 4;
 
   if (portno >= lowerRange && portno <= upperRange)
     return TRUE;
@@ -120,10 +120,11 @@ int main(int argc, char **argv) {
     /* 
      * gethostbyaddr: determine who sent the datagram
      */
-    hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
-			  sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-    if (hostp == NULL)
-      error("ERROR on gethostbyaddr");
+    // hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
+			 //  sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+
+    // if (hostp == NULL)
+    //   error("ERROR on gethostbyaddr");
 
 
     hostaddrp = inet_ntoa(clientaddr.sin_addr);
@@ -137,17 +138,20 @@ int main(int argc, char **argv) {
 		Starting new code not from example code
   	********************************************************/
 
-  
-    int validRange = rangeCheck(portno);
+    int gid = buf[2];
+    printf("gid is: ");
+    printf("%d\n", gid);
+    int validRange = rangeCheck(portno, gid);
     //IF VALID
       if (validRange == TRUE)  //valid
       {
       //IF WAITING CLIENT
         if (waitingClient == TRUE) 
         {
+          //flush
           waitingClient = FALSE;
           //is this right????
-          clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
+          //clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
           unsigned char message[9];//Size of 9???
           message[0] = 12;
           message[1] = 34;
@@ -166,14 +170,14 @@ int main(int argc, char **argv) {
           printf("sent response back\n");
         }
         else {
-          //flush 
+          //No waiting client, so this is the first set up, so next time there will be waiting client
           waitingClient = TRUE;
-
+          clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
           //do stuff
            unsigned char message[5];
             message[0] = 12;
             message[1] = 34;
-            message[2] = 20; // gid
+            message[2] = 20; //gid
             message[3] = 0; //Ph - portno??
             message[4] = 0; //Pl - portno???
 
