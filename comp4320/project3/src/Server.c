@@ -1,11 +1,14 @@
 /*
-*	This is the UDP Server for COMP4320 project1
+*	This is the UDP Server for COMP4320 project3
 *
 *	Based from: 
 *	http://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/udpserver.c
 *
 *	Author: Lucas Saltz
 *	Usage: ./ServerUDP <port>
+
+//10010 + 5*20 
+SERVERPORT 10110
 */
 
 
@@ -23,6 +26,7 @@
 #define TRUE 1
 #define FALSE 0
 
+
 /*
  * error - wrapper for perror
  */
@@ -31,6 +35,16 @@ void error(char *msg) {
   exit(1);
 }
 
+int rangeCheck (short portno) 
+{
+  int lowerRange = 10010 + (20 * 5);
+  int upperRange = 10010 + (20 * 5) + 4;
+
+  if (portno >= lowerRange && portno <= upperRange)
+    return TRUE;
+  else
+    return FALSE;
+}
 
 
 int main(int argc, char **argv) {
@@ -44,6 +58,8 @@ int main(int argc, char **argv) {
   char *hostaddrp; /* dotted decimal host addr string */
   int optval; /* flag value for setsockopt */
   int n; /* message byte size */
+  short clientPo;
+  int waitingClient = FALSE;
 
   /* 
    * check command line arguments 
@@ -89,7 +105,8 @@ int main(int argc, char **argv) {
    * main loop: wait for a datagram, then echo it
    */
   clientlen = sizeof(clientaddr);
-  while (1) {
+  while (1) 
+  {
 
     /*
      * recvfrom: receive a UDP datagram from a client
@@ -107,7 +124,11 @@ int main(int argc, char **argv) {
 			  sizeof(clientaddr.sin_addr.s_addr), AF_INET);
     if (hostp == NULL)
       error("ERROR on gethostbyaddr");
+
+
     hostaddrp = inet_ntoa(clientaddr.sin_addr);
+    
+
     if (hostaddrp == NULL)
       error("ERROR on inet_ntoa\n");
 
@@ -115,56 +136,74 @@ int main(int argc, char **argv) {
   	/*******************************************************
 		Starting new code not from example code
   	********************************************************/
-  	char operation = buf[4];
 
-
-
-  	if(operation == 0x55) //0x55 is hex for vLength
-  	{
-  		//printf("%s\n", "operation == 0x55");
-  		short packetLength = (short)((buf[0] << 8) + buf[1]);
-  		char buffer[packetLength-5]; //-5 for known size
-  		int i;
-  		for (i = 0; i < sizeof(buffer); i++)
-  		{
-  			buffer[i] = buf[i+5];
-  		}
-  		//short numVowels = vowelNumber(buffer, sizeof(buffer));
-  		char response[6];
-  		short length = (short) sizeof(response);
-  	/*******************************************************
-		implement response message to send back below
-  	********************************************************/
-		response[0] = (char)(length >> 8);  //shifting the bits
-		response[1] = (char)(length & 0xff); //taking just the end
-		response[2] = buf[2];
-		response[3] = buf[3];
-
-		n = sendto(sockfd, response, length, 0, 
-	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent response back\n");
-    	if (n < 0) 
-      		error("ERROR in sendto");
-  	}
-  	else if (operation == -86) //hack
-  	{
-  		//printf("%s\n", "operation == 0xAA");
-  		short packetLength = (short)((buf[0] << 8) + buf[1]);
-  		char buffer[packetLength-5];
-  		int i;
-  		for (i = 0; i < sizeof(buffer); i++) //i++???
-  		{
-  			buffer[i] = buf[i+5];
-  		}
-
-  		//n = sendto(sockfd, byteMessage, length, 0, 
-	      // (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent back to client\n");
-    	if (n < 0) 
-      		error("ERROR in sendto");
-   	}
   
+    int validRange = rangeCheck(portno);
+    //IF VALID
+      if (validRange == TRUE)  //valid
+      {
+      //IF WAITING CLIENT
+        if (waitingClient == TRUE) 
+        {
+          waitingClient = FALSE;
+          //is this right????
+          clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
+          unsigned char message[9];//Size of 9???
+          message[0] = 12;
+          message[1] = 34;
+          message[2] = 20; // gid
+          //double check logic 
+          message[7] = ((clientPo >> 8) & 0xff); //ip address of waiting client 4
+          //double check logic
+          message[8] = clientPo & 0xff;//portno of waiting client 5
+
+
+          printf("Waiting Client, sending appropriate message\n");
+      		n = sendto(sockfd, message, 9, 0, 
+            (struct sockaddr *) &clientaddr, clientlen);
+          	if (n < 0) 
+            		error("ERROR in sendto");
+          printf("sent response back\n");
+        }
+        else {
+          //flush 
+          waitingClient = TRUE;
+
+          //do stuff
+           unsigned char message[5];
+            message[0] = 12;
+            message[1] = 34;
+            message[2] = 20; // gid
+            message[3] = 0; //Ph - portno??
+            message[4] = 0; //Pl - portno???
+
+              printf("No waiting client, sending message now\n");
+                n = sendto(sockfd, buf, n, 0, 
+                   (struct sockaddr *) &clientaddr, clientlen);
+                if (n < 0) 
+                    error("ERROR in sendto");  
+              printf("sent back to client\n");
+        }
+      }
+        
+      else 
+      { // Not Valid
+        unsigned char message[5];
+        message[0] = 12;
+        message[1] = 34;
+        message[2] = 20;
+        message[3] = 0;
+        //message[4] = ; //XY???
+
+        //NO magic number - XY0 = 1
+        //Magic number - XY1 = 
+        //Port out of range?? XY2 = 1
+        printf("No valid request, sending message now\n");
+        n = sendto(sockfd, message, 5, 0, (struct sockaddr *) &clientaddr, clientlen);
+
+      }
 
   }
+
 }
 
