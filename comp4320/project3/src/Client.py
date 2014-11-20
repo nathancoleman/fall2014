@@ -6,12 +6,16 @@
 
 import socket, struct, sys
 
+# Constants
+MAGIC_NUMBER = 0x1234
+
 # Error Codes
 ERR_NO_MAGIC_NUM = 0x00
 ERR_INVALID_LGTH = 0x01
 ERR_INVALID_PORT = 0x02
 
 # Response Length
+LEN_MAG_NUM = 2
 LEN_REG_ERR = 5
 LEN_IP_PORT = 9
 
@@ -23,6 +27,7 @@ class ClientUDP:
 		self.play_port 	= play_port
 		self.socket 	= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.group_id 	= group_id
+		self.magic_num 	= MAGIC_NUMBER
 		
 		self.socket.connect((host, port))
 		print "Client init:", host, port, play_port, group_id
@@ -36,8 +41,11 @@ class ClientUDP:
 		print "Request:"
 		
 		print "\tPacking..."
-		pack_format = "!BBBH"
-		packed_data = struct.pack(pack_format, 0x12, 0x34, self.group_id, self.play_port)
+		print "\t\tMagic #:", self.magic_num
+		print "\t\tGroup ID:", self.group_id
+		print "\t\tPort:", self.play_port
+		pack_format = "!HBH"
+		packed_data = struct.pack(pack_format, self.magic_num, self.group_id, self.play_port)
 
 		print "\tSending..."
 		self.socket.sendall(packed_data)
@@ -50,19 +58,26 @@ class ClientUDP:
 
 		# Test Response Data
 		# ============================================
-		ip_format = "!BBBBBBBH"
-		ip_response = struct.pack(ip_format, 0x12, 0x34, 21, 192, 168, 1, 1, 10111)
+		ip_format = "!HBBBBBH"
+		ip_response = struct.pack(ip_format, MAGIC_NUMBER, 21, 192, 168, 1, 1, 10111)
 		
-		reg_format = "!BBBBB"
-		reg_response = struct.pack(reg_format, 0x12, 0x34, 21, 0x37, 0x7F)
+		reg_format = "!HBH"
+		reg_response = struct.pack(reg_format, MAGIC_NUMBER, 21, 10111)
 		
-		err_format = "!BBBBB"
-		err_response = struct.pack(err_format, 0x12, 0x34, 21, 0x00, ERR_NO_MAGIC_NUM)
+		err_format = "!HBBB"
+		err_response = struct.pack(err_format, MAGIC_NUMBER, 21, 0x00, ERR_NO_MAGIC_NUM)
 
-		packed_data = err_response
+		mag_format = "!H"
+		mag_response = struct.pack(mag_format, MAGIC_NUMBER)
+
+		packed_data = ip_response
 		# ============================================
 
-		if len(packed_data) == LEN_REG_ERR:
+		if len(packed_data) == LEN_MAG_NUM:
+			print "\tStarting TCP server on port", self.play_port
+			self.establish_server('', self.play_port)
+
+		elif len(packed_data) == LEN_REG_ERR:
 			
 			if self.is_error(packed_data):
 				print "\tResponse is an error"
@@ -72,10 +87,10 @@ class ClientUDP:
 				print "\tResponse is a registration"
 
 				print "\tUnpacking..."
-				pack_format = "!BBBH" # ! for network order
-				magic1, magic2, group_id, port = struct.unpack(pack_format, packed_data)
+				pack_format = "!HBH" # ! for network order
+				magic, group_id, port = struct.unpack(pack_format, packed_data)
 
-				print "\t\tMagic #:", hex(magic1), hex(magic2)
+				print "\t\tMagic #:", hex(magic)
 				print "\t\tGroup ID:", group_id
 				print "\t\tPort:", port
 
@@ -83,14 +98,18 @@ class ClientUDP:
 			print "\tResponse includes IP address and port #"
 
 			print "\tUnpacking..."
-			pack_format = "!BBBBBBBH" # ! for network order
-			magic1, magic2, group_id, ip1, ip2, ip3, ip4, port = \
+			pack_format = "!HBBBBBH" # ! for network order
+			magic, group_id, ip1, ip2, ip3, ip4, port = \
 				struct.unpack(pack_format, packed_data)
 
-			print "\t\tMagic #:", hex(magic1), hex(magic2)
+			print "\t\tMagic #:", hex(magic)
 			print "\t\tGroup ID:", group_id
-			print "\t\tIP:" + str(ip1) + "." + str(ip2) + "." + str(ip3) + "." + str(ip4)
+			ip = str(ip1) + "." + str(ip2) + "." + str(ip3) + "." + str(ip4)
+			print "\t\tIP:" + ip
 			print "\t\tPort:", port
+
+			print "\tConnecting to opponent at", ip, ":", port
+			self.connect_to_opponent(ip, port) 
 
 		else:
 			print "\t** Response was unexpected length **"
@@ -116,6 +135,28 @@ class ClientUDP:
 			return "ERROR: Invalid port!"
 
 		return "** Received error with invalid code **"
+
+	def establish_server(self, host, port):
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.bind((host, port))
+		self.socket.listen(True)
+
+		while True:
+			try:	
+				print "\tWaiting for opponent to connect..."
+				self.client, self.addr = self.socket.accept()
+				print "\tOpponent connected from:", self.addr
+
+			except KeyboardInterrupt:
+				print "\nExiting..."
+				exit(0) 
+			
+			finally:
+				if hasattr(self, 'client'):
+					self.client.close
+
+	def connect_to_opponent(self, host, port):
+		self.socket.connect((host, port))
 
 
 if __name__ == "__main__":
