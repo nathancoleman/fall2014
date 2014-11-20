@@ -29,6 +29,7 @@ class ClientUDP:
 		self.socket 	= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.group_id 	= group_id
 		self.magic_num 	= MAGIC_NUMBER
+		self.is_server 	= False
 		
 		self.socket.connect((host, port))
 		print "Client init:", host, port, play_port, group_id
@@ -42,7 +43,7 @@ class ClientUDP:
 		print "Request:"
 		
 		print "\tPacking..."
-		print "\t\tMagic #:", self.magic_num
+		print "\t\tMagic #:", hex(self.magic_num)
 		print "\t\tGroup ID:", self.group_id
 		print "\t\tPort:", self.play_port
 		pack_format = "!HBH"
@@ -55,7 +56,7 @@ class ClientUDP:
 		print "Response:"
 
 		# TODO: Replace test reponse data with line below once server works
-		# packed_date = self.socket.recv(1024) #We should not need to recv more than this
+		packed_data = self.socket.recv(1024) #We should not need to recv more than this
 
 		# Test Response Data
 		# ============================================
@@ -71,7 +72,7 @@ class ClientUDP:
 		mag_format = "!H"
 		mag_response = struct.pack(mag_format, MAGIC_NUMBER)
 
-		packed_data = ip_response
+		# packed_data = ip_response
 		# ============================================
 
 		if len(packed_data) == LEN_MAG_NUM:
@@ -138,6 +139,7 @@ class ClientUDP:
 		return "** Received error with invalid code **"
 
 	def establish_server(self, host, port):
+		self.is_server = True
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.bind((host, port))
 		self.socket.listen(True)
@@ -157,7 +159,17 @@ class ClientUDP:
 					self.client.close
 
 	def connect_to_opponent(self, host, port):
+		self.is_server = False
 		self.socket.connect((host, port))
+
+	def send_move(self, row, num_remove):
+		pack_format = "!HBBB"
+		packed_data = struct.pack(pack_format, self.magic_num, self.group_id, row, num_remove)
+
+	def get_move(self):
+		pack_format = "!HBBB"
+		packed_data = self.socket.recv(1024)
+		magic, group_id, row, num_remove = struct.unpack(pack_format, packed_data)
 
 
 if __name__ == "__main__":
