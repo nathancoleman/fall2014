@@ -7,23 +7,8 @@
 *	Author: Lucas Saltz
 *	Usage: ./ServerUDP <port>
 
-
-
-0x1234GIDPhPl
-number 0x1234 (over two bytes), your group ID GID (one byte) (GID is the number of the 
-group who designed/implemented the client.), and a port number P (PhPl
-significant byte of the port, and Pl
-whether there is a waiting client or not:
-i. If there is no waiting client, the server registers the IP address of NewClient and the port 
-number P, and responds with a datagram that contains 0x1234GIDPhPl
-is the magic number, GID is the GID of the owner of the server, and PhPl
-ii. If there is a waiting client WaitingClient, the server responds with a message that 
-1.The magic number 0x1234
-2.The GID where GID is the group ID of the group implementing the server.
-3.The IP address of WaitingClient (network byte order)
-4.The port number of WaitingClient. (network byte order)
- from client NewClient that contains the magic 
- is the least significant byte of the port), it reacts depending on
+//10010 + 5*20 
+SERVERPORT 10110
 */
 
 
@@ -40,8 +25,7 @@ ii. If there is a waiting client WaitingClient, the server responds with a messa
 #define BUFSIZE 1024
 #define TRUE 1
 #define FALSE 0
-//10010 + 5*20 
-#define SERVERPORT 10100
+
 
 /*
  * error - wrapper for perror
@@ -49,6 +33,17 @@ ii. If there is a waiting client WaitingClient, the server responds with a messa
 void error(char *msg) {
   perror(msg);
   exit(1);
+}
+
+int rangeCheck (short portno) 
+{
+  int lowerRange = 10010 + (20 * 5);
+  int upperRange = 10010 + (20 * 5) + 4;
+
+  if (portno >= lowerRange && portno <= upperRange)
+    return TRUE;
+  else
+    return FALSE;
 }
 
 
@@ -63,6 +58,8 @@ int main(int argc, char **argv) {
   char *hostaddrp; /* dotted decimal host addr string */
   int optval; /* flag value for setsockopt */
   int n; /* message byte size */
+  short clientPo;
+  int waitingClient = FALSE;
 
   /* 
    * check command line arguments 
@@ -108,7 +105,8 @@ int main(int argc, char **argv) {
    * main loop: wait for a datagram, then echo it
    */
   clientlen = sizeof(clientaddr);
-  while (1) {
+  while (1) 
+  {
 
     /*
      * recvfrom: receive a UDP datagram from a client
@@ -139,24 +137,73 @@ int main(int argc, char **argv) {
 		Starting new code not from example code
   	********************************************************/
 
-
-
-
-		n = sendto(sockfd, buf, BUFSIZE, 0, 
-	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent response back\n");
-    	if (n < 0) 
-      		error("ERROR in sendto");
-  	}
-
-
-  		n = sendto(sockfd, buf, n, 0, 
-	       (struct sockaddr *) &clientaddr, clientlen);
-		printf("sent back to client\n");
-    	if (n < 0) 
-      		error("ERROR in sendto");
-   	
   
+    int validRange = rangeCheck(portno);
+    //IF VALID
+      if (validRange == TRUE)  //valid
+      {
+      //IF WAITING CLIENT
+        if (waitingClient == TRUE) 
+        {
+          waitingClient = FALSE;
+          //is this right????
+          clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
+          unsigned char message[9];//Size of 9???
+          message[0] = 12;
+          message[1] = 34;
+          message[2] = 20; // gid
+          //double check logic 
+          message[7] = ((clientPo >> 8) & 0xff); //ip address of waiting client 4
+          //double check logic
+          message[8] = clientPo & 0xff;//portno of waiting client 5
+
+
+          printf("Waiting Client, sending appropriate message\n");
+      		n = sendto(sockfd, message, 9, 0, 
+            (struct sockaddr *) &clientaddr, clientlen);
+          	if (n < 0) 
+            		error("ERROR in sendto");
+          printf("sent response back\n");
+        }
+        else {
+          //flush 
+          waitingClient = TRUE;
+
+          //do stuff
+           unsigned char message[5];
+            message[0] = 12;
+            message[1] = 34;
+            message[2] = 20; // gid
+            message[3] = 0; //Ph - portno??
+            message[4] = 0; //Pl - portno???
+
+              printf("No waiting client, sending message now\n");
+                n = sendto(sockfd, buf, n, 0, 
+                   (struct sockaddr *) &clientaddr, clientlen);
+                if (n < 0) 
+                    error("ERROR in sendto");  
+              printf("sent back to client\n");
+        }
+      }
+        
+      else 
+      { // Not Valid
+        unsigned char message[5];
+        message[0] = 12;
+        message[1] = 34;
+        message[2] = 20;
+        message[3] = 0;
+        //message[4] = ; //XY???
+
+        //NO magic number - XY0 = 1
+        //Magic number - XY1 = 
+        //Port out of range?? XY2 = 1
+        printf("No valid request, sending message now\n");
+        n = sendto(sockfd, message, 5, 0, (struct sockaddr *) &clientaddr, clientlen);
+
+      }
+
+  }
 
 }
 
