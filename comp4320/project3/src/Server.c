@@ -1,11 +1,29 @@
 /*
-*	This is the UDP Server for COMP4320 project1
+*	This is the UDP Server for COMP4320 project3
 *
 *	Based from: 
 *	http://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/udpserver.c
 *
 *	Author: Lucas Saltz
 *	Usage: ./ServerUDP <port>
+
+
+
+0x1234GIDPhPl
+number 0x1234 (over two bytes), your group ID GID (one byte) (GID is the number of the 
+group who designed/implemented the client.), and a port number P (PhPl
+significant byte of the port, and Pl
+whether there is a waiting client or not:
+i. If there is no waiting client, the server registers the IP address of NewClient and the port 
+number P, and responds with a datagram that contains 0x1234GIDPhPl
+is the magic number, GID is the GID of the owner of the server, and PhPl
+ii. If there is a waiting client WaitingClient, the server responds with a message that 
+1.The magic number 0x1234
+2.The GID where GID is the group ID of the group implementing the server.
+3.The IP address of WaitingClient (network byte order)
+4.The port number of WaitingClient. (network byte order)
+ from client NewClient that contains the magic 
+ is the least significant byte of the port), it reacts depending on
 */
 
 
@@ -22,6 +40,8 @@
 #define BUFSIZE 1024
 #define TRUE 1
 #define FALSE 0
+//10010 + 5*20 
+#define SERVERPORT 10100
 
 /*
  * error - wrapper for perror
@@ -30,7 +50,6 @@ void error(char *msg) {
   perror(msg);
   exit(1);
 }
-
 
 
 int main(int argc, char **argv) {
@@ -107,7 +126,11 @@ int main(int argc, char **argv) {
 			  sizeof(clientaddr.sin_addr.s_addr), AF_INET);
     if (hostp == NULL)
       error("ERROR on gethostbyaddr");
+
+
     hostaddrp = inet_ntoa(clientaddr.sin_addr);
+    
+
     if (hostaddrp == NULL)
       error("ERROR on inet_ntoa\n");
 
@@ -115,54 +138,24 @@ int main(int argc, char **argv) {
   	/*******************************************************
 		Starting new code not from example code
   	********************************************************/
-  	char operation = buf[4];
 
 
 
-  	if(operation == 0x55) //0x55 is hex for vLength
-  	{
-  		//printf("%s\n", "operation == 0x55");
-  		short packetLength = (short)((buf[0] << 8) + buf[1]);
-  		char buffer[packetLength-5]; //-5 for known size
-  		int i;
-  		for (i = 0; i < sizeof(buffer); i++)
-  		{
-  			buffer[i] = buf[i+5];
-  		}
-  		//short numVowels = vowelNumber(buffer, sizeof(buffer));
-  		char response[6];
-  		short length = (short) sizeof(response);
-  	/*******************************************************
-		implement response message to send back below
-  	********************************************************/
-		response[0] = (char)(length >> 8);  //shifting the bits
-		response[1] = (char)(length & 0xff); //taking just the end
-		response[2] = buf[2];
-		response[3] = buf[3];
 
-		n = sendto(sockfd, response, length, 0, 
+		n = sendto(sockfd, buf, BUFSIZE, 0, 
 	       (struct sockaddr *) &clientaddr, clientlen);
 		printf("sent response back\n");
     	if (n < 0) 
       		error("ERROR in sendto");
   	}
-  	else if (operation == -86) //hack
-  	{
-  		//printf("%s\n", "operation == 0xAA");
-  		short packetLength = (short)((buf[0] << 8) + buf[1]);
-  		char buffer[packetLength-5];
-  		int i;
-  		for (i = 0; i < sizeof(buffer); i++) //i++???
-  		{
-  			buffer[i] = buf[i+5];
-  		}
 
-  		//n = sendto(sockfd, byteMessage, length, 0, 
-	      // (struct sockaddr *) &clientaddr, clientlen);
+
+  		n = sendto(sockfd, buf, n, 0, 
+	       (struct sockaddr *) &clientaddr, clientlen);
 		printf("sent back to client\n");
     	if (n < 0) 
       		error("ERROR in sendto");
-   	}
+   	
   
 
   }
