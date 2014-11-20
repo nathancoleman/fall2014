@@ -7,6 +7,7 @@
 import socket, struct, sys
 
 # Constants
+GROUP_ID = 20
 MAGIC_NUMBER = 0x1234
 
 # Error Codes
@@ -105,7 +106,7 @@ class ClientUDP:
 			print "\t\tMagic #:", hex(magic)
 			print "\t\tGroup ID:", group_id
 			ip = str(ip1) + "." + str(ip2) + "." + str(ip3) + "." + str(ip4)
-			print "\t\tIP:" + ip
+			print "\t\tIP:", ip
 			print "\t\tPort:", port
 
 			print "\tConnecting to opponent at", ip, ":", port
@@ -170,7 +171,7 @@ if __name__ == "__main__":
 	print 'I would like to play on port', play_port
 
 	try:
-		client = ClientUDP(host, port, play_port, 20)
+		client = ClientUDP(host, port, play_port, GROUP_ID)
 		
 		if client.valid_play_port():
 			client.send_request()
