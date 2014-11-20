@@ -153,13 +153,14 @@ int main(int argc, char **argv) {
           //is this right????
           //clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
           unsigned char message[9];//Size of 9???
-          message[0] = 12;
-          message[1] = 34;
+          message[0] = 0x12;
+          message[1] = 0x34;
           message[2] = 20; // gid
           //double check logic 
-          message[7] = ((clientPo >> 8) & 0xff); //ip address of waiting client 4
+          message[7] = serveraddr.sin_addr.s_addr;
+          //((clientPo >> 8) & 0xff); //ip address of waiting client 4 - fucked up
           //double check logic
-          message[8] = clientPo & 0xff;//portno of waiting client 5
+          message[8] = clientPo & 0xff;//portno of waiting client 5 - messed up
 
 
           printf("Waiting Client, sending appropriate message\n");
@@ -171,12 +172,16 @@ int main(int argc, char **argv) {
         }
         else {
           //No waiting client, so this is the first set up, so next time there will be waiting client
+          printf("No waiting client, setting up first connection...\n");
           waitingClient = TRUE;
           clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
+          printf("Correct IP should be: 192.168.43.167\n");
+          printf("The IP pulled is: ");
+          printf("%d\n", serveraddr.sin_addr.s_addr);
           //do stuff
            unsigned char message[5];
-            message[0] = 12;
-            message[1] = 34;
+            message[0] = 0x12;
+            message[1] = 0x34;
             message[2] = 20; //gid
             message[3] = 0; //Ph - portno??
             message[4] = 0; //Pl - portno???
@@ -193,8 +198,8 @@ int main(int argc, char **argv) {
       else 
       { // Not Valid
         unsigned char message[5];
-        message[0] = 12;
-        message[1] = 34;
+        message[0] = 0x12;
+        message[1] = 0x34;
         message[2] = 20;
         message[3] = 0;
         //message[4] = ; //XY???
