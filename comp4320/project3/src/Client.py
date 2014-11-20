@@ -57,9 +57,9 @@ class ClientUDP:
 		reg_response = struct.pack(reg_format, 0x12, 0x34, 21, 0x37, 0x7F)
 		
 		err_format = "!BBBBB"
-		err_reponse = struct.pack(err_format, 0x12, 0x34, 21, 0x00, ERR_NO_MAGIC_NUM)
+		err_response = struct.pack(err_format, 0x12, 0x34, 21, 0x00, ERR_NO_MAGIC_NUM)
 
-		packed_data = ip_response
+		packed_data = err_response
 		# ============================================
 
 		if len(packed_data) == LEN_REG_ERR:
@@ -97,14 +97,14 @@ class ClientUDP:
 
 	def is_error(self, packed_data):
 		pack_format = "!BBBBB"
-		# __, __, __, byte4, __ = struct.unpack(pack_format, packed_data)
 		# 4th byte is 0x00 for an error
 		byte4 = struct.unpack(pack_format, packed_data)[3]
 		return byte4 == 0x00
 
 	def get_error_msg(self, packed_data):
 		pack_format = "!BBBBB"
-		__, __, __, __, error_type = struct.unpack(pack_format, packed_data)
+		# 5th byte is error type code
+		error_type = struct.unpack(pack_format, packed_data)[4]
 
 		if error_type == ERR_NO_MAGIC_NUM:
 			return "ERROR: No magic number!"
