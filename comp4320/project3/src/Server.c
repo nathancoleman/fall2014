@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
   short clientPo;
   int waitingClient = FALSE;
 
+
   /* 
    * check command line arguments 
    */
@@ -120,11 +121,11 @@ int main(int argc, char **argv) {
     /* 
      * gethostbyaddr: determine who sent the datagram
      */
-    // hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
-			 //  sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+    hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
+			   sizeof(clientaddr.sin_addr.s_addr), AF_INET);
 
-    // if (hostp == NULL)
-    //   error("ERROR on gethostbyaddr");
+    if (hostp == NULL)
+      error("ERROR on gethostbyaddr");
 
 
     hostaddrp = inet_ntoa(clientaddr.sin_addr);
@@ -156,10 +157,20 @@ int main(int argc, char **argv) {
           message[0] = 0x12;
           message[1] = 0x34;
           message[2] = 20; // gid
-          //double check logic 
-          message[7] = serveraddr.sin_addr.s_addr;
+          //double check logic
+          // message[3] = ((int)hostaddrp >> 24);
+          // message[4] = ((int)hostaddrp >> 16) & 0xff;
+          // message[5] = ((int)hostaddrp >> 8) & 0xff;
+          // message[6] = (int)hostaddrp & 0xff;
+          message[3] = (clientaddr.sin_addr.s_addr&0xFF);
+          message[4] = ((clientaddr.sin_addr.s_addr&0xFF00)>>8);
+          message[5] = ((clientaddr.sin_addr.s_addr&0xFF0000)>>16);
+          message[6] = ((clientaddr.sin_addr.s_addr&0xFF000000)>>24);
+          
+          //message[7] = (char) hostaddrp;
           //((clientPo >> 8) & 0xff); //ip address of waiting client 4 - fucked up
           //double check logic
+          message[7] = clientPo >> 8;
           message[8] = clientPo & 0xff;//portno of waiting client 5 - messed up
 
 
@@ -174,10 +185,11 @@ int main(int argc, char **argv) {
           //No waiting client, so this is the first set up, so next time there will be waiting client
           printf("No waiting client, setting up first connection...\n");
           waitingClient = TRUE;
-          clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
+          clientPo = (short) ((buf[3] << 8) | buf[4]); // most sig of port and least sig of byte of port
+          hostaddrp = inet_ntoa(clientaddr.sin_addr);
           printf("Correct IP should be: 192.168.43.167\n");
           printf("The IP pulled is: ");
-          printf("%d\n", serveraddr.sin_addr.s_addr);
+          printf("%s\n", hostaddrp);
           //do stuff
            unsigned char message[5];
             message[0] = 0x12;
