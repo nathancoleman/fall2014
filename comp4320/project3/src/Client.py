@@ -93,6 +93,9 @@ class ClientUDP:
 				print "\t\tGroup ID:", group_id
 				print "\t\tPort:", port
 
+				print "\tStarting TCP server on port", port
+				self.establish_server('', port)
+
 		elif len(packed_data) == LEN_IP_PORT:
 			print "\tResponse includes IP address and port #"
 
@@ -146,9 +149,9 @@ class ClientUDP:
 
 		while True:
 			try:	
-				print "\tWaiting for opponent to connect..."
+				print "\tWaiting for opponent to connect...\n"
 				self.client, self.addr = self.socket.accept()
-				print "\tOpponent connected from:", self.addr
+				print "\tOpponent connected from:", self.addr[0]
 
 			except KeyboardInterrupt:
 				print "\nExiting..."
@@ -161,6 +164,7 @@ class ClientUDP:
 	
 	def connect_to_opponent(self, host, port):
 		self.is_server = False
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((host, port))
 
 	
