@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     char *hostaddrp; /* dotted decimal host addr string */
     int optval; /* flag value for setsockopt */
     int n; /* message byte size */
-    int clientPo; /* port the client wants to play on */
+    int clientPo = 0; /* port the client wants to play on */
     int waitingClient = FALSE; /* is there a client waiting to play? */
 
 
@@ -115,8 +115,7 @@ int main(int argc, char **argv)
         * recvfrom: receive a UDP datagram from a client
         */
         bzero(buf, BUFSIZE);
-        n = recvfrom(sockfd, buf, BUFSIZE, 0,
-        (struct sockaddr *) &clientaddr, &clientlen);
+        n = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr *) &clientaddr, &clientlen);
         if (n < 0)
             error("ERROR in recvfrom");
 
@@ -143,8 +142,6 @@ int main(int argc, char **argv)
 
         int gid = buf[2];
         printf("Client connected\n");
-        printf("\tGroup ID: %d\n", gid);
-        printf("\tClient Address: %d\n", clientaddr.sin_addr.s_addr);
         int validRange = rangeCheck(portno, gid);
         //IF VALID
         if (validRange)  //valid
@@ -153,6 +150,8 @@ int main(int argc, char **argv)
             if (waitingClient) 
             {
                 printf("Client waiting, sending address and port...\n");
+                printf("\tIP Address: %s\n", hostaddrp);
+                printf("\tPort: %d\n", clientPo);
                 //flush
                 waitingClient = FALSE;
                 //is this right????
@@ -190,17 +189,17 @@ int main(int argc, char **argv)
                 //No waiting client, so this is the first set up, so next time there will be waiting client
                 printf("No waiting client, storing address and port...\n");
                 waitingClient = TRUE;
-                clientPo = ((buf[3] << 8) | buf[4]); // most sig of port and least sig of byte of port
+                clientPo = (((unsigned int)(unsigned char)buf[3] << 8) + (unsigned int)(unsigned char)buf[4]); // most sig of port and least sig of byte of port
                 hostaddrp = inet_ntoa(clientaddr.sin_addr);
                 printf("\tIP Address: %s\n", hostaddrp);
-                printf("\tPort: %d %d\n", buf[3], buf[4]);
+                printf("\tPort: %d\n", clientPo);
                 //do stuff
                 unsigned char message[5];
                 message[0] = 0x12;
                 message[1] = 0x34;
                 message[2] = 20; //gid
-                message[3] = 0; //Ph - portno??
-                message[4] = 0; //Pl - portno???
+                message[3] = buf[3]; //Ph - portno??
+                message[4] = buf[4]; //Pl - portno???
 
                 n = sendto(sockfd, buf, n, 0, 
                 (struct sockaddr *) &clientaddr, clientlen);
