@@ -34,11 +34,7 @@ class ClientUDP:
 		self.socket.connect((host, port))
 		print "Client init:", host, port, play_port, group_id
 
-	def valid_play_port(self):
-		floor = 10010 + (5 * self.group_id)
-		ceiling = floor + 4
-		return floor <= self.play_port <= ceiling
-
+	
 	def send_request(self):
 		print "Request:"
 		
@@ -52,6 +48,7 @@ class ClientUDP:
 		print "\tSending..."
 		self.socket.sendall(packed_data)
 
+	
 	def get_response(self):
 		print "Response:"
 
@@ -116,12 +113,14 @@ class ClientUDP:
 		else:
 			print "\t** Response was unexpected length **"
 
+	
 	def is_error(self, packed_data):
 		pack_format = "!BBBBB"
 		# 4th byte is 0x00 for an error
 		byte4 = struct.unpack(pack_format, packed_data)[3]
 		return byte4 == 0x00
 
+	
 	def get_error_msg(self, packed_data):
 		pack_format = "!BBBBB"
 		# 5th byte is error type code
@@ -138,6 +137,7 @@ class ClientUDP:
 
 		return "** Received error with invalid code **"
 
+	
 	def establish_server(self, host, port):
 		self.is_server = True
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -158,14 +158,17 @@ class ClientUDP:
 				if hasattr(self, 'client'):
 					self.client.close
 
+	
 	def connect_to_opponent(self, host, port):
 		self.is_server = False
 		self.socket.connect((host, port))
 
+	
 	def send_move(self, row, num_remove):
 		pack_format = "!HBBB"
 		packed_data = struct.pack(pack_format, self.magic_num, self.group_id, row, num_remove)
 
+	
 	def get_move(self):
 		pack_format = "!HBBB"
 		packed_data = self.socket.recv(1024)
@@ -184,12 +187,8 @@ if __name__ == "__main__":
 
 	try:
 		client = ClientUDP(host, port, play_port, GROUP_ID)
-		
-		if client.valid_play_port():
-			client.send_request()
-			client.get_response()
-		else:
-			print "ERROR: The requested port number is invalid."
+		client.send_request()
+		client.get_response()
 	
 	except KeyboardInterrupt:
 		print "\nExiting..."
