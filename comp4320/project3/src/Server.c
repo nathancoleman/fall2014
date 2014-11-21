@@ -60,8 +60,8 @@ int main(int argc, char **argv)
     char *hostaddrp; /* dotted decimal host addr string */
     int optval; /* flag value for setsockopt */
     int n; /* message byte size */
-    short clientPo;
-    int waitingClient = FALSE;
+    int clientPo; /* port the client wants to play on */
+    int waitingClient = FALSE; /* is there a client waiting to play? */
 
 
     /* 
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
         exit(1);
     }
     portno = atoi(argv[1]);
-    printf("Waiting for client to connect\n");
+    printf("Waiting for client to connect\n\n");
     /* 
     * socket: create the parent socket 
     */
@@ -142,15 +142,17 @@ int main(int argc, char **argv)
         ********************************************************/
 
         int gid = buf[2];
-        printf("gid is: ");
-        printf("%d\n", gid);
+        printf("Client connected\n");
+        printf("\tGroup ID: %d\n", gid);
+        printf("\tClient Address: %d\n", clientaddr.sin_addr.s_addr);
         int validRange = rangeCheck(portno, gid);
         //IF VALID
-        if (validRange == TRUE)  //valid
+        if (validRange)  //valid
         {
             //IF WAITING CLIENT
-            if (waitingClient == TRUE) 
+            if (waitingClient) 
             {
+                printf("Client waiting, sending address and port...\n");
                 //flush
                 waitingClient = FALSE;
                 //is this right????
@@ -175,24 +177,23 @@ int main(int argc, char **argv)
                 message[7] = clientPo >> 8;
                 message[8] = clientPo & 0xff;//portno of waiting client 5 - messed up
 
-
-                printf("Waiting Client, sending appropriate message\n");
                 n = sendto(sockfd, message, 9, 0, 
                 (struct sockaddr *) &clientaddr, clientlen);
+                
                 if (n < 0) 
-                    error("ERROR in sendto");
-                printf("sent response back\n");
+                    error("ERROR sending response");
+                
+                printf("Sending response...\n\n");
             }
             else
             {
                 //No waiting client, so this is the first set up, so next time there will be waiting client
-                printf("No waiting client, setting up first connection...\n");
+                printf("No waiting client, storing address and port...\n");
                 waitingClient = TRUE;
-                clientPo = (short) ((buf[3] << 8) | buf[4]); // most sig of port and least sig of byte of port
+                clientPo = ((buf[3] << 8) | buf[4]); // most sig of port and least sig of byte of port
                 hostaddrp = inet_ntoa(clientaddr.sin_addr);
-                printf("Correct IP should be: 192.168.43.167\n");
-                printf("The IP pulled is: ");
-                printf("%s\n", hostaddrp);
+                printf("\tIP Address: %s\n", hostaddrp);
+                printf("\tPort: %d %d\n", buf[3], buf[4]);
                 //do stuff
                 unsigned char message[5];
                 message[0] = 0x12;
@@ -201,12 +202,13 @@ int main(int argc, char **argv)
                 message[3] = 0; //Ph - portno??
                 message[4] = 0; //Pl - portno???
 
-                printf("No waiting client, sending message now\n");
                 n = sendto(sockfd, buf, n, 0, 
                 (struct sockaddr *) &clientaddr, clientlen);
+                
                 if (n < 0) 
-                    error("ERROR in sendto");  
-                printf("sent back to client\n");
+                    error("ERROR sending response");
+
+                printf("Sending response...\n\n");
             }
         }
 
@@ -222,7 +224,7 @@ int main(int argc, char **argv)
             //NO magic number - XY0 = 1
             //Magic number - XY1 = 
             //Port out of range?? XY2 = 1
-            printf("No valid request, sending message now\n");
+            printf("Invalid request - sending error response\n");
             n = sendto(sockfd, message, 5, 0, (struct sockaddr *) &clientaddr, clientlen);
 
         }
