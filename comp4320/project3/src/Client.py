@@ -55,25 +55,7 @@ class ClientUDP:
 	def get_response(self):
 		print "Response:"
 
-		# TODO: Replace test reponse data with line below once server works
 		packed_data = self.socket.recv(1024) #We should not need to recv more than this
-
-		# Test Response Data
-		# ============================================
-		ip_format = "!HBBBBBH"
-		ip_response = struct.pack(ip_format, MAGIC_NUMBER, 21, 192, 168, 1, 1, 10111)
-		
-		reg_format = "!HBH"
-		reg_response = struct.pack(reg_format, MAGIC_NUMBER, 21, 10111)
-		
-		err_format = "!HBBB"
-		err_response = struct.pack(err_format, MAGIC_NUMBER, 21, 0x00, ERR_NO_MAGIC_NUM)
-
-		mag_format = "!H"
-		mag_response = struct.pack(mag_format, MAGIC_NUMBER)
-
-		# packed_data = ip_response
-		# ============================================
 
 		if len(packed_data) == LEN_MAG_NUM:
 			print "\tStarting TCP server on port", self.play_port
