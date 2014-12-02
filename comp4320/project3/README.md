@@ -1,7 +1,7 @@
-#### Part A: Datagram Socket Programming
-The objective is to design a String Processing Server (SPS). This SPS carries out string operations as requested by a client. Your server must offer two operations:
-- number of vowels (vLength) in a string
-- String Disemvoweling
+### NIM Game ###
+- UDP Server stores information of first client to connect
+- First client starts a TCP server on the port it requested to play on
+- Second client to connect to the UDP server is given the first client's information
+- Second client connects to first client's TCP server and the game begins
 
-#### Part B: TCP Socket Programming
-Repeat Part A using TCP sockets to produce (ServerTCP.xxx, ClientTCP.c). The client must be written in C. The server must be written in any language other than C or C++.
+_Player who leaves opponent with only one token on the board wins_
