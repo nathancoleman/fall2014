@@ -4,7 +4,7 @@
 	Author: Nathan Coleman
 """
 
-import socket, struct, sys
+import os, socket, struct, sys
 
 # Constants
 GROUP_ID = 20
@@ -19,6 +19,9 @@ ERR_INVALID_PORT = 0x02
 LEN_MAG_NUM = 2
 LEN_REG_ERR = 5
 LEN_IP_PORT = 9
+
+# Game
+GAME = [1, 3, 5, 7]
 
 class ClientUDP:
 
@@ -147,19 +150,24 @@ class ClientUDP:
 		self.socket.bind((host, port))
 		self.socket.listen(True)
 
-		while True:
+		waiting = True
+
+		while waiting:
 			try:	
 				print "\tWaiting for opponent to connect...\n"
 				self.client, self.addr = self.socket.accept()
 				print "\tOpponent connected from:", self.addr[0]
+				waiting = False
 
 			except KeyboardInterrupt:
 				print "\nExiting..."
 				exit(0) 
 			
-			finally:
-				if hasattr(self, 'client'):
-					self.client.close
+			# finally:
+			# 	if hasattr(self, 'client'):
+			# 		self.client.close
+
+		self.setup_game_on_server()
 
 	
 	def connect_to_opponent(self, host, port):
@@ -167,16 +175,97 @@ class ClientUDP:
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((host, port))
 
+		while not self.game_over():
+
+			self.print_game()
+
+			row, num_remove = self.request_move()
+			GAME[row - 1] -= num_remove
+			self.print_game()
+			self.send_move(row, num_remove)
+
+			if self.game_over():
+				print "\n\t\tYOU WIN!"
+				self.socket.close()
+
+			print("\n\t\tWaiting for opponent...")
+			row, num_remove = self.get_move()
+			GAME[row - 1] -= num_remove
+			self.print_game()
+
+			if self.game_over():
+				print "\n\t\tYOU LOSE!" 
+
+
+	def setup_game_on_server(self):
+		print "\tSetting up game..."
+
+		while not self.game_over():
+
+			self.print_game()
+
+			print("\n\t\tWaiting for opponent...")
+			row, num_remove = self.get_move()
+			GAME[row - 1] -= num_remove
+			self.print_game()
+
+			if self.game_over():
+				print "\n\t\tYOU LOSE!"
+
+			row, num_remove = self.request_move()
+			GAME[row - 1] -= num_remove
+			self.print_game()
+			self.send_move(row, num_remove)
+
+			if self.game_over():
+				print "\n\t\tYOU WIN!"
+				self.client.close()
+
+	
+	def print_game(self):
+		os.system('clear')
+
+		print "\t\tRow #\t# Tokens"
+		print "\t\t----------------"
+		for i in range(0, len(GAME)):
+			print "\t\t", (i + 1), "\t", GAME[i]
+
+
+	def game_over(self):
+		remaining = 0
+
+		for i in range(0, len(GAME)):
+			remaining += GAME[i]
+
+		return remaining == 1
+
 	
 	def send_move(self, row, num_remove):
 		pack_format = "!HBBB"
 		packed_data = struct.pack(pack_format, self.magic_num, self.group_id, row, num_remove)
 
+		if self.is_server:
+			self.client.send(packed_data)
+		else:
+			self.socket.send(packed_data)
+
 	
 	def get_move(self):
 		pack_format = "!HBBB"
-		packed_data = self.socket.recv(1024)
+		
+		if self.is_server:
+			packed_data = self.client.recv(1024)
+		else:
+			packed_data = self.socket.recv(1024)
+
 		magic, group_id, row, num_remove = struct.unpack(pack_format, packed_data)
+
+		return row, num_remove
+
+	def request_move(self):
+		row = int(raw_input("\n\t\tRow #?\t"))
+		num_remove = int(raw_input("\t\tRem #?\t"))
+		return row, num_remove
 
 
 if __name__ == "__main__":
