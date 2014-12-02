@@ -166,6 +166,11 @@ class ClientUDP:
 				self.print_game()
 				print "\n\t\tINVALID MOVE: Please enter a valid move"
 				row, num_remove = self.request_move()
+			
+			# valid_move() assures these are castable to int
+			row = int(row)
+			num_remove = int(num_remove)
+			
 			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
@@ -202,6 +207,11 @@ class ClientUDP:
 				self.print_game()
 				print "\n\t\tINVALID MOVE: Please enter a valid move"
 				row, num_remove = self.request_move()
+
+			# valid_move() assures these are castable to int
+			row = int(row)
+			num_remove = int(num_remove)
+			
 			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
@@ -214,7 +224,7 @@ class ClientUDP:
 	def print_game(self):
 		os.system('clear')
 
-		print "\t\tRow #\t# Tokens"
+		print "\n\t\tRow #\t# Tokens"
 		print "\t\t----------------"
 		for i in range(0, len(GAME)):
 			print "\t\t", (i + 1), "\t", GAME[i]
@@ -256,12 +266,18 @@ class ClientUDP:
 
 
 	def request_move(self):
-		row = int(raw_input("\n\t\tR:\t"))
-		num_remove = int(raw_input("\t\tN:\t"))
+		row = raw_input("\n\t\tR:\t")
+		num_remove = raw_input("\t\tN:\t")
 		return row, num_remove
 
 
 	def valid_move(self, row, num_remove):
+		try:
+			row = int(row)
+			num_remove = int(num_remove)
+		except ValueError:
+			return False
+
 		if row not in range(1, len(GAME) + 1):
 			return False
 		if num_remove not in range(0, GAME[row - 1] + 1):
