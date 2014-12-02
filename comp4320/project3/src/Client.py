@@ -162,20 +162,23 @@ class ClientUDP:
 			self.print_game()
 
 			row, num_remove = self.request_move()
+			while not self.valid_move(row, num_remove):
+				self.print_game()
+				print "\n\t\tINVALID MOVE: Please enter a valid move"
+				row, num_remove = self.request_move()
 			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
 			if self.game_over():
-				print "\n\t\tYOU WIN!"
-				self.socket.close()
+				print "\n\t\tYOU WIN!\n\n"
 
-			print("\n\t\tWaiting for opponent...")
-			row, num_remove = self.get_move()
-			GAME[row - 1] -= num_remove
-			self.print_game()
+			else:
+				print("\n\t\tWaiting for opponent...")
+				row, num_remove = self.get_move()
+				self.update_game(row, num_remove)
 
-			if self.game_over():
-				print "\n\t\tYOU LOSE!" 
+				if self.game_over():
+					print "\n\t\tYOU LOSE!\n\n" 
 
 
 	def setup_game_on_server(self):
@@ -187,19 +190,25 @@ class ClientUDP:
 
 			print("\n\t\tWaiting for opponent...")
 			row, num_remove = self.get_move()
-			GAME[row - 1] -= num_remove
-			self.print_game()
+			self.update_game(row, num_remove)
 
 			if self.game_over():
-				print "\n\t\tYOU LOSE!"
+				print "\n\t\tYOU LOSE!\n\n"
+				self.client.close()
+				exit(0)
 
 			row, num_remove = self.request_move()
+			while not self.valid_move(row, num_remove):
+				self.print_game()
+				print "\n\t\tINVALID MOVE: Please enter a valid move"
+				row, num_remove = self.request_move()
 			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
 			if self.game_over():
-				print "\n\t\tYOU WIN!"
+				print "\n\t\tYOU WIN!\n\n"
 				self.client.close()
+				exit(0)
 
 	
 	def print_game(self):
@@ -247,23 +256,19 @@ class ClientUDP:
 
 
 	def request_move(self):
-		row = int(raw_input("\n\t\tRow #?\t"))
-		num_remove = int(raw_input("\t\tRem #?\t"))
+		row = int(raw_input("\n\t\tR:\t"))
+		num_remove = int(raw_input("\t\tN:\t"))
 		return row, num_remove
 
 
 	def valid_move(self, row, num_remove):
 		if row not in range(1, len(GAME) + 1):
-			print "INVALID MOVE"
 			return False
 		if num_remove not in range(0, GAME[row - 1] + 1):
-			print "INVALID MOVE"
 			return False
 		if num_remove >= self.tokens_remaining():
-			print "INVALID MOVE"
 			return False
 
-		print "VALID MOVE"
 		return True
 
 	def update_game(self, row, num_remove):
