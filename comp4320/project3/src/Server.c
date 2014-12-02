@@ -125,8 +125,10 @@ int main(int argc, char **argv)
         ********************************************************/
 
         int gid = buf[2];
+        short portNo = (short)((buf[3] << 8) + buf[4]);  // getting client port number
+        //printf("\tClient Port: %d\n", portNo);
         printf("Client connected\n");
-        int validRange = rangeCheck(portno, gid);
+        int validRange = rangeCheck(portNo, gid);
         //IF VALID
         if (validRange)  //valid
         {
@@ -214,14 +216,14 @@ int main(int argc, char **argv)
         }
 
         else 
-        { // Not Valid
+        {   // Not Valid
             unsigned char message[5];
             message[0] = 0x12;
             message[1] = 0x34;
             message[2] = 20;
             message[3] = 0;
-            //message[4] = ; //XY???
-
+            message[4] = 3; //XY???
+                // Range is 1-7 
             //NO magic number - XY0 = 1
             //Magic number - XY1 = 
             //Port out of range?? XY2 = 1
