@@ -199,7 +199,7 @@ int main(int argc, char **argv)
             message[1] = 0x34;
             message[2] = 20;
             message[3] = 0;
-            message[4] = 3; //XY???
+            message[4] = 1; //XY???
                 // Range is 1-7 
             //NO magic number - XY0 = 1
             //Magic number - XY1 = 
