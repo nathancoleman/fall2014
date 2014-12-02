@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     int portno; /* port to listen on */
     int clientlen; /* byte size of client's address */
     struct sockaddr_in serveraddr; /* server's addr */
-    struct sockaddr_in clientaddr; /* client addr */
+    struct sockaddr_in clientaddr, waitingaddr; /* client addr */
     struct hostent *hostp; /* client host info */
     char buf[BUFSIZE]; /* message buf */
     char *hostaddrp; /* dotted decimal host addr string */
@@ -149,10 +149,10 @@ int main(int argc, char **argv)
                 // message[4] = ((int)hostaddrp >> 16) & 0xff;
                 // message[5] = ((int)hostaddrp >> 8) & 0xff;
                 // message[6] = (int)hostaddrp & 0xff;
-                message[3] = (clientaddr.sin_addr.s_addr&0xFF);
-                message[4] = ((clientaddr.sin_addr.s_addr&0xFF00)>>8);
-                message[5] = ((clientaddr.sin_addr.s_addr&0xFF0000)>>16);
-                message[6] = ((clientaddr.sin_addr.s_addr&0xFF000000)>>24);
+                message[3] = (waitingaddr.sin_addr.s_addr&0xFF);
+                message[4] = ((waitingaddr.sin_addr.s_addr&0xFF00)>>8);
+                message[5] = ((waitingaddr.sin_addr.s_addr&0xFF0000)>>16);
+                message[6] = ((waitingaddr.sin_addr.s_addr&0xFF000000)>>24);
 
                 //message[7] = (char) hostaddrp;
                 //((clientPo >> 8) & 0xff); //ip address of waiting client 4 - fucked up
@@ -173,14 +173,15 @@ int main(int argc, char **argv)
                 /* 
                 * gethostbyaddr: determine who sent the datagram
                 */
-                hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
-                    sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+                // hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
+                //     sizeof(clientaddr.sin_addr.s_addr), AF_INET);
 
-                if (hostp == NULL)
-                    error("ERROR on gethostbyaddr");
+                // if (hostp == NULL)
+                //     error("ERROR on gethostbyaddr");
 
 
                 hostaddrp = inet_ntoa(clientaddr.sin_addr);
+                waitingaddr = clientaddr;
 
 
                 if (hostaddrp == NULL)
