@@ -162,8 +162,7 @@ class ClientUDP:
 			self.print_game()
 
 			row, num_remove = self.request_move()
-			GAME[row - 1] -= num_remove
-			self.print_game()
+			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
 			if self.game_over():
@@ -195,8 +194,7 @@ class ClientUDP:
 				print "\n\t\tYOU LOSE!"
 
 			row, num_remove = self.request_move()
-			GAME[row - 1] -= num_remove
-			self.print_game()
+			self.update_game(row, num_remove)
 			self.send_move(row, num_remove)
 
 			if self.game_over():
@@ -214,12 +212,15 @@ class ClientUDP:
 
 
 	def game_over(self):
+		return self.tokens_remaining() == 1
+
+	def tokens_remaining(self):
 		remaining = 0
 
 		for i in range(0, len(GAME)):
 			remaining += GAME[i]
 
-		return remaining == 1
+		return remaining
 
 	
 	def send_move(self, row, num_remove):
@@ -244,10 +245,30 @@ class ClientUDP:
 
 		return row, num_remove
 
+
 	def request_move(self):
 		row = int(raw_input("\n\t\tRow #?\t"))
 		num_remove = int(raw_input("\t\tRem #?\t"))
 		return row, num_remove
+
+
+	def valid_move(self, row, num_remove):
+		if row not in range(1, len(GAME) + 1):
+			print "INVALID MOVE"
+			return False
+		if num_remove not in range(0, GAME[row - 1] + 1):
+			print "INVALID MOVE"
+			return False
+		if num_remove >= self.tokens_remaining():
+			print "INVALID MOVE"
+			return False
+
+		print "VALID MOVE"
+		return True
+
+	def update_game(self, row, num_remove):
+		GAME[row - 1] -= num_remove
+		self.print_game()
 
 
 if __name__ == "__main__":
