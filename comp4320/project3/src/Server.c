@@ -138,27 +138,15 @@ int main(int argc, char **argv)
                 printf("Client waiting, sending address and port...\n");
                 printf("\tIP Address: %s\n", hostaddrp);
                 printf("\tPort: %d\n", clientPo);
-                //flush
                 waitingClient = FALSE;
-                //is this right????
-                //clientPo = (short) ((buf[3] << 8) + buf[4]); // most sig of port and least sig of byte of port
                 unsigned char message[9];//Size of 9???
                 message[0] = 0x12;
                 message[1] = 0x34;
-                message[2] = 20; // gid
-                //double check logic
-                // message[3] = ((int)hostaddrp >> 24);
-                // message[4] = ((int)hostaddrp >> 16) & 0xff;
-                // message[5] = ((int)hostaddrp >> 8) & 0xff;
-                // message[6] = (int)hostaddrp & 0xff;
+                message[2] = 20;
                 message[3] = (waitingaddr.sin_addr.s_addr&0xFF);
                 message[4] = ((waitingaddr.sin_addr.s_addr&0xFF00)>>8);
                 message[5] = ((waitingaddr.sin_addr.s_addr&0xFF0000)>>16);
                 message[6] = ((waitingaddr.sin_addr.s_addr&0xFF000000)>>24);
-
-                //message[7] = (char) hostaddrp;
-                //((clientPo >> 8) & 0xff); //ip address of waiting client 4 - fucked up
-                //double check logic
                 message[7] = clientPo >> 8;
                 message[8] = clientPo & 0xff;//portno of waiting client 5 - messed up
 
@@ -172,16 +160,6 @@ int main(int argc, char **argv)
             }
             else
             {
-                /* 
-                * gethostbyaddr: determine who sent the datagram
-                */
-                // hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr, 
-                //     sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-
-                // if (hostp == NULL)
-                //     error("ERROR on gethostbyaddr");
-
-
                 hostaddrp = inet_ntoa(clientaddr.sin_addr);
                 waitingaddr = clientaddr;
 
@@ -197,7 +175,6 @@ int main(int argc, char **argv)
                 hostaddrp = inet_ntoa(clientaddr.sin_addr);
                 printf("\tIP Address: %s\n", hostaddrp);
                 printf("\tPort: %d\n", clientPo);
-                //do stuff
                 unsigned char message[5];
                 message[0] = 0x12;
                 message[1] = 0x34;
