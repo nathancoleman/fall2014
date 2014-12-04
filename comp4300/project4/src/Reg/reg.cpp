@@ -2,6 +2,7 @@
 
 /* Initialize externs */
 reg_word R[R_LENGTH];
+float_word F[F_LENGTH];
 
 void init_regs()
 {
