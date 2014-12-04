@@ -13,6 +13,11 @@
 #define SYSCALL	0x0A // System Call
 #define NOP		0x0B // Null Op
 #define ADD 	0x0C // Add
+#define LD 		0x0D // Load Double
+#define SD		0x0E // Store Double
+#define FADD	0x0F // Floating Point Add
+#define FSUB	0x10 // Floating Point Sub
+#define FMUL	0x11 // Floating Point Mul
 
 typedef unsigned int int32;
 typedef int32 instruction;
