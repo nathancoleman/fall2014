@@ -2,10 +2,13 @@
 #include <stdexcept>
 
 #define R_LENGTH 32
+#define F_LENGTH 32
 
 typedef int32 reg_word;
+typedef float float_word;
 
 extern reg_word R[];
+extern float_word F[];
 
 void init_regs();
 reg_word read_reg(int index);
