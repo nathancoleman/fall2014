@@ -29,7 +29,7 @@ force:
 	@make --always-make
 
 tar.gz: clean
-	@tar -zcf ./group15_project3.tar.gz *
+	@tar -zcf ./group15_project4.tar.gz *
 
 tgz: clean
-	@tar -zcf ./group15_project3.tgz *
+	@tar -zcf ./group15_project4.tgz *
