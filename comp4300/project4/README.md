@@ -17,3 +17,9 @@ This project includes a Makefile and requires g++ for compilation
 ### Run
 After running ```$ make```:
 - From this directory, ```$ bin/pipeSim filename```
+
+
+### Data
+Total Clock Cycles: 
+Total Instructions Executed:
+Number of NOPs:
