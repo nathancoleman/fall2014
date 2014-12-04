@@ -5,3 +5,6 @@
 #include <stdio.h>
 #include <stdexcept>
 #include <string>
+
+int cycleCount, nopCount, instructionCount;
+
