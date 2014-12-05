@@ -42,4 +42,6 @@ void run();
 bool can_issue_instr();
 void issue_instr();
 
-void print_instr_status();
+void print_instr_status_board();
+void print_fu_status_board();
+void print_res_status_board();
