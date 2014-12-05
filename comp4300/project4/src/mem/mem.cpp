@@ -222,15 +222,15 @@ instruction encode_instruction(std::string line)
 		// TODO: Implement this
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int dest = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
+		int tar = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = stoi(line.substr(0, line.find("\r")), 0, 0);
+		int src = parse_reg(line.substr(0, line.find("\r")));
 
 		printf("\t\tADD: params - %d %d %d\n", dest, tar, src);
 
@@ -254,15 +254,15 @@ instruction encode_instruction(std::string line)
 	{	
 		line = line.substr(line.find("$") + 1);
 
-		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
+		int tar = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 		
-		int src = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+		int imm = parse_reg(line.substr(0, line.find("\r")));
 
 		printf("\t\tADDI: params - %d %d %d\n", tar, src, imm);
 
@@ -306,7 +306,7 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int src = stoi(line.substr(0, line.find(" ")), 0, 0);
+		int src = parse_reg(line.substr(0, line.find(" ")));
 
 		line = line.substr(line.find(" ") + 1);
 
@@ -334,11 +334,11 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src1 = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src2 = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src2 = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
@@ -368,11 +368,11 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int src1 = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src1 = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src2 = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src2 = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
@@ -402,7 +402,7 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int dest = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
@@ -430,14 +430,14 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int dest = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
 		// Here we get the src for the address of the byte we
 		// want to load, then retrieve the address from R[src]
 
-		int src = stoi(line.substr(0, line.find(")")), 0, 0);
+		int src = parse_reg(line.substr(0, line.find(")")));
 
 		mem_address addr = (mem_address) R[src];
 
@@ -466,7 +466,7 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+		int imm = parse_reg(line.substr(0, line.find("\r")));
 
 		printf("\t\tLI: params - %d %d\n", dest, imm);
 
@@ -488,15 +488,15 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int tar = stoi(line.substr(0, line.find(",")), 0, 0);
+		int tar = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = stoi(line.substr(0, line.find(",")), 0, 0);
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
+		int imm = parse_reg(line.substr(0, line.find("\r")));
 
 		printf("\t\tSUBI: params - %d %d %d\n", tar, src, imm);
 
