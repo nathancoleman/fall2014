@@ -692,6 +692,6 @@ int parse_reg(std::string input)
 	std::string reg_str = input.substr(start_index);
 	int reg = stoi(reg_str, 0, 0);
 	if (start_index > 0)
-		reg += 32;
+		reg += R_LENGTH;
 	return reg;	
 }
