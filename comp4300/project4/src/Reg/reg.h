@@ -12,4 +12,6 @@ extern float_word F[];
 
 void init_regs();
 reg_word read_reg(int index);
+float_word read_freg(int index);
 void write_reg(int index, reg_word val);
+void write_freg(int index, float_word val);
