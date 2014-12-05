@@ -517,18 +517,56 @@ instruction encode_instruction(std::string line)
 	{
 		printf("\t\tSYSCALL\n");
 
-		// Encode the instruction
 		instr = SYSCALL;
-		instr = instr << 26; // first 6 bits are op code
+		instr = instr << 26;
 	}
 
 	else if(op == "nop")
 	{
 		printf("\t\tNOP\n");
 
-		// Encode the isntruction
 		instr = NOP;
-		instr = instr << 26; // first 6 bits are op code
+		instr = instr << 26;
+	}
+
+	else if(op == "ld")
+	{
+		printf("\t\tLD\n");
+		
+		instr = LD;
+		instr = instr << 26;	
+	}
+
+	else if(op == "sd")
+	{
+		printf("\t\tSD\n");
+
+		instr = SD;
+		instr = instr << 26;
+	}
+
+	else if(op == "fadd")
+	{
+		printf("\t\tFADD\n");
+
+		instr = FADD;
+		instr = instr << 26;
+	}
+
+	else if(op == "fsub")
+	{
+		printf("\t\tFSUB\n");
+
+		instr = FSUB;
+		instr = instr << 26;
+	}
+
+	else if(op == "fmul")
+	{
+		printf("\t\tFMUL\n");
+
+		instr = FMUL;
+		instr = instr << 26;
 	}
 
 	return instr;
