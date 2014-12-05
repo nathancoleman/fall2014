@@ -28,8 +28,6 @@ Store Y0 # pick any (fixed) address you like
 }
 
 
-
-
 .text
 main:
 kx = 1.65  //32
