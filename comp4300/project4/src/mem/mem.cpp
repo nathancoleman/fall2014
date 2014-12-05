@@ -462,7 +462,7 @@ instruction encode_instruction(std::string line)
 	{
 		line = line.substr(line.find("$") + 1);
 
-		int dest = stoi(line.substr(0, line.find(",")), 0, 0);
+		int dest = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
 
@@ -549,8 +549,26 @@ instruction encode_instruction(std::string line)
 	{
 		printf("\t\tFADD\n");
 
+		int dest = parse_reg(line.substr(0, line.find(",")));
+
+		line = line.substr(line.find("$") + 1);
+
+		int tar = parse_reg(line.substr(0, line.find(",")));
+
+		line = line.substr(line.find("$") + 1);
+
+		int src = parse_reg(line.substr(0, line.find("\r")));
+
 		instr = FADD;
 		instr = instr << 26;
+		instr |= src << 21; // second 5 bits are dest
+		instr |= tar << 16; // third 5 bits are tar
+		instr |= dest << 11; // fourth 5 bits are src
+
+		printf("\t\t\tOp Code: %x\n", instr >> 26);
+		printf("\t\t\tDest: %d\n", (instr >> 11) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 	}
 
 	else if(op == "fsub")
@@ -620,4 +638,16 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 	{
 		throw std::runtime_error("*** MEMORY ERROR *** : Address outside designated segment space");	
 	}
+}
+
+int parse_reg(std::string input)
+{
+	int start_index = 0;
+	if (input.find("f") == 0)
+		start_index++;
+	std::string reg_str = input.substr(start_index);
+	int reg = stoi(reg_str, 0, 0);
+	if (start_index > 0)
+		reg += 32;
+	return reg;	
 }

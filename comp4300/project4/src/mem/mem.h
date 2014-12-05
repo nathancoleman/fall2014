@@ -32,3 +32,4 @@ void init_instr_table();
 instruction encode_instruction(std::string line);
 mem_word read_mem(mem_address address);
 void write_mem(mem_address address, mem_word data, bool increment_top = true);
+int parse_reg(std::string input);
