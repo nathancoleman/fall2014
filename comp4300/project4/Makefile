@@ -1,6 +1,6 @@
 CC = g++
 
-all: pre-build pipeSim
+all: pre-build pipeSim scoreboard
 
 pipeSim: pre-build util.o mem.o reg.o pipeSim.o
 	@$(CC) -o bin/pipeSim obj/util.o obj/mem.o obj/reg.o obj/pipeSim.o
