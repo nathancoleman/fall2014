@@ -262,7 +262,7 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = parse_reg(line.substr(0, line.find("\r")));
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tADDI: params - %d %d %d\n", tar, src, imm);
 
@@ -466,7 +466,7 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = parse_reg(line.substr(0, line.find("\r")));
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tLI: params - %d %d\n", dest, imm);
 
@@ -496,7 +496,7 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find(" ") + 1);
 
-		int imm = parse_reg(line.substr(0, line.find("\r")));
+		int imm = stoi(line.substr(0, line.find("\r")), 0, 0);
 
 		printf("\t\tSUBI: params - %d %d %d\n", tar, src, imm);
 
@@ -534,7 +534,9 @@ instruction encode_instruction(std::string line)
 		printf("\t\tLD\n");
 		
 		instr = LD;
-		instr = instr << 26;	
+		instr = instr << 26;
+
+
 	}
 
 	else if(op == "sd")
