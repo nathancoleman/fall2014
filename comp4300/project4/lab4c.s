@@ -10,6 +10,8 @@ ld $1, 0
 ld $2, 99
 
 loop:
+nop
+nop
 fsub $40, $33, $34
 fmul $38, $32, $40
 fsub $40, $36, $37
@@ -22,3 +24,7 @@ sd $38
 sd $39
 add $1, $1, 1
 bne $5, 0 loop
+nop
+nop
+nop
+nop
