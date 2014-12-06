@@ -32,15 +32,20 @@ extern string FILENAME;
 #define RJ 		 	7
 #define RK 		 	8
 
+#define UNUSED		99
+
 unsigned int instr_status[TEXT_SEG_LENGTH][4];
 unsigned int fu_status[5][9];
-unsigned int res_status[F_LENGTH];
+unsigned int res_status[R_LENGTH + F_LENGTH];
 
 void init();
+void init_res_status();
 void run();
 
-bool can_issue_instr();
-void issue_instr();
+bool can_issue_instr(instruction instr);
+bool check_for_waw(instruction instr);
+bool check_for_str_haz(instruction instr);
+void issue_instr(instruction instr);
 
 void print_instr_status_board();
 void print_fu_status_board();

@@ -226,11 +226,11 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find("$") + 1);
 
-		int tar = parse_reg(line.substr(0, line.find(",")));
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = parse_reg(line.substr(0, line.find("\r")));
+		int tar = parse_reg(line.substr(0, line.find("\r")));
 
 		printf("\t\tADD: params - %d %d %d\n", dest, tar, src);
 
@@ -413,7 +413,7 @@ instruction encode_instruction(std::string line)
 		// Encode the instruction
 		instr = LA;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // second 5 bits are dest
+		instr |= dest << 16; // second 5 bits are dest
 		instr |= (data_symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
 		// TODO: Replace the label name with the actual value
@@ -446,8 +446,8 @@ instruction encode_instruction(std::string line)
 		// Encode the instruction
 		instr = LB;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // second 5 bits are dest
-		instr |= src << 16; // third 5 bits are src
+		instr |= dest << 16; // second 5 bits are dest
+		instr |= src << 11; // third 5 bits are src
 
 		// TODO: Replace the label name with the actual value
 
@@ -473,7 +473,7 @@ instruction encode_instruction(std::string line)
 		// Encode the instruction
 		instr = LI;
 		instr = instr << 26; // first 6 bits are op code
-		instr |= dest << 21; // second 5 bits are dest
+		instr |= dest << 16; // second 5 bits are dest
 		instr |= (imm & 0xFFFF); // last 16 bits are immediate
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
@@ -557,11 +557,11 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find("$") + 1);
 
-		int tar = parse_reg(line.substr(0, line.find(",")));
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = parse_reg(line.substr(0, line.find("\r")));
+		int tar = parse_reg(line.substr(0, line.find("\r")));
 
 		instr = FADD;
 		instr = instr << 26;
@@ -585,11 +585,11 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find("$") + 1);
 
-		int tar = parse_reg(line.substr(0, line.find(",")));
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = parse_reg(line.substr(0, line.find("\r")));
+		int tar = parse_reg(line.substr(0, line.find("\r")));
 
 		instr = FSUB;
 		instr = instr << 26;
@@ -613,11 +613,11 @@ instruction encode_instruction(std::string line)
 
 		line = line.substr(line.find("$") + 1);
 
-		int tar = parse_reg(line.substr(0, line.find(",")));
+		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
 
-		int src = parse_reg(line.substr(0, line.find("\r")));
+		int tar = parse_reg(line.substr(0, line.find("\r")));
 
 		instr = FMUL;
 		instr = instr << 26;
