@@ -189,7 +189,7 @@ void print_fu_status_board()
 	int i;
 	for (i = 0; i < arraySize; i++)
 		printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", fu_status[i][0], fu_status[i][1], fu_status[i][2], fu_status[i][3], fu_status[i][4],
-			fu_status[i][5], fu_status[i][6], fu_status[i][7], fu_status[i][8]);	
+			fu_status[i][5], fu_status[i][6], fu_status[i][7], fu_status[i][8]);
 }
 
 void print_res_status_board()
