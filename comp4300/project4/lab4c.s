@@ -10,9 +10,9 @@ df21: .float -0.92
 main:
 ld $f16, d32
 ld $f18, d34
-ld $f17, df17
-ld $f19, df19
-ld $f21, df21
+ld $f17, d17
+ld $f19, d19
+ld $f21, d21
 ld $f20, d36
 li $1, 0
 li $2, 99
