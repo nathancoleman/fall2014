@@ -121,6 +121,10 @@ void issue_instr(instruction instr)
 
 	switch (op_code)
 	{
+		case B:
+		case BEQZ:
+		case BGE:
+		case BNE:
 		case LI:
 		case LD:
 			FU = INTEGER_FU;
@@ -133,6 +137,9 @@ void issue_instr(instruction instr)
 				FU = MULT2_FU;
 			break;
 
+		case ADD:
+		case ADDI:
+		case SUBI:
 		case FADD:
 		case FSUB:
 			FU = ADD_FU;
@@ -150,7 +157,27 @@ void print_instr_status_board()
 
 	int i;
 	for (i = 0; i < arraySize; i++)
-		printf("%d\t%d\t%d\t%d\n", instr_status[i][ISSUE], instr_status[i][READ_OPS], instr_status[i][EXEC_COMP], instr_status[i][WRITE_RES]);
+	{
+		if (instr_status[i][ISSUE] != 0)
+			printf("%d\t", instr_status[i][ISSUE]);
+		else
+			printf(" \t");
+
+		if (instr_status[i][READ_OPS] != 0)
+			printf("%d\t", instr_status[i][READ_OPS]);
+		else
+			printf(" \t");
+		
+		if (instr_status[i][EXEC_COMP] != 0)
+			printf("%d\t", instr_status[i][EXEC_COMP]);
+		else
+			printf(" \t");
+		
+		if (instr_status[i][WRITE_RES] != 0)
+			printf("%d\n", instr_status[i][WRITE_RES]);
+		else
+			printf(" \n");
+	}
 }
 
 void print_fu_status_board()
@@ -182,7 +209,7 @@ void print_res_status_board()
 		else
 			printf("%d\t", res_status[i]);
 
-	printf("\n");
+	printf("\n\n");
 
 	for (i = R_LENGTH; i < arraySize; i++)
 		printf("F%d\t", i - R_LENGTH);
