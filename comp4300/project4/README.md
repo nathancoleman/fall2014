@@ -31,5 +31,5 @@ Number of NOPs: 204 (200 for the 100 executions and 4 for the end)
 
 ##Design Decisions
 
-- We decided to use $0-31 for regular registers and $32-64 for floating point registers. 
+- We decided to use $0-15 for regular registers and $f0-f15 for floating point registers. 
 - Through research into scoreboard, we decided that it should be its own functioning entity, and not simply a data structure. 
