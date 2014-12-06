@@ -21,5 +21,11 @@ After running ```$ make```:
 
 ### Data
 Total Clock Cycles: 
-Total Instructions Executed:
-Number of NOPs:
+Total Instructions Executed: 
+Number of NOPs: 
+
+
+##Design Decisions
+
+- We decided to use $0-31 for regular registers and $32-47 for floating point registers. 
+- Through research into scoreboard, we decided that it should be its own functioning entity, and not simply a data structure. 
