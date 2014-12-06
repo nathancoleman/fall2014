@@ -48,6 +48,8 @@ ld $2, 99
 
 while (run 100 times)
 loop:
+nop
+nop //"So you will need at least two NOPs following each"
 X0 = kx * X1 – X2
 fsub $40, $33, $34 // X1 – X2 
 fmul $38, $32, $40//instruction X0 = kx * $40
@@ -68,4 +70,8 @@ Store Y0 # pick any (fixed) address you like
 sd $39
 add $1, $1, 1
 bne $5, 0 loop 
+nop //adding nop to flush out so stuff can finish up
+nop
+nop
+nop
 

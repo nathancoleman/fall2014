@@ -163,7 +163,12 @@ int32 get_fu(instruction instr)
 		case SUBI:
 		case FADD:
 		case FSUB:
-			FU = ADD_FU;
+			//by lucas
+
+			if (!fu_status[ADD_FU][BUSY])
+				FU = ADD_FU;
+			else
+				//wait
 			break;
 	}
 
