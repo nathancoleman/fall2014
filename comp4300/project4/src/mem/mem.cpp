@@ -114,16 +114,16 @@ void init_segs(std::string filename)
 	printf("Initializing...\n");
 
 	index_symbols(filename);
-	
+
 	std::string line;
 	std::ifstream file (filename, std::ios::in);
 	bool in_text_seg = false;
 	bool in_data_seg = false;
-	
+
 	if (file.is_open())
 	{
 		std::string segment;
-		
+
 		while (getline(file, line))
 		{
 			if (line.find(".text") != std::string::npos)
@@ -132,19 +132,19 @@ void init_segs(std::string filename)
 				in_text_seg = true;
 				in_data_seg = false;
 			}
-				
+
 			else if (line.find(".data") != std::string::npos)
 			{
 				printf("\tSetting segment to data\n");
 				in_data_seg = true;
 				in_text_seg = false;
 			}
-				
+
 			else if (line.empty())
 			{
 				// Do nothing
 			}
-			
+
 			/*
 			*	If this is a line within the data block,
 			*	we need to store the data at the given
@@ -154,7 +154,7 @@ void init_segs(std::string filename)
 			{
 				//printf("\tProcessing data segment line\n");
 			}
-			
+
 			/*
 			*	If this is a line within the text block,
 			*	we need to store the instruction at the next
@@ -163,7 +163,7 @@ void init_segs(std::string filename)
 			else if (in_text_seg)
 			{
 				//printf("\tProcessing text segment line\n");
-				
+
 
 				if(line.find(":") == std::string::npos)
 				{
@@ -178,10 +178,10 @@ void init_segs(std::string filename)
 				{
 					// This is a label
 				}
-			}		
-		
+			}
+
 		}
-				
+
 		file.close();
 	}
 	else
@@ -198,7 +198,7 @@ instruction encode_instruction(std::string line)
 {
 	instruction instr;
 	std::string op;
-	
+
 	// If there is a space, we can use it to
 	// find the op, params follow
 	if(line.find(" ") != std::string::npos)
@@ -216,7 +216,7 @@ instruction encode_instruction(std::string line)
 	}
 
 	printf("\tEncoding instruction\n");
-	
+
 	if(op == "add")
 	{
 		// TODO: Implement this
@@ -251,13 +251,13 @@ instruction encode_instruction(std::string line)
 	 *	ADDI Rdest, Rsrc1, Imm
 	 */
 	else if(op == "addi")
-	{	
+	{
 		line = line.substr(line.find("$") + 1);
 
 		int tar = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find("$") + 1);
-		
+
 		int src = parse_reg(line.substr(0, line.find(",")));
 
 		line = line.substr(line.find(" ") + 1);
@@ -278,7 +278,7 @@ instruction encode_instruction(std::string line)
 		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
-	
+
 	/*
 	 *	B label
 	 */
@@ -320,7 +320,7 @@ instruction encode_instruction(std::string line)
 		instr |= src << 21; // second 5 bits are src
 		instr |= (text_symbol_table[label] & 0xFFFF); // last 16 bits are offset
 
-		
+
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
@@ -532,7 +532,7 @@ instruction encode_instruction(std::string line)
 	else if(op == "ld")
 	{
 		printf("\t\tLD\n");
-		
+
 		instr = LD;
 		instr = instr << 26;
 
@@ -549,29 +549,35 @@ instruction encode_instruction(std::string line)
 
 	else if(op == "fadd")
 	{
-		printf("\t\tFADD\n");
+		printf("\t\tFADD ");
 
 		line = line.substr(line.find("$") + 1);
 
 		int dest = parse_reg(line.substr(0, line.find(",")));
 
+		printf("%d ", dest);
+
 		line = line.substr(line.find("$") + 1);
 
 		int src = parse_reg(line.substr(0, line.find(",")));
+
+		printf("%d ", src);
 
 		line = line.substr(line.find("$") + 1);
 
 		int tar = parse_reg(line.substr(0, line.find("\r")));
 
+		printf("%d \n", tar);
+
 		instr = FADD;
 		instr = instr << 26;
 		instr |= src << 21; // second 5 bits are dest
-		instr |= tar << 16; // third 5 bits are tar
-		instr |= dest << 11; // fourth 5 bits are src
+		instr |= dest << 16; // third 5 bits are tar
+		instr |= tar << 11; // fourth 5 bits are src
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 11) & 0x1F);
-		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tDest: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 11) & 0x1F);
 		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 	}
 
@@ -594,12 +600,12 @@ instruction encode_instruction(std::string line)
 		instr = FSUB;
 		instr = instr << 26;
 		instr |= src << 21; // second 5 bits are dest
-		instr |= tar << 16; // third 5 bits are tar
-		instr |= dest << 11; // fourth 5 bits are src
+		instr |= dest << 16; // third 5 bits are tar
+		instr |= tar << 11; // fourth 5 bits are src
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 11) & 0x1F);
-		printf("\t\t\tTar: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tDest: %d\n", (instr >> 16) & 0x1F);
+		printf("\t\t\tTar: %d\n", (instr >> 11) & 0x1F);
 		printf("\t\t\tSrc: %d\n", (instr >> 21) & 0x1F);
 	}
 
@@ -622,8 +628,8 @@ instruction encode_instruction(std::string line)
 		instr = FMUL;
 		instr = instr << 26;
 		instr |= src << 21; // second 5 bits are dest
-		instr |= tar << 16; // third 5 bits are tar
-		instr |= dest << 11; // fourth 5 bits are src
+		instr |= dest << 16; // third 5 bits are tar
+		instr |= tar << 11; // fourth 5 bits are src
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
 		printf("\t\t\tDest: %d\n", (instr >> 11) & 0x1F);
@@ -680,7 +686,7 @@ void write_mem(mem_address address, mem_word data, bool increment_top)
 
 	else
 	{
-		throw std::runtime_error("*** MEMORY ERROR *** : Address outside designated segment space");	
+		throw std::runtime_error("*** MEMORY ERROR *** : Address outside designated segment space");
 	}
 }
 
@@ -693,5 +699,7 @@ int parse_reg(std::string input)
 	int reg = stoi(reg_str, 0, 0);
 	if (start_index > 0)
 		reg += R_LENGTH;
-	return reg;	
+
+	// printf("INPUT: %s, OUTPUT: %d\n", input.c_str(), reg);
+	return reg;
 }

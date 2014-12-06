@@ -40,12 +40,20 @@ unsigned int res_status[R_LENGTH + F_LENGTH];
 
 void init();
 void init_res_status();
+void init_fu_status();
 void run();
 
 bool can_issue_instr(instruction instr);
 bool check_for_waw(instruction instr);
 bool check_for_str_haz(instruction instr);
+int32 get_fu(instruction instr);
+bool all_complete();
+bool can_get_ops(instruction instr);
 void issue_instr(instruction instr);
+void get_ops();
+bool check_for_raw(int32 reg_index);
+
+void maintain_instr();
 
 void print_instr_status_board();
 void print_fu_status_board();

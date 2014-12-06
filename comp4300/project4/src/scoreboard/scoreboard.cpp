@@ -2,6 +2,7 @@
 
 string FILENAME;
 unsigned int cycleCount = 1;
+unsigned int lastComplete = 0;
 
 int main(int argc, char* argv[])
 {
@@ -26,6 +27,8 @@ void init()
 	init_instr_table();
 
 	init_res_status();
+
+	init_fu_status();
 }
 
 void init_res_status()
@@ -34,41 +37,64 @@ void init_res_status()
 		res_status[i] = UNUSED;
 }
 
+void init_fu_status()
+{
+	for (int i = 0; i < 5; i++)
+		for (int j = 0; j < 9; j++)
+			fu_status[i][j] = UNUSED;
+}
+
 void run()
 {
 	printf("Executing... PC = %x\n", PC);
 
 	bool user_mode = true;
 
-	while (user_mode)	
+	while (user_mode)
 	{
 		instruction instr = read_mem(PC);
-		
-		printf("\tInstruction: %x\n", getBits(instr, 26, 32));
+		bool issued_instr = false;
+
+		printf("PC is %x\n", PC);
+		printf("\tInstruction: %x\n", getBits(instr, 26, 31));
 
 		if (can_issue_instr(instr))
+		{
 			issue_instr(instr);
+			issued_instr = true;
+		}
+
+		maintain_instr();
 
 		cycleCount++;
 
-		if (PC == TEXT_TOP)
+		if (PC == TEXT_TOP || cycleCount > 4)
 			user_mode = false;
 
 		if (!user_mode)
-			printf("\tHALTING EXECUTION\n");
+			printf("HALTING EXECUTION!\n");
 
-		else
+		// PC++ if we haven't ended execution and an instruction was executed
+		if (user_mode && issued_instr)
 			PC++;
 
 	}
 
 	print_instr_status_board();
+	print_fu_status_board();
 	print_res_status_board();
 }
 
 bool can_issue_instr(instruction instr)
 {
 	bool can_issue = true;
+
+	int32 FU = get_fu(instr);
+	if (fu_status[FU][BUSY] == 1)
+	{
+		printf("\t\t################ FU BUSY ####################\n");
+		can_issue = false;
+	}
 
 	if (check_for_waw(instr))
 	{
@@ -87,7 +113,7 @@ bool can_issue_instr(instruction instr)
 
 bool check_for_waw(instruction instr)
 {
-	int dest = getBits(instr, 16, 21);
+	int dest = getBits(instr, 16, 20);
 
 	for (int i = 0; i < 5; i++)
 		if (fu_status[i][FI] == dest)
@@ -98,7 +124,7 @@ bool check_for_waw(instruction instr)
 
 bool check_for_str_haz(instruction instr)
 {
-	int dest = getBits(instr, 16, 21);
+	int dest = getBits(instr, 16, 20);
 
 	if (res_status[dest] != UNUSED)
 	{
@@ -109,15 +135,10 @@ bool check_for_str_haz(instruction instr)
 	return false;
 }
 
-void issue_instr(instruction instr)
+int32 get_fu(instruction instr)
 {
-	printf("\t\tIssuing...\n");
-	instr_status[PC-TEXT_SEG_BASE][ISSUE] = cycleCount;
-
-	int FU = UNUSED;
-
-	int32 op_code = getBits(instr, 26, 32);
-	int32 dest = getBits(instr, 16, 21);
+	int32 op_code = getBits(instr, 26, 31);
+	int32 FU = UNUSED;
 
 	switch (op_code)
 	{
@@ -146,7 +167,65 @@ void issue_instr(instruction instr)
 			break;
 	}
 
+	return FU;
+}
+
+void issue_instr(instruction instr)
+{
+	printf("\t\tIssuing...\n");
+	instr_status[PC-TEXT_SEG_BASE][ISSUE] = cycleCount;
+
+	int FU = get_fu(instr);
+
+	int32 op_code = getBits(instr, 26, 31);
+	int32 dest = getBits(instr, 16, 20);
+	printf("\t\tDEST is %d\n", dest);
+
+	// Unused in case of NOP
+	if (FU != UNUSED)
+	{
+		fu_status[FU][BUSY] = 1;
+		fu_status[FU][OP] = op_code;
+		fu_status[FU][FI] = dest;
+		// fu_status[FU][FJ] = ;
+		// fu_status[FU][FK] = ;
+	}
+
 	res_status[dest] = FU;
+}
+
+void maintain_instr()
+{
+	if (!all_complete())
+	{
+					
+	}
+}
+
+bool all_complete()
+{
+	return lastComplete == TEXT_TOP - TEXT_SEG_BASE;
+}
+
+bool can_get_ops(instruction instr)
+{
+	return true;
+}
+
+void get_ops()
+{
+
+}
+
+bool check_for_raw(int32 reg_index)
+{
+	if (res_status[reg_index] != UNUSED)
+	{
+		printf("Register is being used by FU %d\n", res_status[reg_index]);
+		return true;
+	}
+
+	return false;
 }
 
 void print_instr_status_board()
@@ -167,12 +246,12 @@ void print_instr_status_board()
 			printf("%d\t", instr_status[i][READ_OPS]);
 		else
 			printf(" \t");
-		
+
 		if (instr_status[i][EXEC_COMP] != 0)
 			printf("%d\t", instr_status[i][EXEC_COMP]);
 		else
 			printf(" \t");
-		
+
 		if (instr_status[i][WRITE_RES] != 0)
 			printf("%d\n", instr_status[i][WRITE_RES]);
 		else
@@ -183,13 +262,76 @@ void print_instr_status_board()
 void print_fu_status_board()
 {
 	int arraySize = 5;
-	printf("\nBusy\tOp\tFi\tFj\tFk\tQj\tQk\tRj\tRk\n");
-	printf("--------------------------------------------------------------------\n");
+	printf("\n\tBusy\tOp\tFi\tFj\tFk\tQj\tQk\tRj\tRk\n");
+	printf("\t--------------------------------------------------------------------\n");
 
 	int i;
 	for (i = 0; i < arraySize; i++)
-		printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", fu_status[i][0], fu_status[i][1], fu_status[i][2], fu_status[i][3], fu_status[i][4],
-			fu_status[i][5], fu_status[i][6], fu_status[i][7], fu_status[i][8]);
+	{
+		switch (i)
+		{
+			case 0:
+				printf("INT\t");
+				break;
+			case 1:
+				printf("MULT1\t");
+				break;
+			case 2:
+				printf("MULT2\t");
+				break;
+			case 3:
+				printf("ADD\t");
+				break;
+			case 4:
+				printf("DIV\t");
+				break;
+		}
+
+		if (fu_status[i][0] != UNUSED)
+			printf("%d\t", fu_status[i][BUSY]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][1] != UNUSED)
+			printf("%x\t", fu_status[i][OP]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][2] != UNUSED)
+			printf("%d\t", fu_status[i][FI]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][3] != UNUSED)
+			printf("%d\t", fu_status[i][FJ]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][4] != UNUSED)
+			printf("%d\t", fu_status[i][FK]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][5] != UNUSED)
+			printf("%d\t", fu_status[i][QJ]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][6] != UNUSED)
+			printf("%d\t", fu_status[i][QK]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][7] != UNUSED)
+			printf("%d\t", fu_status[i][RJ]);
+		else
+			printf(" \t");
+
+		if (fu_status[i][8] != UNUSED)
+			printf("%d\n", fu_status[i][RK]);
+		else
+			printf(" \t\n");
+	}
 }
 
 void print_res_status_board()
