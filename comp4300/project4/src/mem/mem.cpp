@@ -477,7 +477,7 @@ instruction encode_instruction(std::string line)
 		instr |= (imm & 0xFFFF); // last 16 bits are immediate
 
 		printf("\t\t\tOp Code: %x\n", instr >> 26);
-		printf("\t\t\tDest: %d\n", (instr >> 21) & 0x1F);
+		printf("\t\t\tDest: %d\n", (instr >> 16) & 0x1F);
 		printf("\t\t\tImm: %d\n", instr & 0xFFFF);
 	}
 
