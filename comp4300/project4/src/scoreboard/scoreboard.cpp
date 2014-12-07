@@ -58,10 +58,10 @@ void run()
 		printf("PC is %x\n", PC);
 		printf("\tInstruction: %x\n", getBits(instr, 26, 31));
 
-		if (can_issue_instr(instr))
-		{
+		// if (can_issue_instr(instr))
+		// {
 
-		}
+		// }
 		issue_instr(instr);
 		issued_instr = true;
 
