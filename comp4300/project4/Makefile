@@ -1,11 +1,7 @@
 CC = g++
 
-all: pre-build pipeSim scoreboard
+all: pre-build scoreboard
 
-pipeSim: pre-build util.o mem.o reg.o pipeSim.o
-	@$(CC) -o bin/pipeSim obj/util.o obj/mem.o obj/reg.o obj/pipeSim.o
-pipeSim.o: src/pipeSim/pipeSim.cpp src/pipeSim/pipeSim.h
-	@$(CC) -c src/pipeSim/pipeSim.cpp -std=gnu++0x -o obj/pipeSim.o
 
 scoreboard: pre-build util.o mem.o reg.o scoreboard.o
 	@$(CC) -o bin/scoreboard obj/util.o obj/mem.o obj/reg.o obj/scoreboard.o

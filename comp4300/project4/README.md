@@ -16,15 +16,19 @@ This project includes a Makefile and requires g++ for compilation
 
 ### Run
 After running ```$ make```:
-- From this directory, ```$ bin/pipeSim filename```
+- From this directory, ```$ bin/scoreboard filename```
 
 
 ### Data - for lab4c.s
-Total Clock Cycles: 
-Total Instructions Executed: 1206 
-	- 1st iteration: 19
-	- 2nd - 99: 12
-	- 100th: 11
+From the lab, we used 6 cycles for the execution of the fmul, 2 cycles for the execution of the LD, LI, SD, ADDI, and branch executions. 
+Total Clock Cycles: 			4835
+	- 1st iteration:		80
+	- 2nd-99th iteration:	48
+	- 100th iteration:		51
+Total Instructions Executed: 	1206 
+	- 1st iteration:		19
+	- 2nd - 99:				12
+	- 100th:				11
 	Total: 19 + (12*98) + 11 = 1206
 Number of NOPs: 204 (200 for the 100 executions and 4 for the end)
 
