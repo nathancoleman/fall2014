@@ -30,7 +30,7 @@ ld $f5, $f4
 ld $f4, $f7
 sd $f6
 sd $f7
-add $1, $1, 1
+addi $1, $1, 1
 bne $5, 0 loop
 nop
 nop
