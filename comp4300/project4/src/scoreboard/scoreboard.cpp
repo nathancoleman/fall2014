@@ -92,19 +92,19 @@ bool can_issue_instr(instruction instr)
 	int32 FU = get_fu(instr);
 	if (fu_status[FU][BUSY] == 1)
 	{
-		printf("\t\t################ FU BUSY ####################\n");
+		printf("\t\t################## FU BUSY ####################\n");
 		can_issue = false;
 	}
 
 	if (check_for_waw(instr))
 	{
-		printf("\t\t################ FOUND WAW ##################\n");
+		printf("\t\t################## FOUND WAW ##################\n");
 		can_issue = false;
 	}
 
 	if (check_for_str_haz(instr))
 	{
-		printf("\t\t################ FOUND STR HAZ ##############\n");
+		printf("\t\t################ FOUND STR HAZ ################\n");
 		can_issue = false;
 	}
 
@@ -183,7 +183,9 @@ void issue_instr(instruction instr)
 	int FU = get_fu(instr);
 
 	int32 op_code = getBits(instr, 26, 31);
-	int32 dest = getBits(instr, 16, 20);
+	int32 dest = (instr >> 16) & 0b11111;//getBits(instr, 16, 20);
+	int32 src = getBits(instr, 21, 25);
+	int32 tar = getBits(instr, 11, 15);
 	printf("\t\tDEST is %d\n", dest);
 
 	// Unused in case of NOP
@@ -192,8 +194,8 @@ void issue_instr(instruction instr)
 		fu_status[FU][BUSY] = 1;
 		fu_status[FU][OP] = op_code;
 		fu_status[FU][FI] = dest;
-		// fu_status[FU][FJ] = ;
-		// fu_status[FU][FK] = ;
+		fu_status[FU][FJ] = src;
+		fu_status[FU][FK] = tar;
 	}
 
 	res_status[dest] = FU;
@@ -203,7 +205,31 @@ void maintain_instr()
 {
 	if (!all_complete())
 	{
-					
+		for (int i = 0; i < 5; i++)
+		{
+			bool get_ops_complete = true;
+			if (fu_status[i][FJ] != UNUSED && can_get_op(fu_status[i][FJ]))
+			{
+				int32 reg = fu_status[i][FJ];
+				printf("RETRIEVING VAL FROM REG %d\n", reg);
+			}
+			else
+				get_ops_complete = false;
+
+			if (fu_status[i][FK] != UNUSED && can_get_op(fu_status[i][FK]))
+			{
+				int32 reg = fu_status[i][FK];
+				printf("RETRIEVING VAL FROM REG %d\n", reg);
+			}
+			else
+				get_ops_complete = false;
+
+			if (get_ops_complete)
+			{
+				fu_status[i][RJ] = 1;
+				fu_status[i][RK] = 1;
+			}
+		}					
 	}
 }
 
@@ -212,7 +238,7 @@ bool all_complete()
 	return lastComplete == TEXT_TOP - TEXT_SEG_BASE;
 }
 
-bool can_get_ops(instruction instr)
+bool can_get_op(int32 reg_index)
 {
 	return true;
 }

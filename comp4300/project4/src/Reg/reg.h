@@ -1,8 +1,8 @@
 #include "../util/util.h"
 #include <stdexcept>
 
-#define R_LENGTH 16
-#define F_LENGTH 16
+#define R_LENGTH 32
+#define F_LENGTH 32
 
 typedef int32 reg_word;
 typedef float float_word;

@@ -48,7 +48,7 @@ bool check_for_waw(instruction instr);
 bool check_for_str_haz(instruction instr);
 int32 get_fu(instruction instr);
 bool all_complete();
-bool can_get_ops(instruction instr);
+bool can_get_op(int32 reg_index);
 void issue_instr(instruction instr);
 void get_ops();
 bool check_for_raw(int32 reg_index);

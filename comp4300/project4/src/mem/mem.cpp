@@ -533,10 +533,30 @@ instruction encode_instruction(std::string line)
 	{
 		printf("\t\tLD\n");
 
-		instr = LD;
-		instr = instr << 26;
+		line = line.substr(line.find("$") + 1);
 
+		int dest = parse_reg(line.substr(0, line.find(",")));
 
+		line = line.substr(line.find(" ") + 1);
+
+		printf("%s\n", line.substr(0, line.find("\r")).c_str());
+
+		// printf("\t\tIMM is %.6f\n", imm);
+
+		// int left = (int)imm;
+		// int right = get_frac_as_int(imm);
+
+		// printf("\t\tLI: params - %d %d.%d\n", dest, left, right);
+
+		// instr = LD;
+		// instr = instr << 26;
+		// instr |= dest << 16;
+		// instr |= (left & 0xFF) << 8;
+		// instr |= right & 0xFF;
+
+		// printf("\t\t\tOp Code: %x\n", instr >> 26);
+		// printf("\t\t\tDest: %d\n", (instr >> 16) & 0x1F);
+		// printf("\t\t\tImm: %d.%d\n", (instr >> 8) & 0xFF, instr & 0xFF);
 	}
 
 	else if(op == "sd")
@@ -702,4 +722,13 @@ int parse_reg(std::string input)
 
 	// printf("INPUT: %s, OUTPUT: %d\n", input.c_str(), reg);
 	return reg;
+}
+
+int get_frac_as_int(float value)
+{
+	int left_part, right_part;
+	char buffer[50];
+	sprintf(buffer, "%lf", value);
+	sscanf(buffer, "%d.%d", &left_part, &right_part);
+	return right_part;
 }
