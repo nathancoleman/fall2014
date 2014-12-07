@@ -33,7 +33,17 @@ Total Instructions Executed: 	1206
 Number of NOPs: 204 (200 for the 100 executions and 4 for the end)
 
 
-##Design Decisions
+### Design Decisions
 
 - We decided to use $0-15 for regular registers and $f0-f15 for floating point registers. 
 - Through research into scoreboard, we decided that it should be its own functioning entity, and not simply a data structure. 
+	- Scoreboard was implemented using a 2D Integer array for the Functinal Unit Status:
+		- unsigned int fu_status[5][9];
+			- Where [5] represents 
+				INTEGER_FU, MULT1_FU, MULT2_FU, ADD_FU, DIVIDE_FU
+			- Where [9] represents
+				BUSY, OP, FI, FJ, FK, QJ, QK, RJ, RK
+
+### About the program
+The program is not fully functional, it can parse the file, issue the instructions, has the functionality of the Scoreboard built out and has the structure for handling WAW, structural hazards and RAW as well. 
+
