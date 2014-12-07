@@ -58,17 +58,17 @@ void run()
 		printf("PC is %x\n", PC);
 		printf("\tInstruction: %x\n", getBits(instr, 26, 31));
 
-		if (can_issue_instr(instr))
-		{
+		// if (can_issue_instr(instr))
+		// {
 			issue_instr(instr);
 			issued_instr = true;
-		}
+		// }
 
 		maintain_instr();
 
 		cycleCount++;
 
-		if (PC == TEXT_TOP || cycleCount > 4)
+		if (PC == TEXT_TOP)
 			user_mode = false;
 
 		if (!user_mode)
@@ -229,6 +229,10 @@ void maintain_instr()
 				fu_status[i][RJ] = 1;
 				fu_status[i][RK] = 1;
 			}
+
+			// instr_status[PC-TEXT_SEG_BASE][READ_OPS] = cycleCount + 1;
+			// instr_status[PC-TEXT_SEG_BASE][EXEC_COMP] = cycleCount + 2;
+			// instr_status[PC-TEXT_SEG_BASE][WRITE_RES] = cycleCount + 3;
 		}					
 	}
 }
