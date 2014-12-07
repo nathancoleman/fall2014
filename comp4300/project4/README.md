@@ -16,7 +16,7 @@ This project includes a Makefile and requires g++ for compilation
 
 ### Run
 After running ```$ make```:
-- From this directory, ```$ bin/pipeSim filename```
+- From this directory, ```$ bin/scoreboard filename```
 
 
 ### Data - for lab4c.s
